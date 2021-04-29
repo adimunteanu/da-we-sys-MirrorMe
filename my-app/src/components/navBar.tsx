@@ -1,5 +1,4 @@
 import React from "react";
-import "bootstrap/dist/css/bootstrap.css";
 import { Page } from "../types/index";
 import { NavigationService } from "../lib/navigationService";
 
