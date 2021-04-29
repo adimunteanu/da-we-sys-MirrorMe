@@ -1,8 +1,9 @@
 import React from "react";
 
-const Home: React.FC = () => {
+const Adrian: React.FC = () => {
 
     return (<div></div>);
+
 };
 
-export default Home;
+export default Adrian;

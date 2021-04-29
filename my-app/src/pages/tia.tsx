@@ -1,8 +1,9 @@
 import React from "react";
 
-const Home: React.FC = () => {
+const Tia: React.FC = () => {
 
     return (<div></div>);
+
 };
 
-export default Home;
+export default Tia;
