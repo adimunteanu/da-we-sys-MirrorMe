@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from 'axios';
+import { Button } from "react-bootstrap";
+import YouTube from "react-youtube";
 
 
 const Tia: React.FC = () => {
@@ -12,7 +14,6 @@ const Tia: React.FC = () => {
         );
 
         setBanks(response.data[1]); 
-        console.log(response.data[1]);
     }
     const renderdata = (index: number) => {
         if (banks.length > 0 ){
@@ -31,17 +32,27 @@ const Tia: React.FC = () => {
   
     </div>)
         }
-        return (<div></div>)
     }
+    const onPlayerReady = (event: any) => {
+            event.target.loadVideoById("gjJBTSIkk4A");
+            event.target.seekTo(43);
+            event.target.playVideo();
+        }
+
     return (
         <div className="App">
                 <h1>World Bank Country</h1>
                 <h2>Fetch a list from an API and find out how high the income is in the countries around the world </h2>
             <div>
 
-            <button className="fetch-button" onClick={fetchData}>
+            <Button className="fetch-button" onClick={fetchData}>
             Click on the Button
-            </button>
+            </Button>
+            <YouTube
+                opts={{ height: '0', width: '0' }}
+                onReady={onPlayerReady}
+            ></YouTube>
+
             <br />
             </div>
             <div className="banks">
