@@ -1,12 +1,11 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter, Route, Link, Switch } from "react-router-dom";
 import Home from "./pages/Home";
-import Adrian from "./pages/adrian";
 import Jonas from "./pages/jonas";
 import OdedTab from "./pages/OdedTab";
 import Tia from "./pages/tia";
+import AdrianTab from './pages/AdrianTab';
 
 
 
@@ -46,7 +45,7 @@ const App: React.FC = () => {
 
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route path="/Adrian" component={Adrian} />
+          <Route path="/Adrian" component={AdrianTab} />
           <Route path="/Jonas" component={Jonas} />
           <Route path="/Oded" component={OdedTab} />
           <Route path="/Tia" component={Tia} />
