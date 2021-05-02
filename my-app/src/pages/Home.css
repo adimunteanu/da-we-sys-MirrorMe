@@ -1,0 +1,18 @@
+#nav{
+    position: fixed;
+    bottom: 0%;
+}
+
+ #image {
+     border-radius: 8px;
+     width: 500px;
+     alignment: center;
+ }
+ #memeCard {
+     margin: auto;
+     width: 600px;
+ }
+ #memeDiv {
+     align-items: center;
+ }
+
