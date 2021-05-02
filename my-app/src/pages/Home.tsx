@@ -88,7 +88,7 @@ const Home: React.FC = () => {
                 }
 
                 <Accordion>
-                    <h2 style={{marginTop: "30px"}}>Here are some memes for you</h2>
+                    <h2 style={{marginTop: "30px"}}>here are some memes for you</h2>
 
                     {memes?.data.children.map(y => y.data.secure_media == null &&  //filters out videos from what I know
                       <div id="memeDiv" style={{margin: "10px"}}>
