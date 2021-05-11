@@ -1,0 +1,29 @@
+.RegisterPage {
+  display: flex;
+  width: var(--space-large);
+}
+
+.RegisterPage-Card {
+  width: 100%;
+}
+
+.RegisterPage-Card .card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.RegisterPage-Form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.RegisterPage-Form .form-group {
+  color: var(--black);
+  margin: 10px 0px;
+}
+
+.RegisterPage-Form-Button {
+  margin: 20px 0px 10px 0px;
+}
