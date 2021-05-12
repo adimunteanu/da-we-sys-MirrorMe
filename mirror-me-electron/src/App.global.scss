@@ -9,9 +9,9 @@
  */
 
 @import './styles/_styles.css';
-@import './pages/UserController/LoginPage/LoginPage.css';
-@import './pages/UserController/RegisterPage/RegisterPage.css';
-@import './components/SlidingError/SlidingError.css';
+@import './pages/UserController/LoginPage/LoginPage.scss';
+@import './pages/UserController/RegisterPage/RegisterPage.scss';
+@import './components/SlidingError/SlidingError.scss';
 
 /*
  * @NOTE: Prepend a `~` to css file paths that are in your node_modules
