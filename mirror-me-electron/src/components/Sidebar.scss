@@ -1,0 +1,29 @@
+a {
+  color: black;
+  align-self: center;
+}
+.sidebar {
+  display: flex;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+.button {
+  width: 8rem;
+}
+.card {
+  width: 8rem;
+  height: 100%;
+  background-color: aliceblue;
+}
+
+.cardtitle {
+  font-size: x-large;
+  align-items: center;
+  text-align: center;
+}
+.cardtext {
+}
