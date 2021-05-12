@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
 import { useHistory } from 'react-router';
+import SlidingError from '../../../components/SlidingError/SlidingError';
 import './LoginPage.css';
 
 const LoginPage = () => {
   const history = useHistory();
+  const [errorOccured /* , setErrorOccured */] = useState(false);
 
   const login = () => {
     console.log('Logged in');
@@ -41,6 +43,10 @@ const LoginPage = () => {
           <Button variant="link" onClick={routeToSignup}>
             Still not a member?
           </Button>
+          <SlidingError
+            hidden={!errorOccured}
+            text="Invalid email or password!"
+          />
         </Card.Body>
       </Card>
     </div>
