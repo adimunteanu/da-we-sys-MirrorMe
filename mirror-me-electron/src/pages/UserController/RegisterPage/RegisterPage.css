@@ -3,27 +3,27 @@
   width: var(--space-large);
 }
 
-.RegisterPage-Card {
+.RegisterPage__Card {
   width: 100%;
 }
 
-.RegisterPage-Card .card-body {
+.RegisterPage__Card .card-body {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.RegisterPage-Form {
+.RegisterPage__Form {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.RegisterPage-Form .form-group {
+.RegisterPage__Form .form-group {
   color: var(--black);
   margin: 10px 0px;
 }
 
-.RegisterPage-Form-Button {
+.RegisterPage__Form-Button {
   margin: 20px 0px 10px 0px;
 }

@@ -17,35 +17,26 @@ const RegisterPage = () => {
 
   return (
     <div className="RegisterPage">
-      <Card className="RegisterPage-Card">
+      <Card className="RegisterPage__Card">
         <Card.Body>
-          <Form className="RegisterPage-Form">
-            <Form.Group
-              className="RegisterPage-Form-Group"
-              controlId="formBasicEmail"
-            >
+          <Form className="RegisterPage__Form">
+            <Form.Group controlId="formBasicEmail">
               <Form.Label>Username</Form.Label>
               <Form.Control type="" placeholder="Enter email" />
             </Form.Group>
 
-            <Form.Group
-              className="RegisterPage-Form-Group"
-              controlId="formBasicPassword"
-            >
+            <Form.Group controlId="formBasicPassword">
               <Form.Label>Password</Form.Label>
               <Form.Control type="password" placeholder="Password" />
             </Form.Group>
 
-            <Form.Group
-              className="RegisterPage-Form-Group"
-              controlId="formBasicPassword"
-            >
+            <Form.Group controlId="formBasicPassword">
               <Form.Label>Confirm Password</Form.Label>
               <Form.Control type="password" placeholder="Password" />
             </Form.Group>
 
             <Button
-              className="RegisterPage-Form-Button"
+              className="RegisterPage__Form-Button"
               variant="primary"
               onClick={register}
             >

@@ -17,27 +17,21 @@ const LoginPage = () => {
 
   return (
     <div className="LoginPage">
-      <Card className="LoginPage-Card">
+      <Card className="LoginPage__Card">
         <Card.Body>
-          <Form className="LoginPage-Form">
-            <Form.Group
-              className="LoginPage-Form-Group"
-              controlId="formBasicEmail"
-            >
+          <Form className="LoginPage__Form">
+            <Form.Group controlId="formBasicEmail">
               <Form.Label>Username</Form.Label>
               <Form.Control type="" placeholder="Enter email" />
             </Form.Group>
 
-            <Form.Group
-              className="LoginPage-Form-Group"
-              controlId="formBasicPassword"
-            >
+            <Form.Group controlId="formBasicPassword">
               <Form.Label>Password</Form.Label>
               <Form.Control type="password" placeholder="Password" />
             </Form.Group>
 
             <Button
-              className="LoginPage-Form-Button"
+              className="LoginPage__Form-Button"
               variant="primary"
               onClick={login}
             >
