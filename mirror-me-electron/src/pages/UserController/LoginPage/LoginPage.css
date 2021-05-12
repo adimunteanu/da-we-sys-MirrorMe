@@ -1,0 +1,29 @@
+.LoginPage {
+  display: flex;
+  width: var(--space-large);
+}
+
+.LoginPage__Card {
+  width: 100%;
+}
+
+.LoginPage__Card .card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.LoginPage__Form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.LoginPage__Form .form-group {
+  color: var(--black);
+  margin: 10px 0px;
+}
+
+.LoginPage__Form-Button {
+  margin: 20px 0px 10px 0px;
+}
