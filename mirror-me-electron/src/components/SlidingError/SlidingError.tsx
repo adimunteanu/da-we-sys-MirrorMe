@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import './SlidingError.css';
+import './SlidingError.scss';
 
 interface Props {
   hidden: boolean;

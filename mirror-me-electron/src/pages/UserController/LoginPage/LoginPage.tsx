@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
 import { useHistory } from 'react-router';
 import SlidingError from '../../../components/SlidingError/SlidingError';
-import './LoginPage.css';
+import './LoginPage.scss';
 
 const LoginPage = () => {
   const history = useHistory();

@@ -4,34 +4,34 @@
   justify-content: center;
   align-items: center;
   height: 0px;
-}
 
-.SlidingError--hidden {
-  height: 0px;
-  animation: SlideOut 0.2s;
-}
+  &--hidden {
+    height: 0px;
+    animation: SlideOut 0.2s;
+  }
 
-.SlidingError--visible {
-  height: 50px;
-  animation: SlideIn 0.2s;
+  &--visible {
+    height: 50px;
+    animation: SlideIn 0.2s;
+  }
 }
 
 .SlidingError__Text {
   color: var(--black);
   height: 0px;
   opacity: 0;
-}
 
-.SlidingError__Text--hidden {
-  color: var(--black);
-  height: 0px;
-  opacity: 0;
-  animation: FadeOut 0.05s;
-}
+  &--hidden {
+    color: var(--black);
+    height: 0px;
+    opacity: 0;
+    animation: FadeOut 0.05s;
+  }
 
-.SlidingError__Text--visible {
-  opacity: 1;
-  animation: FadeIn 0.05s;
+  &--visible {
+    opacity: 1;
+    animation: FadeIn 0.05s;
+  }
 }
 
 @keyframes SlideOut {
