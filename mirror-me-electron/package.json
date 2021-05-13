@@ -248,6 +248,7 @@
     "yarn-deduplicate": "^3.1.0"
   },
   "dependencies": {
+    "@ionic/react": "^5.6.6",
     "bootstrap": "^5.0.0",
     "electron-debug": "^3.1.0",
     "electron-log": "^4.2.4",
