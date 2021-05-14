@@ -17,13 +17,20 @@ import Routes from '../../../routes';
 
 const RegisterPage = () => {
   const history = useHistory();
-  const [errorOccured /* , setErrorOccured */] = useState(false);
+  const [errorOccured, setErrorOccured] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const register = () => {
-    history.push(Routes.LOGIN);
+    if (email === '' || password === '' || confirmPassword === '') {
+      setErrorOccured(true);
+    } else if (password !== confirmPassword) {
+      setErrorOccured(true);
+    } else {
+      setErrorOccured(false);
+      history.push(Routes.LOGIN);
+    }
   };
 
   const routeToLogin = () => {
@@ -84,7 +91,7 @@ const RegisterPage = () => {
             </IonList>
             <SlidingError
               hidden={!errorOccured}
-              text="Invalid email or password!"
+              text="Please check the correctness of the fields!"
             />
           </IonList>
         </IonCardContent>
