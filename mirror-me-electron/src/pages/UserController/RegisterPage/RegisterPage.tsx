@@ -1,59 +1,94 @@
 import React, { useState } from 'react';
-import { Button, Card, Form } from 'react-bootstrap';
+import {
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonList,
+} from '@ionic/react';
 import { useHistory } from 'react-router';
 import SlidingError from '../../../components/SlidingError/SlidingError';
 import './RegisterPage.scss';
+import Routes from '../../../routes';
 
 const RegisterPage = () => {
   const history = useHistory();
   const [errorOccured /* , setErrorOccured */] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const register = () => {
-    console.log('Created a user');
+    history.push(Routes.LOGIN);
   };
 
   const routeToLogin = () => {
-    console.log('Routed to login');
-    history.push('/');
+    history.push(Routes.LOGIN);
   };
 
   return (
     <div className="RegisterPage">
-      <Card className="RegisterPage__Card">
-        <Card.Body>
-          <Form className="RegisterPage__Form">
-            <Form.Group controlId="formBasicEmail">
-              <Form.Label>Username</Form.Label>
-              <Form.Control type="" placeholder="Enter email" />
-            </Form.Group>
-
-            <Form.Group controlId="formBasicPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control type="password" placeholder="Password" />
-            </Form.Group>
-
-            <Form.Group controlId="formBasicPassword">
-              <Form.Label>Confirm Password</Form.Label>
-              <Form.Control type="password" placeholder="Password" />
-            </Form.Group>
-
-            <Button
-              className="RegisterPage__Form-Button"
-              variant="primary"
-              onClick={register}
-            >
-              Submit
-            </Button>
-          </Form>
-          <Button variant="link" onClick={routeToLogin}>
-            Already a member?
-          </Button>
-          <SlidingError
-            hidden={!errorOccured}
-            text="User with this email already exists!"
-          />
-        </Card.Body>
-      </Card>
+      <IonCard className="RegisterPage__Card">
+        <IonCardHeader>
+          <IonCardTitle>Sign Up</IonCardTitle>
+        </IonCardHeader>
+        <IonCardContent>
+          <IonList>
+            <IonItem className="RegisterPage__Item">
+              <IonLabel position="floating">Email</IonLabel>
+              <IonInput
+                onIonChange={(event: any) => {
+                  setEmail(event.detail.value);
+                }}
+              />
+            </IonItem>
+            <IonItem className="RegisterPage__Item">
+              <IonLabel position="floating">Password</IonLabel>
+              <IonInput
+                value={password}
+                type="password"
+                onIonChange={(event: any) => {
+                  setPassword(event.detail.value);
+                }}
+              />
+            </IonItem>
+            <IonItem className="RegisterPage__Item">
+              <IonLabel position="floating">Confirm Password</IonLabel>
+              <IonInput
+                value={confirmPassword}
+                type="password"
+                onIonChange={(event: any) => {
+                  setConfirmPassword(event.detail.value);
+                }}
+              />
+            </IonItem>
+            <IonList className="RegisterPage__Item--centered" lines="none">
+              <IonItem className="RegisterPage__Item" lines="none">
+                <IonButton color="primary" size="default" onClick={register}>
+                  Submit
+                </IonButton>
+              </IonItem>
+              <IonItem className="RegisterPage__Item" lines="none">
+                <IonButton
+                  className="RegisterPage__Link"
+                  fill="clear"
+                  onClick={routeToLogin}
+                >
+                  Already a member?
+                </IonButton>
+              </IonItem>
+            </IonList>
+            <SlidingError
+              hidden={!errorOccured}
+              text="Invalid email or password!"
+            />
+          </IonList>
+        </IonCardContent>
+      </IonCard>
     </div>
   );
 };
