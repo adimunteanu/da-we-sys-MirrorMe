@@ -10,9 +10,21 @@
  */
 
 @import './styles/_styles.css';
+@import './components/SlidingError/SlidingError.scss';
+@import './components/Header/Header.scss';
+
+/*
+ * Pages
+ */
+
 @import './pages/UserController/LoginPage/LoginPage.scss';
 @import './pages/UserController/RegisterPage/RegisterPage.scss';
-@import './components/SlidingError/SlidingError.scss';
+@import './pages/DetailPage/DetailPage.scss';
+@import './pages/LandingPage/LandingPage.scss';
+@import './pages/OverviewPage/OverviewPage.scss';
+@import './pages/RequestPage/RequestPage.scss';
+@import './pages/ScoreboardPage/ScoreboardPage.scss';
+@import './pages/SettingsPage/SettingsPage.scss';
 
 /*
  * @NOTE: Prepend a `~` to css file paths that are in your node_modules
@@ -20,13 +32,6 @@
  */
 
 :root {
-  --ion-background-color: linear-gradient(
-    200.96deg,
-    #fedc2a -29.09%,
-    #dd5789 51.77%,
-    #7a2c9e 129.35%
-  );
-
   --ion-color-angular: #ac282b;
   --ion-color-communication: #8e8d93;
   --ion-color-tooling: #fe4c52;
@@ -104,6 +109,12 @@
 body {
   position: relative;
   height: 100vh;
+  background: linear-gradient(
+    200.96deg,
+    #fedc2a -29.09%,
+    #dd5789 51.77%,
+    #7a2c9e 129.35%
+  );
   font-family: sans-serif;
   overflow-y: hidden;
   display: flex;
