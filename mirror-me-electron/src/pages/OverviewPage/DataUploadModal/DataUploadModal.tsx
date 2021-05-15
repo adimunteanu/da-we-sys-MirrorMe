@@ -1,26 +1,58 @@
 import {
+  IonButton,
   IonCard,
+  IonCardContent,
   IonCardHeader,
-  IonContent,
+  IonCardTitle,
   IonHeader,
-  IonModal,
+  IonIcon,
+  IonList,
   IonText,
-  IonTitle,
+  IonToolbar,
 } from '@ionic/react';
-import React, { useState } from 'react';
+import React from 'react';
+import { FunctionComponent } from 'react-router/node_modules/@types/react';
+import DataDropzone from '../../../components/DataDropzone/DataDropzone';
+import './DataUploadModal.scss';
 
-const DataUploadModal = () => {
-  const [showModal, setShowModal] = useState(true);
+interface Props {
+  onDismiss: () => void;
+}
+
+const DataUploadModal: FunctionComponent<Props> = (props: Props) => {
+  const { onDismiss } = props;
+
+  const handleUpload = () => {
+    console.log('files uploaded');
+  };
 
   return (
-    <IonModal isOpen={showModal}>
-      <IonHeader>
-        <IonTitle>Data Upload</IonTitle>
-      </IonHeader>
-      <IonContent>
-        <IonText>Please drag and drop your data below:</IonText>
-      </IonContent>
-    </IonModal>
+    <div>
+      <IonCard className="DataUploadModal__Card">
+        <IonCardHeader className="DataUploadModal__Header">
+          <IonHeader>
+            <IonToolbar>
+              <IonCardTitle>Data Upload</IonCardTitle>
+              <IonButton
+                className="DataUploadModal__Header-Button"
+                fill="clear"
+                slot="end"
+                onClick={() => onDismiss()}
+              >
+                <IonIcon size="large" name="close" />
+              </IonButton>
+            </IonToolbar>
+          </IonHeader>
+        </IonCardHeader>
+        <IonCardContent>
+          <IonText>Please drag and drop your data below:</IonText>
+          <DataDropzone />
+          <IonList className="DataUploadModal__Item">
+            <IonButton onClick={() => handleUpload()}>Upload</IonButton>
+          </IonList>
+        </IonCardContent>
+      </IonCard>
+    </div>
   );
 };
 

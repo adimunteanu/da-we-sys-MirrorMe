@@ -5,4 +5,8 @@
 
   /* SPACINGS */
   --space-large: 24rem;
+
+  /* BORDERS */
+  --border-small: 6px;
+  --border-large: 16px;
 }
