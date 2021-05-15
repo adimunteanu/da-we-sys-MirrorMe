@@ -35,6 +35,7 @@ const RequestPage: React.FC = () => {
                   <IonRow>
                     <IonCol>
                       <IonButton
+                        id="youtube"
                         size="small"
                         href="https://takeout.google.com/"
                       >
@@ -59,6 +60,7 @@ const RequestPage: React.FC = () => {
                   <IonRow>
                     <IonCol>
                       <IonButton
+                        id="instagram"
                         size="small"
                         href="https://www.instagram.com/download/request/ "
                       >
@@ -84,6 +86,7 @@ const RequestPage: React.FC = () => {
                   <IonRow>
                     <IonCol>
                       <IonButton
+                        id="facebook"
                         size="small"
                         href="https://www.facebook.com/dyi"
                       >
