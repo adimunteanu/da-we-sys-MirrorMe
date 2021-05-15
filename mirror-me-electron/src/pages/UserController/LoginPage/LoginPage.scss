@@ -1,29 +1,26 @@
 .LoginPage {
   display: flex;
-  width: var(--space-large);
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 
   &__Card {
-    width: 100%;
+    height: auto;
+    width: var(--space-large);
+  }
 
-    .card-body {
+  &__Item {
+    margin: 10px 0px;
+
+    &--centered {
       display: flex;
       flex-direction: column;
+      align-items: center;
       justify-content: center;
     }
   }
 
-  &__Form {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    .form-group {
-      color: var(--black);
-      margin: 10px 0px;
-    }
-
-    &-Button {
-      margin: 20px 0px 10px 0px;
-    }
+  &__Link {
+    text-decoration: underline;
   }
 }
