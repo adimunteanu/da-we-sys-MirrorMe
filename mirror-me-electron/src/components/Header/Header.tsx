@@ -7,19 +7,18 @@ import {
 } from '@ionic/react';
 import { useLocation } from 'react-router-dom';
 import React, { FunctionComponent, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Menu from '../Menu/Menu';
-import { GlobalState } from '../../reducers/rootReducer';
-import { useAction } from '../../hooks';
-import { Actions } from '../../actions';
+import { changeTitle } from './HeaderSlice';
+import { GlobalState } from '../../types';
 
 const Header: FunctionComponent = () => {
   const location = useLocation();
-  const dispatch = useAction();
-  const title = useSelector((state: GlobalState) => state.titleReducer.title);
+  const dispatch = useDispatch();
+  const title = useSelector((state: GlobalState) => state);
 
   useEffect(() => {
-    dispatch(Actions.changeTitle(location.pathname));
+    dispatch(changeTitle(location.pathname));
   }, [dispatch, location]);
 
   return (

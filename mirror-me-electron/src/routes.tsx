@@ -6,7 +6,7 @@ const Routes = {
   DETAIL: '/home/overview/',
   REQUEST: '/home/request',
   SCOREBOARD: '/home/scoreboard',
-  SETTINGS: 'home/settings',
+  SETTINGS: '/home/settings',
 };
 
 export default Routes;
