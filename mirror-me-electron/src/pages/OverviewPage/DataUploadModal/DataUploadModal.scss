@@ -1,0 +1,38 @@
+div {
+  .DataUploadModal {
+    .modal-wrapper {
+      background: transparent;
+      box-shadow: none;
+    }
+
+    &__Header {
+      padding-top: 0px;
+
+      &-Button {
+        --padding-start: 0px;
+        --padding-end: 0px;
+        --color: black;
+      }
+    }
+
+    &__Card {
+      min-height: 280px;
+      --padding: var(--border-large);
+      box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    }
+
+    &__Item {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+    }
+  }
+}
+
+.Dropzone {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: var(--border-large) 0px;
+  min-height: 100px;
+}
