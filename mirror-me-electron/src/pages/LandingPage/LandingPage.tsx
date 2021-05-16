@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router';
 import {
   IonContent,
   IonButton,
@@ -10,11 +11,18 @@ import {
   IonRow,
   IonCol,
 } from '@ionic/react';
+import { Link } from 'react-router-dom';
 import MirrorImg from '../../images/Mirror.jpg';
 import AppsImg from '../../images/Apps.png';
 import ScoreImg from '../../images/Score.jpg';
+import Routes from '../../routes';
 
 const LandingPage: React.FC = () => {
+  const history = useHistory();
+  const redirectToSignUp = () => {
+    history.push(Routes.SIGNUP);
+  };
+
   return (
     <IonContent>
       <IonGrid>
@@ -61,7 +69,7 @@ const LandingPage: React.FC = () => {
         </IonRow>
         <IonRow>
           <IonCol className="home">
-            <IonButton id="signup" size="large">
+            <IonButton id="signup" size="large" onClick={redirectToSignUp}>
               Sign up
             </IonButton>
           </IonCol>
@@ -69,10 +77,7 @@ const LandingPage: React.FC = () => {
         <IonRow>
           <IonCol>
             <p>
-              Already a member? Log in
-              <span>
-                <u>here</u>
-              </span>
+              Already a member? Log in <Link to={Routes.LOGIN}>here</Link>
             </p>
           </IonCol>
         </IonRow>
