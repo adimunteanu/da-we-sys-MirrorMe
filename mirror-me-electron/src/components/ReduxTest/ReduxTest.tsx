@@ -1,26 +1,25 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import React from 'react';
-import {
-  decrementCountOne,
-  decrementCountTwo,
-  incrementCountOne,
-  incrementCountTwo,
-} from '../../actions/testCounterAction';
 
-type CounterState = {
-  counter1: number;
-  counter2: number;
-};
+import { GlobalState } from '../../reducers/rootReducer';
+import { Actions } from '../../actions';
+import { useAction } from '../../hooks';
 
 export const ReduxTestComponent: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAction();
+  const counter1 = useSelector(
+    (state: GlobalState) => state.counterReducer.counter1
+  );
+  const counter2 = useSelector(
+    (state: GlobalState) => state.counterReducer.counter2
+  );
 
   return (
     <div>
       <button
         type="button"
         onClick={() => {
-          dispatch(incrementCountOne);
+          dispatch(Actions.incrementCountOne());
         }}
       >
         increment 1
@@ -28,17 +27,17 @@ export const ReduxTestComponent: React.FC = () => {
       <button
         type="button"
         onClick={() => {
-          dispatch(decrementCountOne);
+          dispatch(Actions.decrementCountOne());
         }}
       >
         decrement 1
       </button>
-      {useSelector((state: CounterState) => state.counter1)}
+      {counter1}
       <br />
       <button
         type="button"
         onClick={() => {
-          dispatch(incrementCountTwo);
+          dispatch(Actions.incrementCountTwo());
         }}
       >
         increment 2
@@ -46,12 +45,12 @@ export const ReduxTestComponent: React.FC = () => {
       <button
         type="button"
         onClick={() => {
-          dispatch(decrementCountTwo);
+          dispatch(Actions.decrementCountTwo());
         }}
       >
         decrement 2
       </button>
-      {useSelector((state: CounterState) => state.counter2)}
+      {counter2}
     </div>
   );
 };

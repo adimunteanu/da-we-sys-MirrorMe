@@ -1,6 +1,6 @@
-import { Action } from 'redux';
+import { ActionPayload } from '../actions/types';
 
-type CounterState = {
+export type CounterState = {
   counter1: number;
   counter2: number;
 };
@@ -12,7 +12,7 @@ const initialState: CounterState = {
 
 export const counterReducer = (
   state: CounterState = initialState,
-  action: Action
+  action: ActionPayload
 ) => {
   switch (action.type) {
     case 'INC_COUNT1':

@@ -13,10 +13,10 @@ import SettingsPage from './pages/SettingsPage/SettingsPage';
 import LoginPage from './pages/UserController/LoginPage/LoginPage';
 import RegisterPage from './pages/UserController/RegisterPage/RegisterPage';
 import Routes from './routes';
-import { counterReducer } from './reducers/testCounter';
 import { ReduxTestComponent } from './components/ReduxTest/ReduxTest';
+import { rootReducer } from './reducers/rootReducer';
 
-const store = createStore(counterReducer);
+const store = createStore(rootReducer);
 
 const App = () => {
   const isAuthenticated = true;
@@ -25,7 +25,7 @@ const App = () => {
     <Provider store={store}>
       <IonApp>
         <Router>
-          {isAuthenticated && <Header title="Title" />}
+          {isAuthenticated && <Header />}
           <ReduxTestComponent />
           <Switch>
             <Route path={Routes.SETTINGS} component={SettingsPage} />
