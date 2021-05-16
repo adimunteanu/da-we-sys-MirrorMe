@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SettingsPage = () => {
+const SettingsPage: React.FC = () => {
   return <div>This is the Settings Page</div>;
 };
 

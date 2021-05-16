@@ -14,10 +14,11 @@ import Routes from './routes';
 
 const App = () => {
   const isAuthenticated = true;
+
   return (
     <IonApp>
       <Router>
-        {isAuthenticated && <Header title="Title" />}
+        {isAuthenticated && <Header />}
         <Switch>
           <Route path={Routes.SETTINGS} component={SettingsPage} />
           <Route path={Routes.SCOREBOARD} component={ScoreboardPage} />

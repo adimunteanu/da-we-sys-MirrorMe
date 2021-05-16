@@ -5,15 +5,21 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
-import React, { FunctionComponent } from 'react';
+import { useLocation } from 'react-router-dom';
+import React, { FunctionComponent, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Menu from '../Menu/Menu';
+import { changeTitle } from './HeaderSlice';
+import { GlobalState } from '../../types';
 
-interface Props {
-  title: string;
-}
+const Header: FunctionComponent = () => {
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const title = useSelector((state: GlobalState) => state.header.title);
 
-const Header: FunctionComponent<Props> = (props: Props) => {
-  const { title } = props;
+  useEffect(() => {
+    dispatch(changeTitle(location.pathname));
+  }, [dispatch, location]);
 
   return (
     <div>
