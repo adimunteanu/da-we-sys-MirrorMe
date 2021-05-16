@@ -15,7 +15,7 @@ import { GlobalState } from '../../types';
 const Header: FunctionComponent = () => {
   const location = useLocation();
   const dispatch = useDispatch();
-  const title = useSelector((state: GlobalState) => state);
+  const title = useSelector((state: GlobalState) => state.header.title);
 
   useEffect(() => {
     dispatch(changeTitle(location.pathname));
