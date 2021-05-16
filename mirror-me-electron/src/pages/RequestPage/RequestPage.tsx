@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  IonContent,
   IonButton,
   IonCard,
   IonCardContent,
@@ -18,7 +19,7 @@ import NetflixImg from '../../images/Netflix.png';
 
 const RequestPage: React.FC = () => {
   return (
-    <div className="RequestPage">
+    <IonContent className="RequestPage">
       <p>Request your Data from one of the following Companies!</p>
       <IonGrid className="CardGrid">
         <IonRow>
@@ -179,7 +180,7 @@ const RequestPage: React.FC = () => {
           </IonCol>
         </IonRow>
       </IonGrid>
-    </div>
+    </IonContent>
   );
 };
 
