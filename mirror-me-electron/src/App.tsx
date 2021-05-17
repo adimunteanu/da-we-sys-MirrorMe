@@ -14,12 +14,11 @@ import {
   ScoreboardPage,
   SettingsPage,
 } from './pages';
-import { selectIsAuthenticated } from './pages/UserController/userControllerSlice';
 import { RootState } from './store';
 
 const App = () => {
-  const isAuthenticated = useSelector((state: RootState) =>
-    selectIsAuthenticated(state.userControl)
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.userControl.isAuthenticated
   );
 
   return (
