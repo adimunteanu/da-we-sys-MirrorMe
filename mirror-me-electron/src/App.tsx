@@ -1,19 +1,32 @@
 import { IonApp } from '@ionic/react';
-import React from 'react';
+import React, { FunctionComponent } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.global.scss';
 import Header from './components/Header/Header';
 import { PAGES } from './globals';
-import LandingPage from './pages/LandingPage/LandingPage';
-import OverviewPage from './pages/OverviewPage/OverviewPage';
-import RequestPage from './pages/RequestPage/RequestPage';
-import ScoreboardPage from './pages/ScoreboardPage/ScoreboardPage';
-import SettingsPage from './pages/SettingsPage/SettingsPage';
-import LoginPage from './pages/UserController/LoginPage/LoginPage';
-import RegisterPage from './pages/UserController/RegisterPage/RegisterPage';
+import {
+  LandingPage,
+  LoginPage,
+  OverviewPage,
+  RegisterPage,
+  RequestPage,
+  ScoreboardPage,
+  SettingsPage,
+} from './pages';
+import { selectIsAuthenticated } from './pages/UserController/userControllerSlice';
+import { RootState } from './store';
 
-const App = () => {
-  const isAuthenticated = true;
+const mapStateToProps = (state: RootState) => ({
+  isAuthenticated: selectIsAuthenticated(state.userControl),
+});
+
+const connector = connect(mapStateToProps, {});
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type Props = PropsFromRedux;
+
+const App: FunctionComponent<Props> = (props: Props) => {
+  const { isAuthenticated } = props;
 
   return (
     <IonApp>
@@ -33,4 +46,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default connector(App);
