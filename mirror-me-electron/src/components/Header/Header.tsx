@@ -7,19 +7,30 @@ import {
 } from '@ionic/react';
 import { useLocation } from 'react-router-dom';
 import React, { FunctionComponent, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import Menu from '../Menu/Menu';
-import { changeTitle } from './HeaderSlice';
-import { GlobalState } from '../../types';
+import { selectTitle, updateCurrentPage } from '../../store/globalSlice';
+import { RootState } from '../../store';
 
-const Header: FunctionComponent = () => {
+const mapStateToProps = (state: RootState) => ({
+  title: selectTitle(state.global),
+});
+
+const mapDispatchToProps = {
+  updateCurrentPage,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type Props = PropsFromRedux;
+
+const Header: FunctionComponent<Props> = (props: Props) => {
   const location = useLocation();
-  const dispatch = useDispatch();
-  const title = useSelector((state: GlobalState) => state.header.title);
+  const { title, updateCurrentPage } = props;
 
   useEffect(() => {
-    dispatch(changeTitle(location.pathname));
-  }, [dispatch, location]);
+    updateCurrentPage(location.pathname);
+  }, [updateCurrentPage, location]);
 
   return (
     <div>
@@ -36,4 +47,4 @@ const Header: FunctionComponent = () => {
   );
 };
 
-export default Header;
+export default connector(Header);

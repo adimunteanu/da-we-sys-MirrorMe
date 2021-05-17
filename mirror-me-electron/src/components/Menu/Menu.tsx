@@ -10,31 +10,31 @@ import {
 } from '@ionic/react';
 import React from 'react';
 import { useHistory } from 'react-router';
-import Routes from '../../routes';
+import { PAGES } from '../../globals';
 
 const Menu = () => {
   const history = useHistory();
 
   const redirectTo = (route: string) => {
     switch (route) {
-      case Routes.OVERVIEW: {
-        history.push(Routes.OVERVIEW);
+      case PAGES.OVERVIEW.route: {
+        history.push(PAGES.OVERVIEW.route);
         break;
       }
-      case Routes.REQUEST: {
-        history.push(Routes.REQUEST);
+      case PAGES.REQUEST.route: {
+        history.push(PAGES.REQUEST.route);
         break;
       }
-      case Routes.SCOREBOARD: {
-        history.push(Routes.SCOREBOARD);
+      case PAGES.SCOREBOARD.route: {
+        history.push(PAGES.SCOREBOARD.route);
         break;
       }
-      case Routes.SETTINGS: {
-        history.push(Routes.SETTINGS);
+      case PAGES.SETTINGS.route: {
+        history.push(PAGES.SETTINGS.route);
         break;
       }
-      case Routes.LANDING: {
-        history.push(Routes.LANDING);
+      case PAGES.LANDING.route: {
+        history.push(PAGES.LANDING.route);
         break;
       }
       default:
@@ -51,22 +51,22 @@ const Menu = () => {
       </IonHeader>
       <IonContent>
         <IonList>
-          <IonItem button onClick={() => redirectTo(Routes.OVERVIEW)}>
+          <IonItem button onClick={() => redirectTo(PAGES.OVERVIEW.route)}>
             Overview
           </IonItem>
-          <IonItem button onClick={() => redirectTo(Routes.REQUEST)}>
+          <IonItem button onClick={() => redirectTo(PAGES.REQUEST.route)}>
             Request Data
           </IonItem>
-          <IonItem button onClick={() => redirectTo(Routes.SCOREBOARD)}>
+          <IonItem button onClick={() => redirectTo(PAGES.SCOREBOARD.route)}>
             Scoreboard
           </IonItem>
-          <IonItem button onClick={() => redirectTo(Routes.SETTINGS)}>
+          <IonItem button onClick={() => redirectTo(PAGES.SETTINGS.route)}>
             Settings
           </IonItem>
         </IonList>
       </IonContent>
       <IonFooter>
-        <IonItem button onClick={() => redirectTo(Routes.LANDING)}>
+        <IonItem button onClick={() => redirectTo(PAGES.LANDING.route)}>
           Logout
         </IonItem>
       </IonFooter>

@@ -12,7 +12,7 @@ import {
 import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 import SlidingError from '../../../components/SlidingError/SlidingError';
-import Routes from '../../../routes';
+import { PAGES } from '../../../globals';
 import './LoginPage.scss';
 
 const LoginPage = () => {
@@ -26,12 +26,12 @@ const LoginPage = () => {
       setErrorOccured(true);
     } else {
       setErrorOccured(false);
-      history.push(Routes.OVERVIEW);
+      history.push(PAGES.OVERVIEW.route);
     }
   };
 
   const routeToSignup = () => {
-    history.push(Routes.SIGNUP);
+    history.push(PAGES.SIGNUP.route);
   };
 
   return (
