@@ -1,6 +1,6 @@
 import { IonApp } from '@ionic/react';
-import React, { FunctionComponent } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.global.scss';
 import Header from './components/Header/Header';
@@ -17,16 +17,10 @@ import {
 import { selectIsAuthenticated } from './pages/UserController/userControllerSlice';
 import { RootState } from './store';
 
-const mapStateToProps = (state: RootState) => ({
-  isAuthenticated: selectIsAuthenticated(state.userControl),
-});
-
-const connector = connect(mapStateToProps, {});
-type PropsFromRedux = ConnectedProps<typeof connector>;
-type Props = PropsFromRedux;
-
-const App: FunctionComponent<Props> = (props: Props) => {
-  const { isAuthenticated } = props;
+const App = () => {
+  const isAuthenticated = useSelector((state: RootState) =>
+    selectIsAuthenticated(state.userControl)
+  );
 
   return (
     <IonApp>
@@ -46,4 +40,4 @@ const App: FunctionComponent<Props> = (props: Props) => {
   );
 };
 
-export default connector(App);
+export default App;

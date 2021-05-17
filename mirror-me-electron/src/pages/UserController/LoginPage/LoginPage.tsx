@@ -9,28 +9,20 @@ import {
   IonLabel,
   IonList,
 } from '@ionic/react';
-import React, { FunctionComponent, useState } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import SlidingError from '../../../components/SlidingError/SlidingError';
 import { PAGES } from '../../../globals';
 import './LoginPage.scss';
 import { login } from '../userControllerSlice';
 
-const mapDispatchToProps = {
-  login,
-};
-
-const connector = connect(() => ({}), mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-type Props = PropsFromRedux;
-
-const LoginPage: FunctionComponent<Props> = (props: Props) => {
+const LoginPage = () => {
   const history = useHistory();
   const [errorOccured, setErrorOccured] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = props;
+  const dispatch = useDispatch();
 
   const tryLogin = () => {
     if (email !== '' || password !== '') {
@@ -38,7 +30,7 @@ const LoginPage: FunctionComponent<Props> = (props: Props) => {
     } else {
       setErrorOccured(false);
       history.push(PAGES.OVERVIEW.route);
-      login();
+      dispatch(login());
     }
   };
 
@@ -99,4 +91,4 @@ const LoginPage: FunctionComponent<Props> = (props: Props) => {
   );
 };
 
-export default connector(LoginPage);
+export default LoginPage;

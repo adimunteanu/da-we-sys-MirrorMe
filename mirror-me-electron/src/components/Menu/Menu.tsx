@@ -8,23 +8,15 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
-import React, { FunctionComponent } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import { PAGES } from '../../globals';
 import { logout } from '../../pages/UserController/userControllerSlice';
 
-const mapDispatchToProps = {
-  logout,
-};
-
-const connector = connect(() => ({}), mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-type Props = PropsFromRedux;
-
-const Menu: FunctionComponent<Props> = (props: Props) => {
+const Menu = () => {
   const history = useHistory();
-  const { logout } = props;
+  const dispatch = useDispatch();
 
   const redirectTo = (route: string) => {
     switch (route) {
@@ -45,7 +37,7 @@ const Menu: FunctionComponent<Props> = (props: Props) => {
         break;
       }
       case PAGES.LANDING.route: {
-        logout();
+        dispatch(logout());
         history.push(PAGES.LANDING.route);
         break;
       }
@@ -86,4 +78,4 @@ const Menu: FunctionComponent<Props> = (props: Props) => {
   );
 };
 
-export default connector(Menu);
+export default Menu;
