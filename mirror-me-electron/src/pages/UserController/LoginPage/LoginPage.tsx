@@ -9,24 +9,36 @@ import {
   IonLabel,
   IonList,
 } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 import { useHistory } from 'react-router';
 import SlidingError from '../../../components/SlidingError/SlidingError';
 import { PAGES } from '../../../globals';
 import './LoginPage.scss';
+import { login } from '../userControllerSlice';
 
-const LoginPage = () => {
+const mapDispatchToProps = {
+  login,
+};
+
+const connector = connect(() => ({}), mapDispatchToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type Props = PropsFromRedux;
+
+const LoginPage: FunctionComponent<Props> = (props: Props) => {
   const history = useHistory();
   const [errorOccured, setErrorOccured] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { login } = props;
 
-  const login = () => {
+  const tryLogin = () => {
     if (email !== '' || password !== '') {
       setErrorOccured(true);
     } else {
       setErrorOccured(false);
       history.push(PAGES.OVERVIEW.route);
+      login();
     }
   };
 
@@ -62,7 +74,7 @@ const LoginPage = () => {
             </IonItem>
             <IonList className="LoginPage__Item--centered" lines="none">
               <IonItem className="LoginPage__Item" lines="none">
-                <IonButton color="primary" size="default" onClick={login}>
+                <IonButton color="primary" size="default" onClick={tryLogin}>
                   Submit
                 </IonButton>
               </IonItem>
@@ -87,4 +99,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default connector(LoginPage);
