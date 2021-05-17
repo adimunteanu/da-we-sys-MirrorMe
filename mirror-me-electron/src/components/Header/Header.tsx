@@ -16,6 +16,7 @@ import Menu from '../Menu/Menu';
 import { selectTitle, updateCurrentPage } from '../../store/globalSlice';
 import { RootState } from '../../store';
 import DataUploadModal from '../../pages/OverviewPage/DataUploadModal/DataUploadModal';
+import { PAGES } from '../../globals';
 
 const mapStateToProps = (state: RootState) => ({
   title: selectTitle(state.global),
@@ -49,7 +50,7 @@ const Header: FunctionComponent<Props> = (props: Props) => {
             <IonMenuButton />
           </IonButtons>
           <IonTitle>{title}</IonTitle>
-          {title === 'Data Overview' && (
+          {title === PAGES.OVERVIEW.title && (
             <IonButtons slot="end">
               <IonButton
                 fill="clear"
