@@ -19,7 +19,7 @@ const headerSlice = createSlice({
           state.title = 'Details';
           break;
         case Routes.OVERVIEW:
-          state.title = 'Overview';
+          state.title = 'Data Overview';
           break;
         case Routes.SETTINGS:
           state.title = 'Settings';
