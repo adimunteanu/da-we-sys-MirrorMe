@@ -10,23 +10,25 @@ import {
 } from '@ionic/react';
 import { add } from 'ionicons/icons';
 import { useLocation } from 'react-router-dom';
-import React, { FunctionComponent, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Menu from '../Menu/Menu';
-import { changeTitle } from './HeaderSlice';
-import { GlobalState } from '../../types';
+import { selectTitle, updateCurrentPage } from '../../store/globalSlice';
+import { RootState } from '../../store';
 import DataUploadModal from '../../pages/OverviewPage/DataUploadModal/DataUploadModal';
+import { PAGES } from '../../globals';
 
-const Header: FunctionComponent = () => {
+const Header = () => {
   const location = useLocation();
+  const title = useSelector((state: RootState) => selectTitle(state.global));
   const dispatch = useDispatch();
-  const title = useSelector((state: GlobalState) => state.header.title);
   const [present, dismiss] = useIonModal(
     <DataUploadModal onDismiss={() => dismiss()} />
   );
+
   useEffect(() => {
-    dispatch(changeTitle(location.pathname));
-  }, [dispatch, location]);
+    dispatch(updateCurrentPage(location.pathname));
+  }, [updateCurrentPage, location]);
 
   return (
     <div>
@@ -37,7 +39,7 @@ const Header: FunctionComponent = () => {
             <IonMenuButton />
           </IonButtons>
           <IonTitle>{title}</IonTitle>
-          {title === 'Data Overview' && (
+          {title === PAGES.OVERVIEW.title && (
             <IonButtons slot="end">
               <IonButton
                 fill="clear"

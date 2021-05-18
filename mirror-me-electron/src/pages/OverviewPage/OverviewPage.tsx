@@ -9,13 +9,13 @@ import {
 } from '@ionic/react';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import Routes from '../../routes';
+import { PAGES } from '../../globals';
 
 const OverviewPage = () => {
   const history = useHistory();
 
-  const routeToLogin = () => {
-    history.push(Routes.REQUEST);
+  const routeToRequest = () => {
+    history.push(PAGES.REQUEST.route);
   };
 
   return (
@@ -31,7 +31,7 @@ const OverviewPage = () => {
             </p>
             <IonButton
               fill="clear"
-              onClick={routeToLogin}
+              onClick={routeToRequest}
               className="Request-Button"
             >
               <IonLabel>Take me to the Request Data Page!</IonLabel>

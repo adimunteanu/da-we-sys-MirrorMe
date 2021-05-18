@@ -13,7 +13,7 @@ import {
 import { useHistory } from 'react-router';
 import SlidingError from '../../../components/SlidingError/SlidingError';
 import './RegisterPage.scss';
-import Routes from '../../../routes';
+import { PAGES } from '../../../globals';
 
 const RegisterPage = () => {
   const history = useHistory();
@@ -29,12 +29,12 @@ const RegisterPage = () => {
       setErrorOccured(true);
     } else {
       setErrorOccured(false);
-      history.push(Routes.LOGIN);
+      history.push(PAGES.LOGIN.route);
     }
   };
 
   const routeToLogin = () => {
-    history.push(Routes.LOGIN);
+    history.push(PAGES.LOGIN.route);
   };
 
   return (

@@ -10,28 +10,32 @@ import {
   IonList,
 } from '@ionic/react';
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import SlidingError from '../../../components/SlidingError/SlidingError';
-import Routes from '../../../routes';
+import { PAGES } from '../../../globals';
 import './LoginPage.scss';
+import { login } from '../userControllerSlice';
 
 const LoginPage = () => {
   const history = useHistory();
   const [errorOccured, setErrorOccured] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
 
-  const login = () => {
+  const tryLogin = () => {
     if (email !== '' || password !== '') {
       setErrorOccured(true);
     } else {
       setErrorOccured(false);
-      history.push(Routes.OVERVIEW);
+      history.push(PAGES.OVERVIEW.route);
+      dispatch(login());
     }
   };
 
   const routeToSignup = () => {
-    history.push(Routes.SIGNUP);
+    history.push(PAGES.SIGNUP.route);
   };
 
   return (
@@ -62,7 +66,7 @@ const LoginPage = () => {
             </IonItem>
             <IonList className="LoginPage__Item--centered" lines="none">
               <IonItem className="LoginPage__Item" lines="none">
-                <IonButton color="primary" size="default" onClick={login}>
+                <IonButton color="primary" size="default" onClick={tryLogin}>
                   Submit
                 </IonButton>
               </IonItem>

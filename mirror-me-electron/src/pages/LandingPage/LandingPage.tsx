@@ -15,12 +15,12 @@ import { Link } from 'react-router-dom';
 import MirrorImg from '../../images/Mirror.jpg';
 import AppsImg from '../../images/Apps.png';
 import ScoreImg from '../../images/Score.jpg';
-import Routes from '../../routes';
+import { PAGES } from '../../globals';
 
 const LandingPage: React.FC = () => {
   const history = useHistory();
   const redirectToSignUp = () => {
-    history.push(Routes.SIGNUP);
+    history.push(PAGES.SIGNUP.route);
   };
 
   return (
@@ -77,7 +77,7 @@ const LandingPage: React.FC = () => {
         <IonRow>
           <IonCol>
             <p>
-              Already a member? Log in <Link to={Routes.LOGIN}>here</Link>
+              Already a member? Log in <Link to={PAGES.LOGIN.route}>here</Link>
             </p>
           </IonCol>
         </IonRow>
