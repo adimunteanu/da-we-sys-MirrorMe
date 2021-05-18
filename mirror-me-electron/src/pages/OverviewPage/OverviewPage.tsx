@@ -14,7 +14,7 @@ import { PAGES } from '../../globals';
 const OverviewPage = () => {
   const history = useHistory();
 
-  const routeToLogin = () => {
+  const routeToRequest = () => {
     history.push(PAGES.REQUEST.route);
   };
 
@@ -31,7 +31,7 @@ const OverviewPage = () => {
             </p>
             <IonButton
               fill="clear"
-              onClick={routeToLogin}
+              onClick={routeToRequest}
               className="Request-Button"
             >
               <IonLabel>Take me to the Request Data Page!</IonLabel>
