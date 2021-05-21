@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   IonButton,
   IonCard,
@@ -11,9 +11,12 @@ import {
   IonList,
 } from '@ionic/react';
 import { useHistory } from 'react-router';
+import { useDispatch, useSelector } from 'react-redux';
 import SlidingError from '../../../components/SlidingError/SlidingError';
 import './RegisterPage.scss';
 import { PAGES } from '../../../globals';
+import { RootState } from '../../../store';
+import { signupThunk } from '../userControllerSlice';
 
 const RegisterPage = () => {
   const history = useHistory();
@@ -21,15 +24,34 @@ const RegisterPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const dispatch = useDispatch();
+
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.userControl.isAuthenticated
+  );
+
+  const trySignUpAndLogin = () => {
+    dispatch(
+      signupThunk({
+        email,
+        password,
+      })
+    );
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) history.push(PAGES.OVERVIEW.route);
+  }, [isAuthenticated]);
 
   const register = () => {
     if (email === '' || password === '' || confirmPassword === '') {
+      // email gets checked on the server if it's an email that's why you're still able to produce bad requests
       setErrorOccured(true);
     } else if (password !== confirmPassword) {
       setErrorOccured(true);
     } else {
       setErrorOccured(false);
-      history.push(PAGES.LOGIN.route);
+      trySignUpAndLogin();
     }
   };
 
