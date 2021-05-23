@@ -1,3 +1,4 @@
+import JSZip from 'jszip';
 import React, { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
@@ -6,7 +7,22 @@ const DataDropzone = () => {
 
   // TODO: process actual zipped files
   const handleData = (acceptedFiles: Array<File>) => {
-    setFileNames(acceptedFiles.map((file) => file.name));
+    const zip = new JSZip();
+    zip
+      .loadAsync(acceptedFiles[0])
+      .then(
+        (zipped) => {
+          zipped.forEach(async (_, file) => {
+            const currentFile = await file.async('text');
+            console.log(currentFile);
+          });
+          return null;
+        },
+        () => {
+          throw new Error('Invalid format');
+        }
+      )
+      .catch((err) => console.log(err));
   };
 
   const {
@@ -17,7 +33,7 @@ const DataDropzone = () => {
     isDragReject,
   } = useDropzone({
     // TODO: change accepted types to actual types
-    accept: 'image/*',
+    accept: 'application/zip',
     onDrop: (acceptedFiles) => handleData(acceptedFiles),
   });
 
