@@ -8,7 +8,6 @@ interface Props {
 }
 
 const DataDropzone = ({ selectedCompany }: Props) => {
-  // TODO: process actual zipped files
   const handleData = (acceptedFiles: Array<File>) => {
     switch (selectedCompany) {
       case COMPANIES.REDDIT.name:

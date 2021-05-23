@@ -61,7 +61,6 @@ const DataUploadModal: FunctionComponent<Props> = (props: Props) => {
                 value={selectedCompany}
               >
                 {Object.values(COMPANIES).map((company) => {
-                  console.log(company.name);
                   return (
                     <IonSelectOption value={company.name} key={company.name}>
                       {company.name}

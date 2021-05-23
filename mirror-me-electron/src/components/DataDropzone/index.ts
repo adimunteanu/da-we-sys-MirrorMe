@@ -7,11 +7,9 @@ export const processReddit = (acceptedFiles: Array<File>) => {
     .loadAsync(acceptedFiles[0])
     .then(
       (zipped) => {
-        zipped.forEach(async (relativePath, file) => {
+        zipped.forEach(async (_, file) => {
           const currentFile = await file.async('text');
           const json = readString(currentFile, { header: true });
-          console.log(relativePath);
-          console.log(json.data);
         });
         return null;
       },
