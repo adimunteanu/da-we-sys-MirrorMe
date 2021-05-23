@@ -11,4 +11,9 @@ export const PAGES = {
   SETTINGS: { route: '/home/settings', title: 'Settings' },
 };
 
+export const COMPANIES = {
+  REDDIT: { name: 'Reddit' },
+  INSTAGRAM: { name: 'Instagram' },
+};
+
 export default APP_NAME;

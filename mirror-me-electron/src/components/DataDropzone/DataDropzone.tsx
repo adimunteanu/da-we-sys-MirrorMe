@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDropzone } from 'react-dropzone';
+import { processReddit } from './index';
+import { COMPANIES } from '../../globals';
 
-const DataDropzone = () => {
-  const [fileNames, setFileNames] = useState<Array<string>>([]);
+interface Props {
+  selectedCompany: string;
+}
 
-  // TODO: process actual zipped files
+const DataDropzone = ({ selectedCompany }: Props) => {
   const handleData = (acceptedFiles: Array<File>) => {
-    setFileNames(acceptedFiles.map((file) => file.name));
+    switch (selectedCompany) {
+      case COMPANIES.REDDIT.name:
+        processReddit(acceptedFiles);
+        break;
+      default:
+        break;
+    }
   };
 
   const {
@@ -17,7 +26,7 @@ const DataDropzone = () => {
     isDragReject,
   } = useDropzone({
     // TODO: change accepted types to actual types
-    accept: 'image/*',
+    accept: 'application/zip',
     onDrop: (acceptedFiles) => handleData(acceptedFiles),
   });
 
@@ -31,11 +40,7 @@ const DataDropzone = () => {
         })}
       >
         <input {...getInputProps()} />
-        <p>
-          {fileNames.length > 0
-            ? fileNames.join(', ')
-            : "Drag 'n' drop some files here, or click to select files"}
-        </p>
+        <p>Drag &apos;n&apos; drop some files here, or click to select files</p>
       </div>
     </div>
   );

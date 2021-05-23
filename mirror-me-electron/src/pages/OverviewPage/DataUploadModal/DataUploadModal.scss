@@ -5,6 +5,10 @@ div {
       box-shadow: none;
     }
 
+    &__Ion-Item {
+      --padding-start: 0px;
+    }
+
     &__Header {
       padding-top: 0px;
 
