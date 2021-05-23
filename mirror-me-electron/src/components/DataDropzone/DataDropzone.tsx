@@ -1,28 +1,22 @@
-import JSZip from 'jszip';
-import React, { useState } from 'react';
+import React from 'react';
 import { useDropzone } from 'react-dropzone';
+import { processReddit } from './index';
+import { COMPANIES } from '../../globals';
 
-const DataDropzone = () => {
-  const [fileNames, setFileNames] = useState<Array<string>>([]);
+interface Props {
+  selectedCompany: string;
+}
 
+const DataDropzone = ({ selectedCompany }: Props) => {
   // TODO: process actual zipped files
   const handleData = (acceptedFiles: Array<File>) => {
-    const zip = new JSZip();
-    zip
-      .loadAsync(acceptedFiles[0])
-      .then(
-        (zipped) => {
-          zipped.forEach(async (_, file) => {
-            const currentFile = await file.async('text');
-            console.log(currentFile);
-          });
-          return null;
-        },
-        () => {
-          throw new Error('Invalid format');
-        }
-      )
-      .catch((err) => console.log(err));
+    switch (selectedCompany) {
+      case COMPANIES.REDDIT.name:
+        processReddit(acceptedFiles);
+        break;
+      default:
+        break;
+    }
   };
 
   const {
@@ -47,11 +41,7 @@ const DataDropzone = () => {
         })}
       >
         <input {...getInputProps()} />
-        <p>
-          {fileNames.length > 0
-            ? fileNames.join(', ')
-            : "Drag 'n' drop some files here, or click to select files"}
-        </p>
+        <p>Drag &apos;n&apos; drop some files here, or click to select files</p>
       </div>
     </div>
   );
