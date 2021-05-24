@@ -12,8 +12,10 @@ export const PAGES = {
 };
 
 export const COMPANIES = {
-  REDDIT: { name: 'Reddit' },
-  INSTAGRAM: { name: 'Instagram' },
+  REDDIT: { name: 'Reddit', save_file: 'reddit_data.json' },
+  INSTAGRAM: { name: 'Instagram', save_file: 'instagram_data.json' },
 };
+
+export const DATA_DIR = 'data/';
 
 export default APP_NAME;

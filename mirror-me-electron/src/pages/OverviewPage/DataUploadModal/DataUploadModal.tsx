@@ -16,6 +16,7 @@ import {
 } from '@ionic/react';
 import React, { useState } from 'react';
 import { FunctionComponent } from 'react-router/node_modules/@types/react';
+import { saveTextToFile } from '../../../components/DataDropzone';
 import DataDropzone from '../../../components/DataDropzone/DataDropzone';
 import { COMPANIES } from '../../../globals';
 import './DataUploadModal.scss';
@@ -26,10 +27,19 @@ interface Props {
 
 const DataUploadModal: FunctionComponent<Props> = (props: Props) => {
   const [selectedCompany, setSelectedCompany] = useState<string>('Reddit');
+  const [stringifiedData, setStringifiedData] = useState<string>('');
+  const [canUpload, setCanUpload] = useState<boolean>(false);
   const { onDismiss } = props;
 
   const handleUpload = () => {
-    console.log('files uploaded');
+    const fileName = Object.values(COMPANIES).find(
+      (company) => company.name === selectedCompany
+    )?.save_file;
+    if (fileName) {
+      saveTextToFile(fileName, stringifiedData);
+    }
+
+    onDismiss();
   };
 
   return (
@@ -71,9 +81,19 @@ const DataUploadModal: FunctionComponent<Props> = (props: Props) => {
             </IonItem>
             <IonText>Please drag and drop your data below:</IonText>
           </IonList>
-          <DataDropzone selectedCompany={selectedCompany} />
+          <DataDropzone
+            selectedCompany={selectedCompany}
+            setCanUpload={(flag: boolean) => {
+              setCanUpload(flag);
+            }}
+            setStringifiedData={(data: string) => {
+              setStringifiedData(data);
+            }}
+          />
           <IonList className="DataUploadModal__Item">
-            <IonButton onClick={() => handleUpload()}>Upload</IonButton>
+            <IonButton onClick={() => handleUpload()} disabled={!canUpload}>
+              Upload
+            </IonButton>
           </IonList>
         </IonCardContent>
       </IonCard>
