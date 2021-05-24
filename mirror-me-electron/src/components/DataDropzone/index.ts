@@ -1,5 +1,7 @@
 import JSZip from 'jszip';
+import jetpack from 'fs-jetpack';
 import { readString } from 'react-papaparse';
+import { DATA_DIR } from '../../globals';
 import { InstagramRelevantData, RedditRelevantData } from '../../types';
 
 const relevantFields = {
@@ -13,6 +15,11 @@ const relevantFields = {
     SUBREDDITS: 'subscribed_subreddits.csv',
     TRANSACITONS: 'reddit_gold_information.csv',
   },
+};
+
+export const saveTextToFile = (name: string, content: string) => {
+  jetpack.dir(DATA_DIR);
+  jetpack.file(DATA_DIR + name, { content });
 };
 
 export const processReddit = async (
