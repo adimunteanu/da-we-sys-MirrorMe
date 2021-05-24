@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../../store';
 
 export type DataState = {
   stringifiedData: string;
@@ -25,10 +26,10 @@ const dataSlice = createSlice({
 
 const { actions, reducer } = dataSlice;
 
-const selectStringifiedData = (state: DataState): string =>
-  state.stringifiedData;
+const selectStringifiedData = (state: RootState): string =>
+  state.data.stringifiedData;
 
-const selectCanUpload = (state: DataState): boolean => state.canUpload;
+const selectCanUpload = (state: RootState): boolean => state.data.canUpload;
 
 export const { updateStringifiedData, updateCanUpload } = actions;
 

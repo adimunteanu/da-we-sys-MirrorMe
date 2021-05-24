@@ -15,10 +15,12 @@ import {
   IonToolbar,
 } from '@ionic/react';
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { FunctionComponent } from 'react-router/node_modules/@types/react';
 import { saveTextToFile } from '../../../components/DataDropzone';
 import DataDropzone from '../../../components/DataDropzone/DataDropzone';
 import { COMPANIES } from '../../../globals';
+import { selectCanUpload, selectStringifiedData } from '../dataSlice';
 import './DataUploadModal.scss';
 
 interface Props {
@@ -27,8 +29,8 @@ interface Props {
 
 const DataUploadModal: FunctionComponent<Props> = (props: Props) => {
   const [selectedCompany, setSelectedCompany] = useState<string>('Reddit');
-  const [stringifiedData, setStringifiedData] = useState<string>('');
-  const [canUpload, setCanUpload] = useState<boolean>(false);
+  const canUpload = useSelector(selectCanUpload);
+  const stringifiedData = useSelector(selectStringifiedData);
   const { onDismiss } = props;
 
   const handleUpload = () => {
@@ -81,15 +83,7 @@ const DataUploadModal: FunctionComponent<Props> = (props: Props) => {
             </IonItem>
             <IonText>Please drag and drop your data below:</IonText>
           </IonList>
-          <DataDropzone
-            selectedCompany={selectedCompany}
-            setCanUpload={(flag: boolean) => {
-              setCanUpload(flag);
-            }}
-            setStringifiedData={(data: string) => {
-              setStringifiedData(data);
-            }}
-          />
+          <DataDropzone selectedCompany={selectedCompany} />
           <IonList className="DataUploadModal__Item">
             <IonButton onClick={() => handleUpload()} disabled={!canUpload}>
               Upload
