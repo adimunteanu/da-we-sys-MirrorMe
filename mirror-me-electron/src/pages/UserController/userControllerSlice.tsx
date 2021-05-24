@@ -46,7 +46,6 @@ const userControllerSlice = createSlice({
     builder.addCase(loginThunk.fulfilled, (state, action) => {
       state.isAuthenticated = true;
       state.authToken = JSON.parse(JSON.stringify(action.payload.data.token));
-      console.log(action.payload.data.token); // to check that the AuthToken is there
     });
     builder.addCase(loginThunk.rejected, (state) => {
       state.isAuthenticated = false;
@@ -55,7 +54,6 @@ const userControllerSlice = createSlice({
     builder.addCase(signupThunk.fulfilled, (state, action) => {
       state.isAuthenticated = true;
       state.authToken = JSON.parse(JSON.stringify(action.payload.data.token));
-      console.log(action.payload.data.token); // to check that the AuthToken is there
     });
     builder.addCase(signupThunk.rejected, (state) => {
       state.isAuthenticated = false;
