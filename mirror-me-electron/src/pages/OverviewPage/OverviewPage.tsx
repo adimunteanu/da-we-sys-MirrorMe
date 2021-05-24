@@ -1,50 +1,35 @@
-import {
-  IonButton,
-  IonCol,
-  IonContent,
-  IonGrid,
-  IonLabel,
-  IonRow,
-  IonText,
-} from '@ionic/react';
-import React from 'react';
-import { useHistory } from 'react-router-dom';
-import { PAGES } from '../../globals';
+import { IonCol, IonContent, IonGrid, IonRow } from '@ionic/react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadFiles, selectData, selectHasData } from './dataSlice';
+import EmptyView from './EmptyView';
 
 const OverviewPage = () => {
-  const history = useHistory();
+  const dispatch = useDispatch();
+  const hasData = useSelector(selectHasData);
+  const relevantData = useSelector(selectData);
 
-  const routeToRequest = () => {
-    history.push(PAGES.REQUEST.route);
-  };
+  useEffect(() => {
+    dispatch(loadFiles());
+  }, []);
 
   return (
     <IonContent className="OverviewPage">
-      <IonGrid>
-        <IonRow>
-          <IonCol>
-            <p>
-              <IonText>
-                It seems kinda empty around here, would you like to request your
-                data?
-              </IonText>
-            </p>
-            <IonButton
-              fill="clear"
-              onClick={routeToRequest}
-              className="Request-Button"
-            >
-              <IonLabel>Take me to the Request Data Page!</IonLabel>
-            </IonButton>
-            <p>
-              <IonText>
-                Already have your data? Upload it by pressing on the + icon to
-                the top right!
-              </IonText>
-            </p>
-          </IonCol>
-        </IonRow>
-      </IonGrid>
+      {!hasData ? (
+        <EmptyView />
+      ) : (
+        <IonGrid>
+          <IonRow>
+            <IonCol>
+              {relevantData.map((companyObject) => {
+                return (
+                  <p key={companyObject.company}>{companyObject.company}</p>
+                );
+              })}
+            </IonCol>
+          </IonRow>
+        </IonGrid>
+      )}
     </IonContent>
   );
 };

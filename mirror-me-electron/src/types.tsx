@@ -32,3 +32,8 @@ export type InstagramRelevantData = {
 };
 
 export type CompanyRelevantData = RedditRelevantData | InstagramRelevantData;
+
+export type CompanyRelevanDataObject = {
+  company: string;
+  data: CompanyRelevantData;
+};
