@@ -16,6 +16,7 @@ import SlidingError from '../../../components/SlidingError/SlidingError';
 import './RegisterPage.scss';
 import { PAGES } from '../../../globals';
 import { selectIsAuthenticated, signupThunk } from '../userControllerSlice';
+import { isEmail, isPassword } from '..';
 
 const RegisterPage = () => {
   const history = useHistory();
@@ -40,8 +41,20 @@ const RegisterPage = () => {
     if (isAuthenticated) history.push(PAGES.OVERVIEW.route);
   }, [isAuthenticated]);
 
+  useEffect(() => {
+    if (errorOccured) {
+      const interval = setInterval(() => {
+        setErrorOccured(false);
+      }, 2000);
+
+      return () => clearInterval(interval);
+    }
+
+    return () => {};
+  }, [errorOccured]);
+
   const register = () => {
-    if (email === '' || password === '' || confirmPassword === '') {
+    if (!isEmail(email) && !isPassword(password)) {
       // email gets checked on the server if it's an email that's why you're still able to produce bad requests
       setErrorOccured(true);
     } else if (password !== confirmPassword) {
