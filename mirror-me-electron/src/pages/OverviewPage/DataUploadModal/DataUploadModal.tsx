@@ -15,12 +15,16 @@ import {
   IonToolbar,
 } from '@ionic/react';
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FunctionComponent } from 'react-router/node_modules/@types/react';
 import { saveTextToFile } from '../../../components/DataDropzone';
 import DataDropzone from '../../../components/DataDropzone/DataDropzone';
 import { COMPANIES } from '../../../globals';
-import { selectCanUpload, selectStringifiedData } from '../dataSlice';
+import {
+  loadFiles,
+  selectCanUpload,
+  selectStringifiedData,
+} from '../dataSlice';
 import './DataUploadModal.scss';
 
 interface Props {
@@ -28,6 +32,7 @@ interface Props {
 }
 
 const DataUploadModal: FunctionComponent<Props> = (props: Props) => {
+  const dispatch = useDispatch();
   const [selectedCompany, setSelectedCompany] = useState<string>('Reddit');
   const canUpload = useSelector(selectCanUpload);
   const stringifiedData = useSelector(selectStringifiedData);
@@ -40,7 +45,7 @@ const DataUploadModal: FunctionComponent<Props> = (props: Props) => {
     if (fileName) {
       saveTextToFile(fileName, stringifiedData);
     }
-
+    dispatch(loadFiles());
     onDismiss();
   };
 
