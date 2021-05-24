@@ -15,8 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import SlidingError from '../../../components/SlidingError/SlidingError';
 import './RegisterPage.scss';
 import { PAGES } from '../../../globals';
-import { RootState } from '../../../store';
-import { signupThunk } from '../userControllerSlice';
+import { selectIsAuthenticated, signupThunk } from '../userControllerSlice';
 
 const RegisterPage = () => {
   const history = useHistory();
@@ -26,9 +25,7 @@ const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const dispatch = useDispatch();
 
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.userControl.isAuthenticated
-  );
+  const isAuthenticated = useSelector(selectIsAuthenticated);
 
   const trySignUpAndLogin = () => {
     dispatch(

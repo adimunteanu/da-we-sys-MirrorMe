@@ -14,8 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { PAGES } from '../../../globals';
 import './LoginPage.scss';
-import { loginThunk } from '../userControllerSlice';
-import { RootState } from '../../../store';
+import { loginThunk, selectIsAuthenticated } from '../userControllerSlice';
 
 const LoginPage = () => {
   const history = useHistory();
@@ -23,9 +22,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
 
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.userControl.isAuthenticated
-  );
+  const isAuthenticated = useSelector(selectIsAuthenticated);
 
   const tryLogin = () => {
     dispatch(

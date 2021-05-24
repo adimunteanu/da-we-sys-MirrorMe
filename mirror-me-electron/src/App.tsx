@@ -14,12 +14,10 @@ import {
   ScoreboardPage,
   SettingsPage,
 } from './pages';
-import { RootState } from './store';
+import { selectIsAuthenticated } from './pages/UserController/userControllerSlice';
 
 const App = () => {
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.userControl.isAuthenticated
-  );
+  const isAuthenticated = useSelector(selectIsAuthenticated);
 
   return (
     <IonApp>

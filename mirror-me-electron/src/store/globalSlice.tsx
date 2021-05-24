@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '.';
 import { PAGES } from '../globals';
 import { Page } from '../types';
 
@@ -27,7 +28,8 @@ const globalSlice = createSlice({
 
 const { actions, reducer } = globalSlice;
 
-const selectTitle = (state: GlobalState): string => state.currentPage.title;
+const selectTitle = (state: RootState): string =>
+  state.global.currentPage.title;
 
 export const { updateCurrentPage } = actions;
 

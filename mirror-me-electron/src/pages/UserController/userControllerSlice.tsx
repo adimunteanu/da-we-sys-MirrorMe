@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { RootState } from '../../store';
 
 export type UserControllerState = {
   isAuthenticated: boolean;
@@ -65,8 +66,8 @@ const userControllerSlice = createSlice({
 
 const { actions, reducer } = userControllerSlice;
 
-const selectIsAuthenticated = (state: UserControllerState): boolean =>
-  state.isAuthenticated;
+const selectIsAuthenticated = (state: RootState): boolean =>
+  state.userControl.isAuthenticated;
 
 export const { logout } = actions;
 

@@ -14,7 +14,7 @@ import React, { useEffect } from 'react';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import Menu from '../Menu/Menu';
 import { selectTitle, updateCurrentPage } from '../../store/globalSlice';
-import store, { RootState } from '../../store';
+import store from '../../store';
 import DataUploadModal from '../../pages/OverviewPage/DataUploadModal/DataUploadModal';
 import { PAGES } from '../../globals';
 import {
@@ -24,7 +24,7 @@ import {
 
 const Header = () => {
   const location = useLocation();
-  const title = useSelector((state: RootState) => selectTitle(state.global));
+  const title = useSelector(selectTitle);
   const dispatch = useDispatch();
 
   const dismissDataUploadModal = () => {
