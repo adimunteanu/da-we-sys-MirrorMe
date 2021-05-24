@@ -1,23 +1,23 @@
 import React from 'react';
 import { useDropzone } from 'react-dropzone';
+import { useDispatch } from 'react-redux';
 import { processInstagram, processReddit } from './index';
 import { COMPANIES } from '../../globals';
 import { CompanyRelevantData } from '../../types';
+import {
+  updateCanUpload,
+  updateStringifiedData,
+} from '../../pages/OverviewPage/dataSlice';
 
 interface Props {
   selectedCompany: string;
-  setCanUpload: (flag: boolean) => void;
-  setStringifiedData: (data: string) => void;
 }
 
-const DataDropzone = ({
-  selectedCompany,
-  setCanUpload,
-  setStringifiedData,
-}: Props) => {
+const DataDropzone = ({ selectedCompany }: Props) => {
+  const dispatch = useDispatch();
   const handleData = async (acceptedFiles: Array<File>) => {
     let relevantData: Promise<CompanyRelevantData>;
-    setCanUpload(false);
+    dispatch(updateCanUpload(false));
 
     switch (selectedCompany) {
       case COMPANIES.REDDIT.name:
@@ -32,9 +32,8 @@ const DataDropzone = ({
     }
 
     await relevantData.then((data) => {
-      console.log(JSON.stringify(data));
-      setStringifiedData(JSON.stringify(data));
-      setCanUpload(true);
+      dispatch(updateStringifiedData(JSON.stringify(data)));
+      dispatch(updateCanUpload(true));
       return JSON.stringify(data);
     });
   };
