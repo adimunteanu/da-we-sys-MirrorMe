@@ -9,30 +9,36 @@ import {
   IonLabel,
   IonList,
 } from '@ionic/react';
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
-import SlidingError from '../../../components/SlidingError/SlidingError';
 import { PAGES } from '../../../globals';
 import './LoginPage.scss';
-import { login } from '../userControllerSlice';
+import { loginThunk } from '../userControllerSlice';
+import { RootState } from '../../../store';
 
 const LoginPage = () => {
   const history = useHistory();
-  const [errorOccured, setErrorOccured] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
 
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.userControl.isAuthenticated
+  );
+
   const tryLogin = () => {
-    if (email !== '' || password !== '') {
-      setErrorOccured(true);
-    } else {
-      setErrorOccured(false);
-      history.push(PAGES.OVERVIEW.route);
-      dispatch(login());
-    }
+    dispatch(
+      loginThunk({
+        email,
+        password,
+      })
+    );
   };
+
+  useEffect(() => {
+    if (isAuthenticated) history.push(PAGES.OVERVIEW.route);
+  }, [isAuthenticated]);
 
   const routeToSignup = () => {
     history.push(PAGES.SIGNUP.route);
@@ -80,10 +86,6 @@ const LoginPage = () => {
                 </IonButton>
               </IonItem>
             </IonList>
-            <SlidingError
-              hidden={!errorOccured}
-              text="Invalid email or password!"
-            />
           </IonList>
         </IonCardContent>
       </IonCard>
