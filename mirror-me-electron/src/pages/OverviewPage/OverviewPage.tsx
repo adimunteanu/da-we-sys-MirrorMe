@@ -21,12 +21,13 @@ const OverviewPage = () => {
       ) : (
         <IonGrid>
           <IonRow>
-            <IonCol>
+            <IonCol offset="3" size="6">
               {relevantData.map((companyObject) => {
                 return (
                   <SummarizedCard
                     key={companyObject.company}
                     title={companyObject.company}
+                    logo={companyObject.logo}
                   >
                     {companyObject.company}
                   </SummarizedCard>

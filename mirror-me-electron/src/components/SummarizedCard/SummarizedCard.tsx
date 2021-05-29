@@ -10,11 +10,13 @@ import './SummarizedCard.scss';
 interface Props {
   title: string;
   children: React.ReactNode;
+  logo: any;
 }
 
-const SummarizedCard = ({ title, children }: Props) => {
+const SummarizedCard = ({ title, children, logo }: Props) => {
   return (
-    <IonCard>
+    <IonCard className="SummarizedCard">
+      <img src={logo} alt={title} />
       <IonCardHeader>
         <IonCardTitle>{title}</IonCardTitle>
       </IonCardHeader>

@@ -23,7 +23,11 @@ const loadFiles = createAsyncThunk('data/loadFiles', async () => {
       const fileContent = jetpack.read(DATA_DIR + company.save_file, 'utf8');
       if (fileContent) {
         const currentJson = JSON.parse(fileContent);
-        dataArray.push({ company: company.name, data: currentJson });
+        dataArray.push({
+          company: company.name,
+          logo: company.logo,
+          data: currentJson,
+        });
       }
     }
   });

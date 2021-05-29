@@ -1,3 +1,6 @@
+import REDDIT_LOGO from './images/Reddit.jpg';
+import INSTAGRAM_LOGO from './images/Instagram.png';
+
 const APP_NAME = 'MirrorMe';
 
 export const PAGES = {
@@ -12,8 +15,16 @@ export const PAGES = {
 };
 
 export const COMPANIES = {
-  REDDIT: { name: 'Reddit', save_file: 'reddit_data.json' },
-  INSTAGRAM: { name: 'Instagram', save_file: 'instagram_data.json' },
+  REDDIT: {
+    name: 'Reddit',
+    logo: REDDIT_LOGO,
+    save_file: 'reddit_data.json',
+  },
+  INSTAGRAM: {
+    name: 'Instagram',
+    logo: INSTAGRAM_LOGO,
+    save_file: 'instagram_data.json',
+  },
 };
 
 export const DATA_DIR = 'data/';
