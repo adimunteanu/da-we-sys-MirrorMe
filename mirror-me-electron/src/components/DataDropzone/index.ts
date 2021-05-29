@@ -13,7 +13,6 @@ const relevantFields = {
     VOTES: 'post_votes.csv',
     MESSAGES: 'messages.csv',
     SUBREDDITS: 'subscribed_subreddits.csv',
-    TRANSACITONS: 'reddit_gold_information.csv',
   },
 };
 
@@ -22,20 +21,29 @@ export const saveTextToFile = (name: string, content: string) => {
   jetpack.file(DATA_DIR + name, { content });
 };
 
+const getValuesFromObject = (object: unknown, keys: string[]): any[] => {
+  const values: any[] = [];
+  Object.entries(object as any).forEach(([key, value]) => {
+    if (keys.includes(key)) {
+      values.push(value);
+    }
+  });
+  return values;
+};
+
 export const processReddit = async (
   acceptedFiles: Array<File>
 ): Promise<RedditRelevantData> => {
   const relevantJSON: RedditRelevantData = {
-    gender: [],
+    gender: '',
     ip_logs: [],
     contributions: {
-      comments: 0,
-      votes: 0,
-      posts: 0,
-      messages: 0,
+      comments: [],
+      votes: [],
+      posts: [],
+      messages: [],
     },
     subreddits: 0,
-    transactions: [],
   };
 
   const promises = { promises: [] as Promise<string>[], paths: [] as string[] };
@@ -62,29 +70,64 @@ export const processReddit = async (
     for (let i = 0; i < values.length; i += 1) {
       const jsonData = readString(values[i], { header: true }).data;
       switch (promises.paths[i]) {
-        case relevantFields.REDDIT.GENDER:
-          relevantJSON.gender = jsonData;
+        case relevantFields.REDDIT.GENDER: {
+          const values = getValuesFromObject(jsonData[0], ['account_gender']);
+          [relevantJSON.gender] = values;
           break;
-        case relevantFields.REDDIT.IP_LOGS:
-          relevantJSON.ip_logs = jsonData;
+        }
+        case relevantFields.REDDIT.IP_LOGS: {
+          jsonData.forEach((object) => {
+            const values = getValuesFromObject(object, ['date', 'ip']);
+            if (values[0] !== 'registration ip') {
+              relevantJSON.ip_logs.push({
+                date: values[0],
+                ip: values[1],
+              });
+            }
+          });
           break;
-        case relevantFields.REDDIT.COMMENTS:
-          relevantJSON.contributions.comments = jsonData.length;
+        }
+        case relevantFields.REDDIT.COMMENTS: {
+          jsonData.forEach((object) => {
+            const values = getValuesFromObject(object, ['date', 'subreddit']);
+            relevantJSON.contributions.comments.push({
+              date: values[0],
+              subreddit: values[1],
+            });
+          });
           break;
-        case relevantFields.REDDIT.VOTES:
-          relevantJSON.contributions.votes = jsonData.length;
+        }
+        case relevantFields.REDDIT.VOTES: {
+          jsonData.forEach((object) => {
+            const values = getValuesFromObject(object, ['direction']);
+            if (values[0] !== 'none') {
+              relevantJSON.contributions.votes.push(values[0] === 'up');
+            }
+          });
           break;
-        case relevantFields.REDDIT.POSTS:
-          relevantJSON.contributions.posts = jsonData.length;
+        }
+        case relevantFields.REDDIT.POSTS: {
+          jsonData.forEach((object) => {
+            const values = getValuesFromObject(object, ['date', 'subreddit']);
+            relevantJSON.contributions.posts.push({
+              date: values[0],
+              subreddit: values[1],
+            });
+          });
           break;
-        case relevantFields.REDDIT.MESSAGES:
-          relevantJSON.contributions.messages = jsonData.length;
+        }
+        case relevantFields.REDDIT.MESSAGES: {
+          jsonData.forEach((object) => {
+            const values = getValuesFromObject(object, ['date', 'from']);
+            relevantJSON.contributions.messages.push({
+              date: values[0],
+              from: values[1],
+            });
+          });
           break;
+        }
         case relevantFields.REDDIT.SUBREDDITS:
           relevantJSON.subreddits = jsonData.length;
-          break;
-        case relevantFields.REDDIT.TRANSACITONS:
-          relevantJSON.transactions = jsonData;
           break;
         default:
           break;
@@ -157,9 +200,6 @@ export const processInstagram = async (
           break;
         case relevantFields.REDDIT.SUBREDDITS:
           relevantJSON.subreddits = jsonData.length;
-          break;
-        case relevantFields.REDDIT.TRANSACITONS:
-          relevantJSON.transactions = jsonData;
           break;
         default:
           break;
