@@ -2,12 +2,12 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import jetpack from 'fs-jetpack';
 import { COMPANIES, DATA_DIR } from '../../globals';
 import { RootState } from '../../store';
-import { CompanyRelevanDataObject } from '../../types';
+import { CompanyRelevantDataObject } from '../../types';
 
 export type DataState = {
   stringifiedData: string;
   canUpload: boolean;
-  companyRelevantDataArray: CompanyRelevanDataObject[];
+  companyRelevantDataArray: CompanyRelevantDataObject[];
 };
 
 const initialState: DataState = {
@@ -17,13 +17,18 @@ const initialState: DataState = {
 };
 
 const loadFiles = createAsyncThunk('data/loadFiles', async () => {
-  const dataArray = [] as CompanyRelevanDataObject[];
+  const dataArray = [] as CompanyRelevantDataObject[];
   Object.values(COMPANIES).forEach((company) => {
     if (jetpack.exists(DATA_DIR + company.save_file) === 'file') {
       const fileContent = jetpack.read(DATA_DIR + company.save_file, 'utf8');
       if (fileContent) {
         const currentJson = JSON.parse(fileContent);
-        dataArray.push({ company: company.name, data: currentJson });
+        dataArray.push({
+          company: company.name,
+          logo: company.logo,
+          summarized_card: company.summarized_component,
+          data: currentJson,
+        });
       }
     }
   });
@@ -58,7 +63,7 @@ const selectCanUpload = (state: RootState): boolean => state.data.canUpload;
 const selectHasData = (state: RootState): boolean =>
   state.data.companyRelevantDataArray.length > 0;
 
-const selectData = (state: RootState): CompanyRelevanDataObject[] =>
+const selectData = (state: RootState): CompanyRelevantDataObject[] =>
   state.data.companyRelevantDataArray;
 
 export const { updateStringifiedData, updateCanUpload } = actions;

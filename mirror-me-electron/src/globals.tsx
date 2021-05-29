@@ -1,3 +1,8 @@
+import React from 'react';
+import REDDIT_LOGO from './images/Reddit.jpg';
+import INSTAGRAM_LOGO from './images/Instagram.png';
+import SummarizedRedditCard from './components/SummarizedCard/CompanyCards/SummarizedRedditCard';
+
 const APP_NAME = 'MirrorMe';
 
 export const PAGES = {
@@ -12,10 +17,29 @@ export const PAGES = {
 };
 
 export const COMPANIES = {
-  REDDIT: { name: 'Reddit', save_file: 'reddit_data.json' },
-  INSTAGRAM: { name: 'Instagram', save_file: 'instagram_data.json' },
+  REDDIT: {
+    name: 'Reddit',
+    logo: REDDIT_LOGO,
+    summarized_component: <SummarizedRedditCard />,
+    save_file: 'reddit_data.json',
+  },
+  INSTAGRAM: {
+    name: 'Instagram',
+    logo: INSTAGRAM_LOGO,
+    summarized_component: SummarizedRedditCard,
+    save_file: 'instagram_data.json',
+  },
 };
 
 export const DATA_DIR = 'data/';
+
+export const CHART_COLORS = [
+  'rgb(255, 99, 132)',
+  'rgb(54, 162, 235)',
+  'rgb(255, 205, 86)',
+  'rgb(51, 204, 51)',
+  'rgb(153, 102, 255)',
+  'rgb(102, 255, 255)',
+];
 
 export default APP_NAME;

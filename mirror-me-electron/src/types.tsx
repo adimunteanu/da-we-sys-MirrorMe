@@ -1,3 +1,5 @@
+import React from 'react';
+
 export type Route = string;
 
 export type Page = {
@@ -6,16 +8,27 @@ export type Page = {
 };
 
 export type RedditRelevantData = {
-  gender: any[];
-  ip_logs: any[];
+  gender: string;
+  ip_logs: {
+    date: Date;
+    ip: string;
+  }[];
   contributions: {
-    comments: number;
-    votes: number;
-    posts: number;
-    messages: number;
+    comments: {
+      subreddit: string;
+      date: Date;
+    }[];
+    votes: boolean[];
+    posts: {
+      subreddit: string;
+      date: Date;
+    }[];
+    messages: {
+      date: Date;
+      from: string;
+    }[];
   };
   subreddits: number;
-  transactions: any[];
 };
 
 export type InstagramRelevantData = {
@@ -33,7 +46,9 @@ export type InstagramRelevantData = {
 
 export type CompanyRelevantData = RedditRelevantData | InstagramRelevantData;
 
-export type CompanyRelevanDataObject = {
+export type CompanyRelevantDataObject = {
   company: string;
+  logo: string;
+  summarized_card: React.ReactNode;
   data: CompanyRelevantData;
 };
