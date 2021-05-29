@@ -33,4 +33,13 @@ export const COMPANIES = {
 
 export const DATA_DIR = 'data/';
 
+export const CHART_COLORS = [
+  'rgb(255, 99, 132)',
+  'rgb(54, 162, 235)',
+  'rgb(255, 205, 86)',
+  'rgb(51, 204, 51)',
+  'rgb(153, 102, 255)',
+  'rgb(102, 255, 255)',
+];
+
 export default APP_NAME;

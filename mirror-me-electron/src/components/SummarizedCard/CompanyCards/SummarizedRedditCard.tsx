@@ -2,6 +2,7 @@ import { IonCol, IonGrid, IonRow } from '@ionic/react';
 import React from 'react';
 import { Pie } from 'react-chartjs-2';
 import { useSelector } from 'react-redux';
+import { CHART_COLORS } from '../../../globals';
 import { selectData } from '../../../pages/OverviewPage/dataSlice';
 import { RedditRelevantData } from '../../../types';
 import './SummarizedRedditCard.scss';
@@ -19,12 +20,7 @@ const SummarizedRedditCard = () => {
         {
           label: 'Contributions',
           data: [posts.length, messages.length, votes.length, comments.length],
-          backgroundColor: [
-            'rgb(255, 99, 132)',
-            'rgb(54, 162, 235)',
-            'rgb(255, 205, 86)',
-            'rgb(42, 69, 37)',
-          ],
+          backgroundColor: CHART_COLORS,
           hoverOffset: 4,
         },
       ],
