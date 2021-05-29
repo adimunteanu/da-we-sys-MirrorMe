@@ -15,27 +15,46 @@ import { useHistory } from 'react-router';
 import { PAGES } from '../../../globals';
 import './LoginPage.scss';
 import { loginThunk, selectIsAuthenticated } from '../userControllerSlice';
+import { isEmail, isPassword } from '..';
+import SlidingError from '../../../components/SlidingError/SlidingError';
 
 const LoginPage = () => {
   const history = useHistory();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorOccured, setErrorOccured] = useState(false);
   const dispatch = useDispatch();
-
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
   const tryLogin = () => {
-    dispatch(
-      loginThunk({
-        email,
-        password,
-      })
-    );
+    if (isEmail(email) && isPassword(password)) {
+      setErrorOccured(false);
+      dispatch(
+        loginThunk({
+          email,
+          password,
+        })
+      );
+    } else {
+      setErrorOccured(true);
+    }
   };
 
   useEffect(() => {
     if (isAuthenticated) history.push(PAGES.OVERVIEW.route);
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (errorOccured) {
+      const interval = setInterval(() => {
+        setErrorOccured(false);
+      }, 2000);
+
+      return () => clearInterval(interval);
+    }
+
+    return () => {};
+  }, [errorOccured]);
 
   const routeToSignup = () => {
     history.push(PAGES.SIGNUP.route);
@@ -83,6 +102,10 @@ const LoginPage = () => {
                 </IonButton>
               </IonItem>
             </IonList>
+            <SlidingError
+              hidden={!errorOccured}
+              text="Please check the correctness of the fields!"
+            />
           </IonList>
         </IonCardContent>
       </IonCard>
