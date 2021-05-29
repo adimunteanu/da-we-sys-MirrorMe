@@ -1,6 +1,7 @@
 import { IonCol, IonContent, IonGrid, IonRow } from '@ionic/react';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import SummarizedCard from '../../components/SummarizedCard/SummarizedCard';
 import { loadFiles, selectData, selectHasData } from './dataSlice';
 import EmptyView from './EmptyView';
 
@@ -23,7 +24,12 @@ const OverviewPage = () => {
             <IonCol>
               {relevantData.map((companyObject) => {
                 return (
-                  <p key={companyObject.company}>{companyObject.company}</p>
+                  <SummarizedCard
+                    key={companyObject.company}
+                    title={companyObject.company}
+                  >
+                    {companyObject.company}
+                  </SummarizedCard>
                 );
               })}
             </IonCol>
