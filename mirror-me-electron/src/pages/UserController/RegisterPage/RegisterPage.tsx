@@ -54,7 +54,7 @@ const RegisterPage = () => {
   }, [errorOccured]);
 
   const register = () => {
-    if (!isEmail(email) && !isPassword(password)) {
+    if (!isEmail(email) || !isPassword(password)) {
       // email gets checked on the server if it's an email that's why you're still able to produce bad requests
       setErrorOccured(true);
     } else if (password !== confirmPassword) {
