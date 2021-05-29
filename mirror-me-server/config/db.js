@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 // Replace this with your MONGOURI.
 const MONGOURI =
-  "mongodb://main:main@127.0.0.1:27017/mirrorme";
+  "mongodb://main:main@18.222.101.203/mirrorme";
 
 const InitiateMongoServer = async () => {
   try {
