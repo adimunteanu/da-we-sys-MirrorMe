@@ -1,9 +1,36 @@
 import { IonCol, IonGrid, IonRow } from '@ionic/react';
 import React from 'react';
 import { Pie } from 'react-chartjs-2';
+import { useSelector } from 'react-redux';
+import { selectData } from '../../../pages/OverviewPage/dataSlice';
+import { RedditRelevantData } from '../../../types';
 import './SummarizedRedditCard.scss';
 
 const SummarizedRedditCard = () => {
+  const data = useSelector(selectData).find(
+    (object) => object.company === 'Reddit'
+  )!.data as RedditRelevantData;
+
+  const getPieChartData = () => {
+    const { posts, messages, votes, comments } = data.contributions;
+    return {
+      labels: ['Posts', 'Messages', 'Votes', 'Comments'],
+      datasets: [
+        {
+          label: 'Contributions',
+          data: [posts.length, messages.length, votes.length, comments.length],
+          backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)',
+            'rgb(42, 69, 37)',
+          ],
+          hoverOffset: 4,
+        },
+      ],
+    };
+  };
+
   return (
     <IonGrid>
       <IonRow>
@@ -11,23 +38,14 @@ const SummarizedRedditCard = () => {
           <Pie
             className="PieChart"
             type="pie"
-            data={{
-              labels: ['Red', 'Blue', 'Yellow'],
-              datasets: [
-                {
-                  label: 'My First Dataset',
-                  data: [300, 50, 100],
-                  backgroundColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(54, 162, 235)',
-                    'rgb(255, 205, 86)',
-                  ],
-                  hoverOffset: 4,
-                },
-              ],
-            }}
+            data={getPieChartData}
             options={{
               maintainAspectRatio: true,
+              title: {
+                display: true,
+                text: 'Overall Contributions',
+                fontSize: 20,
+              },
             }}
           />
         </IonCol>
