@@ -1,5 +1,7 @@
+import React from 'react';
 import REDDIT_LOGO from './images/Reddit.jpg';
 import INSTAGRAM_LOGO from './images/Instagram.png';
+import SummarizedRedditCard from './components/SummarizedCard/CompanyCards/SummarizedRedditCard';
 
 const APP_NAME = 'MirrorMe';
 
@@ -18,11 +20,13 @@ export const COMPANIES = {
   REDDIT: {
     name: 'Reddit',
     logo: REDDIT_LOGO,
+    summarized_component: <SummarizedRedditCard />,
     save_file: 'reddit_data.json',
   },
   INSTAGRAM: {
     name: 'Instagram',
     logo: INSTAGRAM_LOGO,
+    summarized_component: SummarizedRedditCard,
     save_file: 'instagram_data.json',
   },
 };

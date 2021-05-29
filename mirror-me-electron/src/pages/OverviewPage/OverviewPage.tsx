@@ -29,7 +29,7 @@ const OverviewPage = () => {
                     title={companyObject.company}
                     logo={companyObject.logo}
                   >
-                    {companyObject.company}
+                    {companyObject.summarized_card}
                   </SummarizedCard>
                 );
               })}
