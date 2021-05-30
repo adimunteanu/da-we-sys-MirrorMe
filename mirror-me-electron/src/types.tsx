@@ -18,7 +18,10 @@ export type RedditRelevantData = {
       subreddit: string;
       date: Date;
     }[];
-    votes: boolean[];
+    votes: {
+      subreddit: string;
+      direction: boolean;
+    }[];
     posts: {
       subreddit: string;
       date: Date;

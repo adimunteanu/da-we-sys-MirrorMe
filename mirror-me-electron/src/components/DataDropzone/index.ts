@@ -99,9 +99,21 @@ export const processReddit = async (
         }
         case relevantFields.REDDIT.VOTES: {
           jsonData.forEach((object) => {
-            const values = getValuesFromObject(object, ['direction']);
-            if (values[0] !== 'none') {
-              relevantJSON.contributions.votes.push(values[0] === 'up');
+            const values = getValuesFromObject(object, [
+              'permalink',
+              'direction',
+            ]);
+
+            if (values.length > 0 && values[1] !== 'none') {
+              const rIndex = values[0].indexOf('/r/') + 3;
+              const subreddit = values[0].substring(
+                rIndex,
+                values[0].indexOf('/', rIndex)
+              );
+              relevantJSON.contributions.votes.push({
+                subreddit,
+                direction: values[1] === 'up',
+              });
             }
           });
           break;

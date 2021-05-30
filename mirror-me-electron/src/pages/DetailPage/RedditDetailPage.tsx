@@ -17,7 +17,7 @@ const RedditDetailPage = () => {
     const { votes } = data.contributions;
     const newData = [0, 0];
     votes.forEach((vote) => {
-      if (vote) {
+      if (vote.direction) {
         newData[0] += 1;
       } else {
         newData[1] += 1;
@@ -30,6 +30,33 @@ const RedditDetailPage = () => {
         {
           label: '# of votes',
           data: newData,
+          backgroundColor: CHART_COLORS,
+          hoverOffset: 4,
+        },
+      ],
+    };
+  };
+
+  const getVotesDistribution = () => {
+    const { votes } = data.contributions;
+
+    const subredditMap = new Map();
+
+    votes.forEach((vote) => {
+      const hasSub = subredditMap.has(vote.subreddit);
+
+      subredditMap.set(
+        vote.subreddit,
+        !hasSub ? 1 : subredditMap.get(vote.subreddit) + 1
+      );
+    });
+
+    return {
+      labels: Array.from(subredditMap.keys()),
+      datasets: [
+        {
+          label: 'Subreddits',
+          data: Array.from(subredditMap.values()),
           backgroundColor: CHART_COLORS,
           hoverOffset: 4,
         },
@@ -72,16 +99,23 @@ const RedditDetailPage = () => {
         <IonRow>
           <IonCol size="4">
             <ChartCard
-              title="Votes Distribution"
+              title="Access Locations"
+              chartType={ChartType.PIE}
+              data={getLocationCounts}
+            />
+          </IonCol>
+          <IonCol size="4">
+            <ChartCard
+              title="Votes Positivity"
               chartType={ChartType.BAR}
               data={getUpDownVotes}
             />
           </IonCol>
           <IonCol size="4">
             <ChartCard
-              title="Access Locations"
+              title="Votes Distribution"
               chartType={ChartType.PIE}
-              data={getLocationCounts}
+              data={getVotesDistribution}
             />
           </IonCol>
         </IonRow>
