@@ -190,7 +190,7 @@ const RedditDetailPage = () => {
           <IonCol size="4">
             <ChartCard
               title="Votes Distribution"
-              chartType={ChartType.PIE}
+              chartType={ChartType.DONUT}
               data={getVotesDistribution}
             />
           </IonCol>

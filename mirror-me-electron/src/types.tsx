@@ -60,4 +60,5 @@ export enum ChartType {
   BAR,
   LINE,
   PIE,
+  DONUT,
 }

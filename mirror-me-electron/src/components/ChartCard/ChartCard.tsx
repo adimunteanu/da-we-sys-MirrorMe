@@ -5,7 +5,7 @@ import {
   IonCardTitle,
 } from '@ionic/react';
 import React from 'react';
-import { Bar, Line, Pie } from 'react-chartjs-2';
+import { Bar, Doughnut, Line, Pie } from 'react-chartjs-2';
 import { ChartType } from '../../types';
 
 interface Props {
@@ -24,6 +24,9 @@ const ChartCard = ({ data, title, chartType }: Props) => {
         {chartType === ChartType.BAR && <Bar type="bar" data={data} />}
         {chartType === ChartType.PIE && <Pie type="pie" data={data} />}
         {chartType === ChartType.LINE && <Line type="line" data={data} />}
+        {chartType === ChartType.DONUT && (
+          <Doughnut type="doughnut" data={data} />
+        )}
       </IonCardContent>
     </IonCard>
   );
