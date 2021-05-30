@@ -36,7 +36,7 @@ export const processReddit = async (
 ): Promise<RedditRelevantData> => {
   const relevantJSON: RedditRelevantData = {
     gender: '',
-    ip_logs: [],
+    ipLogs: [],
     contributions: {
       comments: [],
       votes: [],
@@ -79,7 +79,7 @@ export const processReddit = async (
           jsonData.forEach((object) => {
             const values = getValuesFromObject(object, ['date', 'ip']);
             if (values[0] !== 'registration ip') {
-              relevantJSON.ip_logs.push({
+              relevantJSON.ipLogs.push({
                 date: values[0],
                 ip: values[1],
               });
@@ -145,7 +145,7 @@ export const processInstagram = async (
 ): Promise<InstagramRelevantData> => {
   const relevantJSON: InstagramRelevantData = {
     bender: [],
-    ip_logs: [],
+    ipLogs: [],
     contributions: {
       comments: 0,
       votes: 0,
@@ -184,7 +184,7 @@ export const processInstagram = async (
           relevantJSON.bender = jsonData;
           break;
         case relevantFields.REDDIT.IP_LOGS:
-          relevantJSON.ip_logs = jsonData;
+          relevantJSON.ipLogs = jsonData;
           break;
         case relevantFields.REDDIT.COMMENTS:
           relevantJSON.contributions.comments = jsonData.length;
