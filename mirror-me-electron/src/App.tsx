@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.global.scss';
 import Header from './components/Header/Header';
-import { PAGES } from './globals';
+import { COMPANIES, PAGES } from './globals';
 import {
   LandingPage,
   LoginPage,
@@ -27,6 +27,15 @@ const App = () => {
           <Route path={PAGES.SETTINGS.route} component={SettingsPage} />
           <Route path={PAGES.SCOREBOARD.route} component={ScoreboardPage} />
           <Route path={PAGES.REQUEST.route} component={RequestPage} />
+          {Object.values(COMPANIES).map((company) => {
+            return (
+              <Route
+                key={company.name}
+                path={PAGES.DETAIL.route + company.name.toLowerCase()}
+                component={company.detail_page}
+              />
+            );
+          })}
           <Route path={PAGES.OVERVIEW.route} component={OverviewPage} />
           <Route path={PAGES.SIGNUP.route} component={RegisterPage} />
           <Route path={PAGES.LOGIN.route} component={LoginPage} />

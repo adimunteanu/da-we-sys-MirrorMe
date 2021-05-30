@@ -2,6 +2,7 @@ import React from 'react';
 import REDDIT_LOGO from './images/Reddit.jpg';
 import INSTAGRAM_LOGO from './images/Instagram.png';
 import SummarizedRedditCard from './components/SummarizedCard/CompanyCards/SummarizedRedditCard';
+import RedditDetailPage from './pages/DetailPage/RedditDetailPage';
 
 const APP_NAME = 'MirrorMe';
 
@@ -10,7 +11,7 @@ export const PAGES = {
   LOGIN: { route: '/auth/login', title: '' },
   SIGNUP: { route: '/auth/signup', title: '' },
   OVERVIEW: { route: '/home/overview', title: 'Overview' },
-  DETAIL: { route: '/home/overview/', title: '{{Company}} Summary' },
+  DETAIL: { route: '/home/overview/', title: 'Summary' },
   REQUEST: { route: '/home/request', title: 'Requests' },
   SCOREBOARD: { route: '/home/scoreboard', title: 'Scoreboard' },
   SETTINGS: { route: '/home/settings', title: 'Settings' },
@@ -21,12 +22,14 @@ export const COMPANIES = {
     name: 'Reddit',
     logo: REDDIT_LOGO,
     summarized_component: <SummarizedRedditCard />,
+    detail_page: RedditDetailPage,
     save_file: 'reddit_data.json',
   },
   INSTAGRAM: {
     name: 'Instagram',
     logo: INSTAGRAM_LOGO,
-    summarized_component: SummarizedRedditCard,
+    summarized_component: <SummarizedRedditCard />,
+    detail_page: RedditDetailPage,
     save_file: 'instagram_data.json',
   },
 };

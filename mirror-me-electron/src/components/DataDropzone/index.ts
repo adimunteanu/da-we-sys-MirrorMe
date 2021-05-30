@@ -36,7 +36,7 @@ export const processReddit = async (
 ): Promise<RedditRelevantData> => {
   const relevantJSON: RedditRelevantData = {
     gender: '',
-    ip_logs: [],
+    ipLogs: [],
     contributions: {
       comments: [],
       votes: [],
@@ -79,8 +79,8 @@ export const processReddit = async (
           jsonData.forEach((object) => {
             const values = getValuesFromObject(object, ['date', 'ip']);
             if (values[0] !== 'registration ip') {
-              relevantJSON.ip_logs.push({
-                date: values[0],
+              relevantJSON.ipLogs.push({
+                date: new Date(values[0]),
                 ip: values[1],
               });
             }
@@ -91,7 +91,7 @@ export const processReddit = async (
           jsonData.forEach((object) => {
             const values = getValuesFromObject(object, ['date', 'subreddit']);
             relevantJSON.contributions.comments.push({
-              date: values[0],
+              date: new Date(values[0]),
               subreddit: values[1],
             });
           });
@@ -99,9 +99,21 @@ export const processReddit = async (
         }
         case relevantFields.REDDIT.VOTES: {
           jsonData.forEach((object) => {
-            const values = getValuesFromObject(object, ['direction']);
-            if (values[0] !== 'none') {
-              relevantJSON.contributions.votes.push(values[0] === 'up');
+            const values = getValuesFromObject(object, [
+              'permalink',
+              'direction',
+            ]);
+
+            if (values.length > 0 && values[1] !== 'none') {
+              const rIndex = values[0].indexOf('/r/') + 3;
+              const subreddit = values[0].substring(
+                rIndex,
+                values[0].indexOf('/', rIndex)
+              );
+              relevantJSON.contributions.votes.push({
+                subreddit,
+                direction: values[1] === 'up',
+              });
             }
           });
           break;
@@ -110,7 +122,7 @@ export const processReddit = async (
           jsonData.forEach((object) => {
             const values = getValuesFromObject(object, ['date', 'subreddit']);
             relevantJSON.contributions.posts.push({
-              date: values[0],
+              date: new Date(values[0]),
               subreddit: values[1],
             });
           });
@@ -120,7 +132,7 @@ export const processReddit = async (
           jsonData.forEach((object) => {
             const values = getValuesFromObject(object, ['date', 'from']);
             relevantJSON.contributions.messages.push({
-              date: values[0],
+              date: new Date(values[0]),
               from: values[1],
             });
           });
@@ -145,7 +157,7 @@ export const processInstagram = async (
 ): Promise<InstagramRelevantData> => {
   const relevantJSON: InstagramRelevantData = {
     bender: [],
-    ip_logs: [],
+    ipLogs: [],
     contributions: {
       comments: 0,
       votes: 0,
@@ -184,7 +196,7 @@ export const processInstagram = async (
           relevantJSON.bender = jsonData;
           break;
         case relevantFields.REDDIT.IP_LOGS:
-          relevantJSON.ip_logs = jsonData;
+          relevantJSON.ipLogs = jsonData;
           break;
         case relevantFields.REDDIT.COMMENTS:
           relevantJSON.contributions.comments = jsonData.length;

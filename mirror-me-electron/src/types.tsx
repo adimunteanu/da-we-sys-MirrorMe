@@ -9,7 +9,7 @@ export type Page = {
 
 export type RedditRelevantData = {
   gender: string;
-  ip_logs: {
+  ipLogs: {
     date: Date;
     ip: string;
   }[];
@@ -18,7 +18,10 @@ export type RedditRelevantData = {
       subreddit: string;
       date: Date;
     }[];
-    votes: boolean[];
+    votes: {
+      subreddit: string;
+      direction: boolean;
+    }[];
     posts: {
       subreddit: string;
       date: Date;
@@ -33,7 +36,7 @@ export type RedditRelevantData = {
 
 export type InstagramRelevantData = {
   bender: any[];
-  ip_logs: any[];
+  ipLogs: any[];
   contributions: {
     comments: number;
     votes: number;
@@ -52,3 +55,10 @@ export type CompanyRelevantDataObject = {
   summarized_card: React.ReactNode;
   data: CompanyRelevantData;
 };
+
+export enum ChartType {
+  BAR,
+  LINE,
+  PIE,
+  DONUT,
+}
