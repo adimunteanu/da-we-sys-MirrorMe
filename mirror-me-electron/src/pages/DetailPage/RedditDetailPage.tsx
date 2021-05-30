@@ -40,37 +40,25 @@ const RedditDetailPage = () => {
   const getLocationCounts = () => {
     const { ipLogs } = data;
 
-    const locationWrapper: { name: string; index: number }[] = [];
-    const locations: string[] = [];
-    const counts: number[] = [];
-    let maxIndex = 0;
+    const citiesMap = new Map();
 
     ipLogs.forEach((log) => {
       if (log.ip) {
         const { city } = geoip.allData(log.ip);
         if (city) {
-          const foundCity = locationWrapper.find(
-            (location) => location.name === city
-          );
+          const hasCity = citiesMap.has(city);
 
-          if (foundCity) {
-            counts[foundCity.index] += 1;
-          } else {
-            locationWrapper.push({ name: city, index: maxIndex });
-            locations.push(city);
-            counts.push(1);
-            maxIndex += 1;
-          }
+          citiesMap.set(city, !hasCity ? 1 : citiesMap.get(city) + 1);
         }
       }
     });
 
     return {
-      labels: locations,
+      labels: Array.from(citiesMap.keys()),
       datasets: [
         {
           label: 'Cities',
-          data: counts,
+          data: Array.from(citiesMap.values()),
           backgroundColor: CHART_COLORS,
           hoverOffset: 4,
         },
