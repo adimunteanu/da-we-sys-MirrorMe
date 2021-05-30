@@ -80,7 +80,7 @@ export const processReddit = async (
             const values = getValuesFromObject(object, ['date', 'ip']);
             if (values[0] !== 'registration ip') {
               relevantJSON.ipLogs.push({
-                date: values[0],
+                date: new Date(values[0]),
                 ip: values[1],
               });
             }
@@ -91,7 +91,7 @@ export const processReddit = async (
           jsonData.forEach((object) => {
             const values = getValuesFromObject(object, ['date', 'subreddit']);
             relevantJSON.contributions.comments.push({
-              date: values[0],
+              date: new Date(values[0]),
               subreddit: values[1],
             });
           });
@@ -122,7 +122,7 @@ export const processReddit = async (
           jsonData.forEach((object) => {
             const values = getValuesFromObject(object, ['date', 'subreddit']);
             relevantJSON.contributions.posts.push({
-              date: values[0],
+              date: new Date(values[0]),
               subreddit: values[1],
             });
           });
@@ -132,7 +132,7 @@ export const processReddit = async (
           jsonData.forEach((object) => {
             const values = getValuesFromObject(object, ['date', 'from']);
             relevantJSON.contributions.messages.push({
-              date: values[0],
+              date: new Date(values[0]),
               from: values[1],
             });
           });
