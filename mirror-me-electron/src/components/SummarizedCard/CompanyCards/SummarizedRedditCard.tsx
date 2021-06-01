@@ -2,7 +2,7 @@ import { IonCol, IonGrid, IonRow } from '@ionic/react';
 import React from 'react';
 import { Pie } from 'react-chartjs-2';
 import { useSelector } from 'react-redux';
-import { CHART_COLORS } from '../../../globals';
+import { createChartDataset } from '../../ChartCard/chartUtils';
 import { selectData } from '../../../pages/OverviewPage/dataSlice';
 import { RedditRelevantData } from '../../../types';
 import './SummarizedRedditCard.scss';
@@ -14,17 +14,11 @@ const SummarizedRedditCard = () => {
 
   const getPieChartData = () => {
     const { posts, messages, votes, comments } = data.contributions;
-    return {
-      labels: ['Posts', 'Messages', 'Votes', 'Comments'],
-      datasets: [
-        {
-          label: 'Contributions',
-          data: [posts.length, messages.length, votes.length, comments.length],
-          backgroundColor: CHART_COLORS,
-          hoverOffset: 4,
-        },
-      ],
-    };
+    return createChartDataset(
+      ['Posts', 'Messages', 'Votes', 'Comments'],
+      'Contributions',
+      [posts.length, messages.length, votes.length, comments.length]
+    );
   };
 
   return (

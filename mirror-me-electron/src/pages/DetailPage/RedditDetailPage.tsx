@@ -1,8 +1,12 @@
 import { IonCol, IonContent, IonGrid, IonRow } from '@ionic/react';
 import React from 'react';
 import { useSelector } from 'react-redux';
+import {
+  createChartDataset,
+  createChartDatasetFromMap,
+  getFieldPerMonth,
+} from '../../components/ChartCard/chartUtils';
 import ChartCard from '../../components/ChartCard/ChartCard';
-import { CHART_COLORS } from '../../globals';
 import { ChartType, RedditRelevantData } from '../../types';
 import { selectData } from '../OverviewPage/dataSlice';
 
@@ -16,6 +20,7 @@ const RedditDetailPage = () => {
   const getUpDownVotes = () => {
     const { votes } = data.contributions;
     const newData = [0, 0];
+
     votes.forEach((vote) => {
       if (vote.direction) {
         newData[0] += 1;
@@ -24,22 +29,11 @@ const RedditDetailPage = () => {
       }
     });
 
-    return {
-      labels: ['Upvotes', 'Downvotes'],
-      datasets: [
-        {
-          label: '# of votes',
-          data: newData,
-          backgroundColor: CHART_COLORS,
-          hoverOffset: 4,
-        },
-      ],
-    };
+    return createChartDataset(['Upvotes', 'Downvotes'], '# of votes', newData);
   };
 
   const getVotesDistribution = () => {
     const { votes } = data.contributions;
-
     const subredditMap = new Map();
 
     votes.forEach((vote) => {
@@ -51,93 +45,19 @@ const RedditDetailPage = () => {
       );
     });
 
-    return {
-      labels: Array.from(subredditMap.keys()),
-      datasets: [
-        {
-          label: 'Subreddits',
-          data: Array.from(subredditMap.values()),
-          backgroundColor: CHART_COLORS,
-          hoverOffset: 4,
-        },
-      ],
-    };
+    return createChartDatasetFromMap('Subreddits', subredditMap);
   };
 
   const getCommentsPerMonth = () => {
     const { comments } = data.contributions;
-    const sortedComments = [...comments];
 
-    sortedComments.sort(
-      (comment1, comment2) =>
-        new Date(comment1.date).getTime() - new Date(comment2.date).getTime()
-    );
-
-    const monthsMap = new Map();
-
-    sortedComments.forEach((comment) => {
-      const time = `${new Date(comment.date).getMonth().toString()}-${new Date(
-        comment.date
-      )
-        .getFullYear()
-        .toString()}`;
-
-      if (!time.toLowerCase().includes('nan')) {
-        const hasTime = monthsMap.has(time);
-
-        monthsMap.set(time, !hasTime ? 1 : monthsMap.get(time) + 1);
-      }
-    });
-
-    return {
-      labels: Array.from(monthsMap.keys()),
-      datasets: [
-        {
-          label: '# of comments',
-          data: Array.from(monthsMap.values()),
-          backgroundColor: CHART_COLORS,
-          hoverOffset: 4,
-        },
-      ],
-    };
+    return getFieldPerMonth(comments, '# of comments');
   };
 
   const getMessagesPerMonth = () => {
     const { messages } = data.contributions;
-    const sortedMessages = [...messages];
 
-    sortedMessages.sort(
-      (message1, message2) =>
-        new Date(message1.date).getTime() - new Date(message2.date).getTime()
-    );
-
-    const monthsMap = new Map();
-
-    sortedMessages.forEach((message) => {
-      const time = `${new Date(message.date).getMonth().toString()}-${new Date(
-        message.date
-      )
-        .getFullYear()
-        .toString()}`;
-
-      if (!time.toLowerCase().includes('nan')) {
-        const hasTime = monthsMap.has(time);
-
-        monthsMap.set(time, !hasTime ? 1 : monthsMap.get(time) + 1);
-      }
-    });
-
-    return {
-      labels: Array.from(monthsMap.keys()),
-      datasets: [
-        {
-          label: '# of messages',
-          data: Array.from(monthsMap.values()),
-          backgroundColor: CHART_COLORS,
-          hoverOffset: 4,
-        },
-      ],
-    };
+    return getFieldPerMonth(messages, '# of messages');
   };
 
   const getLocationCounts = () => {
@@ -156,17 +76,7 @@ const RedditDetailPage = () => {
       }
     });
 
-    return {
-      labels: Array.from(citiesMap.keys()),
-      datasets: [
-        {
-          label: 'Cities',
-          data: Array.from(citiesMap.values()),
-          backgroundColor: CHART_COLORS,
-          hoverOffset: 4,
-        },
-      ],
-    };
+    return createChartDatasetFromMap('Cities', citiesMap);
   };
 
   return (
