@@ -5,7 +5,6 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonHeader,
-  IonIcon,
   IonItem,
   IonLabel,
   IonList,
@@ -16,7 +15,9 @@ import {
 } from '@ionic/react';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { close } from 'ionicons/icons';
 import { FunctionComponent } from 'react-router/node_modules/@types/react';
+import IconButton from '../../../components/Buttons/IconButton/IconButton';
 import { saveTextToFile } from '../../../components/DataDropzone';
 import DataDropzone from '../../../components/DataDropzone/DataDropzone';
 import { COMPANIES } from '../../../globals';
@@ -56,14 +57,13 @@ const DataUploadModal: FunctionComponent<Props> = (props: Props) => {
           <IonHeader>
             <IonToolbar>
               <IonCardTitle>Data Upload</IonCardTitle>
-              <IonButton
+              <IconButton
                 className="DataUploadModal__Header-Button"
-                fill="clear"
-                slot="end"
                 onClick={() => onDismiss()}
-              >
-                <IonIcon size="large" name="close" />
-              </IonButton>
+                size="large"
+                slot="end"
+                icon={close}
+              />
             </IonToolbar>
           </IonHeader>
         </IonCardHeader>

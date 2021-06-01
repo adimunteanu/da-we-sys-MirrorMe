@@ -1,8 +1,6 @@
 import {
-  IonButton,
   IonButtons,
   IonHeader,
-  IonIcon,
   IonMenuButton,
   IonTitle,
   IonToolbar,
@@ -21,6 +19,7 @@ import {
   updateCanUpload,
   updateStringifiedData,
 } from '../../pages/OverviewPage/dataSlice';
+import IconButton from '../Buttons/IconButton/IconButton';
 
 const Header = () => {
   const location = useLocation();
@@ -45,7 +44,7 @@ const Header = () => {
 
   useEffect(() => {
     dispatch(updateCurrentPage(location.pathname));
-  }, [updateCurrentPage, location]);
+  }, [location, dispatch]);
 
   return (
     <div>
@@ -58,13 +57,11 @@ const Header = () => {
           <IonTitle>{title}</IonTitle>
           {title === PAGES.OVERVIEW.title && (
             <IonButtons slot="end">
-              <IonButton
-                fill="clear"
+              <IconButton
                 onClick={() => present({ cssClass: 'DataUploadModal' })}
-                className="Header-Button"
-              >
-                <IonIcon size="large" icon={add} slot="icon-only" />
-              </IonButton>
+                size="large"
+                icon={add}
+              />
             </IonButtons>
           )}
         </IonToolbar>

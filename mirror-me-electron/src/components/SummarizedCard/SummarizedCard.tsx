@@ -1,12 +1,9 @@
 import {
-  IonButton,
   IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardTitle,
-  IonIcon,
-  IonText,
   IonToolbar,
 } from '@ionic/react';
 import { statsChartOutline } from 'ionicons/icons';
@@ -15,6 +12,7 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import { PAGES } from '../../globals';
 import { updateCurrentCompanyView } from '../../store/globalSlice';
+import IconButton from '../Buttons/IconButton/IconButton';
 import './SummarizedCard.scss';
 
 interface Props {
@@ -39,15 +37,11 @@ const SummarizedCard = ({ title, children, logo }: Props) => {
         <IonToolbar>
           <IonCardTitle>{title}</IonCardTitle>
           <IonButtons slot="end">
-            <IonButton
-              fill="clear"
-              onClick={() => {
-                goToDetailedView();
-              }}
-            >
-              <IonText>See more</IonText>
-              <IonIcon icon={statsChartOutline} />
-            </IonButton>
+            <IconButton
+              onClick={() => goToDetailedView()}
+              label="See more"
+              icon={statsChartOutline}
+            />
           </IonButtons>
         </IonToolbar>
       </IonCardHeader>
