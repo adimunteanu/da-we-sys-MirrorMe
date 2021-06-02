@@ -6,6 +6,9 @@ module.exports = {
     'react/jsx-props-no-spreading': 'off',
     '@typescript-eslint/no-shadow': 'off',
     'import/no-cycle': 'off',
+    'react/prop-types': 'off', // Since we do not use prop-types
+    'react/require-default-props': 'off', // Since we do not use prop-types
+    'no-param-reassign': 'off', // Since we sometimes want to reassign objects
   },
   parserOptions: {
     ecmaVersion: 2020,

@@ -37,7 +37,6 @@ const globalSlice = createSlice({
 const { actions, reducer } = globalSlice;
 
 const selectTitle = (state: RootState): string => {
-  console.log(state.global.currentPage);
   if (state.global.currentPage === PAGES.DETAIL) {
     return `${state.global.currentCompanyView} ${state.global.currentPage.title}`;
   }
