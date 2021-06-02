@@ -29,6 +29,7 @@ export const createChartDatasetFromMap = (
   );
 };
 
+// TODO: Delete in future refactoring if not used
 export const createChartDatasets = (
   labels: string[],
   datasetLabels: string[],
