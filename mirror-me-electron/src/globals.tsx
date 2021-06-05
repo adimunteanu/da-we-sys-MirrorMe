@@ -3,6 +3,7 @@ import REDDIT_LOGO from './images/Reddit.jpg';
 import INSTAGRAM_LOGO from './images/Instagram.png';
 import SummarizedRedditCard from './components/SummarizedCard/CompanyCards/SummarizedRedditCard';
 import RedditDetailPage from './pages/DetailPage/RedditDetailPage';
+import SummarizedInstagramCard from './components/SummarizedCard/CompanyCards/SummarizedInstagramCard';
 
 const APP_NAME = 'MirrorMe';
 
@@ -30,7 +31,7 @@ export const COMPANIES = {
   INSTAGRAM: {
     name: 'Instagram',
     logo: INSTAGRAM_LOGO,
-    summarized_component: <SummarizedRedditCard />,
+    summarized_component: <SummarizedInstagramCard />,
     detail_page: RedditDetailPage,
     save_file: 'instagram_data.json',
   },
