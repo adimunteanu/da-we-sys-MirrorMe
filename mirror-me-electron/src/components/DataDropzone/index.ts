@@ -1,7 +1,7 @@
 import JSZip from 'jszip';
 import jetpack from 'fs-jetpack';
 import { readString } from 'react-papaparse';
-import { DATA_DIR } from '../../globals';
+import { DATA_DIR, SUPPORTED_FILE_TYPES } from '../../globals';
 import {
   CompanyRelevantData,
   InstagramRelevantData,
@@ -17,6 +17,11 @@ const relevantFields = {
     VOTES: 'post_votes.csv',
     MESSAGES: 'messages.csv',
     SUBREDDITS: 'subscribed_subreddits.csv',
+  },
+  INSTAGRAM: {
+    COMMENTS: 'post_comments.json',
+    MESSAGES: 'message_1.json',
+    POSTS: 'posts_1.json',
   },
 };
 
@@ -54,7 +59,8 @@ export const processCompany = async (
     data: unknown[],
     path: string
   ) => void,
-  acceptedFiles: Array<File>
+  acceptedFiles: Array<File>,
+  isJSON: boolean
 ): Promise<CompanyRelevantData> => {
   const promises = { promises: [] as Promise<string>[], paths: [] as string[] };
 
@@ -64,8 +70,15 @@ export const processCompany = async (
     .then(
       (zipped) => {
         zipped.forEach(async (relativePath, file) => {
-          promises.promises.push(file.async('text'));
-          promises.paths.push(relativePath);
+          if (!file.dir) {
+            const type = relativePath.substr(relativePath.lastIndexOf('.'));
+            if (SUPPORTED_FILE_TYPES.includes(type)) {
+              promises.promises.push(file.async('text'));
+              promises.paths.push(
+                relativePath.substr(relativePath.lastIndexOf('/') + 1)
+              );
+            }
+          }
         });
 
         return null;
@@ -78,7 +91,12 @@ export const processCompany = async (
 
   await Promise.all(promises.promises).then((values) => {
     for (let i = 0; i < values.length; i += 1) {
-      const jsonData = readString(values[i], { header: true }).data;
+      let jsonData: any;
+      if (isJSON) {
+        jsonData = JSON.parse(values[i]);
+      } else {
+        jsonData = readString(values[i], { header: true }).data;
+      }
       companySwitch(relevantJSON, jsonData, promises.paths[i]);
     }
 
@@ -156,7 +174,8 @@ export const processReddit = async (
       }
       json = { ...relevantJSON };
     },
-    acceptedFiles
+    acceptedFiles,
+    false
   ) as Promise<RedditRelevantData>;
 };
 
@@ -164,16 +183,11 @@ export const processInstagram = async (
   acceptedFiles: Array<File>
 ): Promise<InstagramRelevantData> => {
   const relevantJSON: InstagramRelevantData = {
-    bender: [],
-    ipLogs: [],
     contributions: {
-      comments: 0,
-      votes: 0,
-      posts: 0,
-      messages: 0,
+      comments: [],
+      messages: [],
+      posts: [],
     },
-    subreddits: 0,
-    transactions: [],
   };
 
   return processCompany(
@@ -181,33 +195,75 @@ export const processInstagram = async (
     (json, jsonData, path) => {
       const relevantJSON = { ...json } as InstagramRelevantData;
       switch (path) {
-        case relevantFields.REDDIT.GENDER:
-          relevantJSON.bender = jsonData;
+        case relevantFields.INSTAGRAM.COMMENTS: {
+          const timestamps: Date[] = [];
+          const values = getValuesFromObject(jsonData, [
+            'comments_media_comments',
+          ]);
+
+          (values[0] as any[]).forEach((wrapper) => {
+            const comment = getValuesFromObject(wrapper, [
+              'string_list_data',
+            ])[0] as any[];
+
+            timestamps.push(
+              new Date(getValuesFromObject(comment[0], ['timestamp'])[0] * 1000)
+            );
+          });
+
+          relevantJSON.contributions.comments = [...timestamps];
           break;
-        case relevantFields.REDDIT.IP_LOGS:
-          relevantJSON.ipLogs = jsonData;
+        }
+        case relevantFields.INSTAGRAM.MESSAGES: {
+          const messages: any[] = [];
+          const values = getValuesFromObject(jsonData, [
+            'participants',
+            'messages',
+          ]);
+
+          if (values[0].length <= 2) {
+            const participant = decodeURIComponent(
+              escape(getValuesFromObject(values[0][0], ['name'])[0])
+            );
+
+            (values[1] as any[]).forEach((message) => {
+              const content = getValuesFromObject(message, [
+                'sender_name',
+                'timestamp_ms',
+              ]);
+
+              if (participant !== content[0]) {
+                messages.push({
+                  participant,
+                  date: new Date(content[1]),
+                });
+              }
+            });
+          }
+
+          relevantJSON.contributions.messages = [
+            ...relevantJSON.contributions.messages,
+            ...messages,
+          ];
           break;
-        case relevantFields.REDDIT.COMMENTS:
-          relevantJSON.contributions.comments = jsonData.length;
+        }
+        case relevantFields.INSTAGRAM.POSTS: {
+          relevantJSON.contributions.posts = jsonData.map((post) => {
+            const content = getValuesFromObject(post, ['media'])[0];
+            return new Date(
+              getValuesFromObject(content[0], ['creation_timestamp'])[0] * 1000
+            );
+          });
           break;
-        case relevantFields.REDDIT.VOTES:
-          relevantJSON.contributions.votes = jsonData.length;
+        }
+        default: {
           break;
-        case relevantFields.REDDIT.POSTS:
-          relevantJSON.contributions.posts = jsonData.length;
-          break;
-        case relevantFields.REDDIT.MESSAGES:
-          relevantJSON.contributions.messages = jsonData.length;
-          break;
-        case relevantFields.REDDIT.SUBREDDITS:
-          relevantJSON.subreddits = jsonData.length;
-          break;
-        default:
-          break;
+        }
       }
       json = { ...relevantJSON };
     },
-    acceptedFiles
+    acceptedFiles,
+    true
   ) as Promise<InstagramRelevantData>;
 };
 

@@ -6,6 +6,8 @@ import RedditDetailPage from './pages/DetailPage/RedditDetailPage';
 
 const APP_NAME = 'MirrorMe';
 
+export const SUPPORTED_FILE_TYPES = ['.json', '.csv'];
+
 export const PAGES = {
   LANDING: { route: '/', title: '' },
   LOGIN: { route: '/auth/login', title: '' },
