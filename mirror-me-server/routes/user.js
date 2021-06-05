@@ -1,5 +1,6 @@
+const mongoose = require("mongoose");
 const express = require("express");
-const { check, validationResult } = require("express-validator");
+const {check, validationResult} = require("express-validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth.js");
@@ -11,7 +12,7 @@ const User = require("../model/User.js");
 /**
  * @method - POST
  * @param - /signup
- * @description - User SignUp
+ * @description - User SignUp and Login
  */
 
 router.post(
@@ -30,7 +31,7 @@ router.post(
       });
     }
 
-    const { email, password } = req.body;
+    const {email, password} = req.body;
     try {
       let user = await User.findOne({
         email,
@@ -77,6 +78,11 @@ router.post(
   }
 );
 
+/**
+ * @method - POST
+ * @param - /login
+ * @description - User Login
+ */
 router.post(
   "/login",
   [
@@ -94,7 +100,7 @@ router.post(
       });
     }
 
-    const { email, password } = req.body;
+    const {email, password} = req.body;
     try {
       let user = await User.findOne({
         email,
@@ -150,7 +156,7 @@ router.get("/me", auth, async (req, res) => {
     const user = await User.findById(req.user.id);
     res.json(user);
   } catch (e) {
-    res.send({ message: "Error in Fetching user" });
+    res.send({message: "Error in Fetching user"});
   }
 });
 
