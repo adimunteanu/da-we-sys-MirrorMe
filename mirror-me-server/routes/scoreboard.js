@@ -16,7 +16,7 @@ const Scoreboard = require("../model/Scoreboard.js")
 
 router.post(
   "/addScore",
-//  auth,
+  auth,
   [
     check("nickname", "Please enter a valid nickname")
       .isString()
@@ -65,7 +65,7 @@ router.post(
  * @description - get all scores
  */
 
-router.get("/getAll", async (req, res) => { //REMOVED AUTHENTICATION FOR TESTING
+router.get("/getAll", auth, async (req, res) => { //REMOVED AUTHENTICATION FOR TESTING
   try {
     const allScores = await Scoreboard.find({}, function (err, scores) {
       var scoreMap = {};
@@ -79,5 +79,6 @@ router.get("/getAll", async (req, res) => { //REMOVED AUTHENTICATION FOR TESTING
     res.send({message: "Error in Fetching user"});
   }
 });
+
 
 module.exports = router;
