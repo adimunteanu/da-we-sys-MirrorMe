@@ -7,6 +7,12 @@ import {
   InstagramRelevantData,
   RedditRelevantData,
 } from '../../types';
+import {
+  decodeString,
+  getValueFromObjectArray,
+  getValuesFromObject,
+  populateJsonArray,
+} from './jsonUtils';
 
 const relevantFields = {
   REDDIT: {
@@ -22,34 +28,18 @@ const relevantFields = {
     COMMENTS: 'post_comments.json',
     MESSAGES: 'message_1.json',
     POSTS: 'posts_1.json',
+    LIKES: 'liked_posts.json',
+    FOLLOWERS: 'followers.json',
+    FOLLOWINGS: 'following.json',
+    ADS_INTERESTS: 'ads_interests.json',
+    YOUR_TOPICS: 'your_topics.json',
+    STORIES: 'stories.json',
   },
 };
 
 export const saveTextToFile = (name: string, content: string) => {
   jetpack.dir(DATA_DIR);
   jetpack.file(DATA_DIR + name, { content });
-};
-
-const getValuesFromObject = (object: unknown, keys: string[]): any[] => {
-  const values: any[] = [];
-  Object.entries(object as any).forEach(([key, value]) => {
-    if (keys.includes(key)) {
-      values.push(value);
-    }
-  });
-  return values;
-};
-
-const populateJsonArray = (array: any, data: unknown[], fields: string[]) => {
-  data.forEach((object) => {
-    const values = getValuesFromObject(object, fields);
-    const element: Record<string, any> = {};
-
-    for (let i = 0; i < fields.length; i += 1) {
-      element[fields[i]] = values[i];
-    }
-    array.push(element);
-  });
 };
 
 export const processCompany = async (
@@ -187,6 +177,16 @@ export const processInstagram = async (
       comments: [],
       messages: [],
       posts: [],
+      likes: [],
+      stories: [],
+    },
+    relationships: {
+      followers: [],
+      followings: [],
+    },
+    interests: {
+      ads: [],
+      topics: [],
     },
   };
 
@@ -196,22 +196,18 @@ export const processInstagram = async (
       const relevantJSON = { ...json } as InstagramRelevantData;
       switch (path) {
         case relevantFields.INSTAGRAM.COMMENTS: {
-          const timestamps: Date[] = [];
-          const values = getValuesFromObject(jsonData, [
+          const comments = getValueFromObjectArray(
+            jsonData,
             'comments_media_comments',
-          ]);
+            ['string_list_data']
+          );
 
-          (values[0] as any[]).forEach((wrapper) => {
-            const comment = getValuesFromObject(wrapper, [
-              'string_list_data',
-            ])[0] as any[];
-
-            timestamps.push(
-              new Date(getValuesFromObject(comment[0], ['timestamp'])[0] * 1000)
+          relevantJSON.contributions.comments = comments.map((comment) => {
+            return new Date(
+              getValuesFromObject(comment[0], ['timestamp'])[0] * 1000
             );
           });
 
-          relevantJSON.contributions.comments = [...timestamps];
           break;
         }
         case relevantFields.INSTAGRAM.MESSAGES: {
@@ -222,8 +218,8 @@ export const processInstagram = async (
           ]);
 
           if (values[0].length <= 2) {
-            const participant = decodeURIComponent(
-              escape(getValuesFromObject(values[0][0], ['name'])[0])
+            const participant = decodeString(
+              getValuesFromObject(values[0][0], ['name'])[0]
             );
 
             (values[1] as any[]).forEach((message) => {
@@ -254,6 +250,85 @@ export const processInstagram = async (
               getValuesFromObject(content[0], ['creation_timestamp'])[0] * 1000
             );
           });
+          break;
+        }
+        case relevantFields.INSTAGRAM.LIKES: {
+          const likes = getValueFromObjectArray(jsonData, 'likes_media_likes', [
+            'string_list_data',
+          ]);
+
+          relevantJSON.contributions.likes = likes.map((like) => {
+            return new Date(
+              getValuesFromObject(like[0], ['timestamp'])[0] * 1000
+            );
+          });
+
+          break;
+        }
+        case relevantFields.INSTAGRAM.FOLLOWERS: {
+          const followers = getValueFromObjectArray(
+            jsonData,
+            'relationships_followers',
+            ['string_list_data']
+          );
+
+          relevantJSON.relationships.followers = followers.map((follower) => {
+            return getValuesFromObject(follower[0], ['value'])[0];
+          });
+
+          break;
+        }
+        case relevantFields.INSTAGRAM.FOLLOWINGS: {
+          const followings = getValueFromObjectArray(
+            jsonData,
+            'relationships_following',
+            ['string_list_data']
+          );
+
+          relevantJSON.relationships.followings = followings.map((follow) => {
+            return getValuesFromObject(follow[0], ['value'])[0];
+          });
+
+          break;
+        }
+        case relevantFields.INSTAGRAM.ADS_INTERESTS: {
+          const ads = getValueFromObjectArray(
+            jsonData,
+            'inferred_data_ig_interest',
+            ['string_map_data']
+          );
+
+          relevantJSON.interests.ads = ads.map((ad) => {
+            const interest = getValuesFromObject(ad, ['Interest'])[0];
+            console.log(interest);
+            return getValuesFromObject(interest, ['value'])[0];
+          });
+
+          break;
+        }
+        case relevantFields.INSTAGRAM.YOUR_TOPICS: {
+          const topics = getValueFromObjectArray(
+            jsonData,
+            'topics_your_topics',
+            ['string_map_data']
+          );
+
+          relevantJSON.interests.topics = topics.map((topic) => {
+            const name = getValuesFromObject(topic, ['Name'])[0];
+            return getValuesFromObject(name, ['value'])[0];
+          });
+
+          break;
+        }
+        case relevantFields.INSTAGRAM.STORIES: {
+          const stories = getValueFromObjectArray(jsonData, 'ig_stories', [
+            'creation_timestamp',
+          ]);
+
+          relevantJSON.contributions.stories = stories.map((story) => {
+            return new Date(story * 1000);
+          });
+
           break;
         }
         default: {

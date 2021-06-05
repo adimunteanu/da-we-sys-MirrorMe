@@ -42,6 +42,16 @@ export type InstagramRelevantData = {
       date: Date;
     }[];
     posts: Date[];
+    likes: Date[];
+    stories: Date[];
+  };
+  relationships: {
+    followers: string[];
+    followings: string[];
+  };
+  interests: {
+    ads: string[];
+    topics: string[];
   };
 };
 
