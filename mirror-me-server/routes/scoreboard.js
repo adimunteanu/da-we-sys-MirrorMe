@@ -17,7 +17,7 @@ const Scoreboard = require("../model/Scoreboard.js")
 
 router.post(
   "/addScore",
-  auth,
+
   [
     check("nickname", "Please enter a valid nickname")
       .isString()
@@ -66,7 +66,7 @@ router.post(
  * @description - get all scores
  */
 
-router.get("/getAll",auth, async (req, res) => { //REMOVED AUTHENTICATION FOR TESTING
+router.get("/getAll", async (req, res) => { //REMOVED AUTHENTICATION FOR TESTING
   try {
     const allScores = await Scoreboard.find({}, function (err, scores) {
       var scoreMap = {};
@@ -86,7 +86,7 @@ router.get("/getAll",auth, async (req, res) => { //REMOVED AUTHENTICATION FOR TE
  * @param - /refresh
  * @description - refresh Score Object from Given Nickname
  */
-router.put("/refresh",auth, async (req, res) => { //REMOVED AUTHENTICATION FOR TESTING
+router.put("/refresh", async (req, res) => { //REMOVED AUTHENTICATION FOR TESTING
 
   const {nickname, score} = req.body;
   try {
@@ -99,10 +99,7 @@ router.put("/refresh",auth, async (req, res) => { //REMOVED AUTHENTICATION FOR T
       });
     }
 
-    await Scoreboard.findByIdAndUpdate(nickname,{
-      nickname: nickname,
-      score: score,
-    },{new: true});
+    await Scoreboard.findOneAndReplace(nickname, {});
     res.status(200).send("Score Updated");
 
   } catch (err) {
@@ -116,20 +113,27 @@ router.put("/refresh",auth, async (req, res) => { //REMOVED AUTHENTICATION FOR T
  * @param - /delete
  * @description - delete Nickname out of DB
  */
-router.delete("/delete",auth, async (req, res) => { //REMOVED AUTHENTICATION FOR TESTING
-
+router.delete("/delete", async (req, res) => { //REMOVED AUTHENTICATION FOR TESTING
   const {nickname} = req.body;
   try {
+
     let userScore = await Scoreboard.findOne({
       nickname,
     });
+
     if (!userScore) {
       return res.status(400).json({
         msg: "Nickname Not Found",
       });
     }
-    Scoreboard.findByIdAndDelete(nickname)
-    res.status(200).send("Nickname And Score Deleted");  } catch (err) {
+
+    Scoreboard.findOneAndDelete({nickname}, function (err) {
+      if (err) console.log(err);
+      console.log("Successful deletion");
+    })
+
+    res.status(200).send("Nickname And Score Deleted");
+  } catch (err) {
     console.log(err.message);
     res.status(500).send("Error in Deleting");
   }
