@@ -1,7 +1,10 @@
 import { IonCol, IonContent, IonGrid, IonRow } from '@ionic/react';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { getFieldsPerMonth } from '../../components/ChartCard/chartUtils';
+import {
+  createChartDataset,
+  getFieldsPerMonth,
+} from '../../components/ChartCard/chartUtils';
 import ChartCard from '../../components/ChartCard/ChartCard';
 import { ChartType, InstagramRelevantData } from '../../types';
 import { selectData } from '../OverviewPage/dataSlice';
@@ -22,24 +25,43 @@ const InstagramDetailPage = () => {
         comments,
       ],
       [
-        '# of likes',
         '# of messages',
         '# of posts',
+        '# of likes',
         '# of stories',
         '# of comments',
       ]
     );
   };
 
-  // const getMessagesPerMonth = () => {
-  //   const { messages } = data.contributions;
+  const getRelationships = () => {
+    const { followers, followings } = data.relationships;
+    const mutuals: string[] = [];
+    followers.forEach((follower) => {
+      if (followings.includes(follower)) {
+        mutuals.push(follower);
+      }
+    });
 
-  //   return getFieldPerMonth(messages, '# of messages');
-  // };
+    return createChartDataset(
+      ['Followers', 'Followings', 'Mutuals'],
+      'Relationships',
+      [followers.length, followings.length, mutuals.length]
+    );
+  };
 
   return (
     <IonContent>
       <IonGrid>
+        <IonRow>
+          <IonCol size="4">
+            <ChartCard
+              title="Relationships"
+              chartType={ChartType.BAR}
+              data={getRelationships}
+            />
+          </IonCol>
+        </IonRow>
         <IonRow>
           <IonCol size="12">
             <ChartCard
