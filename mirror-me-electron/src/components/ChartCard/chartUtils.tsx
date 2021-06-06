@@ -29,28 +29,6 @@ export const createChartDatasetFromMap = (
   );
 };
 
-// TODO: Delete in future refactoring if not used
-export const createChartDatasets = (
-  labels: string[],
-  datasetLabels: string[],
-  datas: any[]
-) => {
-  const datasets = [];
-  for (let i = 0; i < datas.length; i += 1) {
-    datasets.push({
-      label: datasetLabels[i],
-      data: datas[i],
-      backgroundColor: CHART_COLORS,
-      hoverOffset: 4,
-    });
-  }
-
-  return {
-    labels,
-    datasets,
-  };
-};
-
 export const getFieldPerMonth = (field: any[], datasetLabel: string) => {
   const sortedArray = [...field];
 
