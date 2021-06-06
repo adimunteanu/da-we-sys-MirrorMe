@@ -8,20 +8,30 @@ export const getValuesFromObject = (object: unknown, keys: string[]): any[] => {
   return values;
 };
 
-export const getValueFromObjectArray = (
+export const getValuesFromNestedObject = (
   object: unknown,
-  rootKey: string,
   keys: string[]
 ): any[] => {
   const values: any[] = [];
-  const array = getValuesFromObject(object, [rootKey])[0];
 
-  array.forEach((element: any) => {
-    Object.entries(element as any).forEach(([key, value]) => {
-      if (keys.includes(key)) {
-        values.push(value);
-      }
-    });
+  keys.forEach((key) => {
+    if (!key.includes('.')) {
+      values.push(getValuesFromObject(object, [key])[0]);
+    } else {
+      const dotIndex = key.indexOf('.');
+      Object.entries(object as any).forEach(([objKey, value]) => {
+        if (key.substr(0, dotIndex) === objKey) {
+          const restKey = key.substr(dotIndex + 1);
+          values.push(
+            Array.isArray(value)
+              ? value.flatMap(
+                  (element) => getValuesFromNestedObject(element, [restKey])[0]
+                )
+              : getValuesFromNestedObject(value, [restKey])[0]
+          );
+        }
+      });
+    }
   });
 
   return values;

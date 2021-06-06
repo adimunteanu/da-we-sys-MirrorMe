@@ -9,7 +9,7 @@ import {
 } from '../../types';
 import {
   decodeString,
-  getValueFromObjectArray,
+  getValuesFromNestedObject,
   getValuesFromObject,
   populateJsonArray,
 } from './jsonUtils';
@@ -196,45 +196,31 @@ export const processInstagram = async (
       const relevantJSON = { ...json } as InstagramRelevantData;
       switch (path) {
         case relevantFields.INSTAGRAM.COMMENTS: {
-          const comments = getValueFromObjectArray(
+          relevantJSON.contributions.comments = getValuesFromNestedObject(
             jsonData,
-            'comments_media_comments',
-            ['string_list_data']
-          );
-
-          relevantJSON.contributions.comments = comments.map((comment) => {
-            return new Date(
-              getValuesFromObject(comment[0], ['timestamp'])[0] * 1000
-            );
-          });
+            ['comments_media_comments.string_list_data.timestamp']
+          )[0].map((value: any) => new Date(value * 1000));
 
           break;
         }
         case relevantFields.INSTAGRAM.MESSAGES: {
           const messages: any[] = [];
-          const values = getValuesFromObject(jsonData, [
-            'participants',
-            'messages',
+          const values = getValuesFromNestedObject(jsonData, [
+            'participants.name',
+            'messages.sender_name',
+            'messages.timestamp_ms',
           ]);
 
-          if (values[0].length <= 2) {
-            const participant = decodeString(
-              getValuesFromObject(values[0][0], ['name'])[0]
-            );
+          const participant = decodeString(values[0][0]);
+          values[1].map((sender: any) => decodeString(sender));
 
-            (values[1] as any[]).forEach((message) => {
-              const content = getValuesFromObject(message, [
-                'sender_name',
-                'timestamp_ms',
-              ]);
-
-              if (participant !== content[0]) {
-                messages.push({
-                  participant,
-                  date: new Date(content[1]),
-                });
-              }
-            });
+          for (let i = 0; i < values[1].length; i += 1) {
+            if (values[1][i] !== participant) {
+              messages.push({
+                participant,
+                date: new Date(values[2][i]),
+              });
+            }
           }
 
           relevantJSON.contributions.messages = [
@@ -245,60 +231,47 @@ export const processInstagram = async (
         }
         case relevantFields.INSTAGRAM.POSTS: {
           relevantJSON.contributions.posts = jsonData.map((post) => {
-            const content = getValuesFromObject(post, ['media'])[0];
             return new Date(
-              getValuesFromObject(content[0], ['creation_timestamp'])[0] * 1000
+              getValuesFromNestedObject(post, [
+                'media.creation_timestamp',
+              ])[0][0] * 1000
             );
           });
+
           break;
         }
         case relevantFields.INSTAGRAM.LIKES: {
-          const likes = getValueFromObjectArray(jsonData, 'likes_media_likes', [
-            'string_list_data',
-          ]);
-
-          relevantJSON.contributions.likes = likes.map((like) => {
-            return new Date(
-              getValuesFromObject(like[0], ['timestamp'])[0] * 1000
-            );
-          });
+          relevantJSON.contributions.likes = getValuesFromNestedObject(
+            jsonData,
+            ['likes_media_likes.string_list_data.timestamp']
+          )[0].map((value: any) => new Date(value * 1000));
 
           break;
         }
         case relevantFields.INSTAGRAM.FOLLOWERS: {
-          const followers = getValueFromObjectArray(
-            jsonData,
-            'relationships_followers',
-            ['string_list_data']
-          );
-
-          relevantJSON.relationships.followers = followers.map((follower) => {
-            return getValuesFromObject(follower[0], ['value'])[0];
-          });
+          [
+            relevantJSON.relationships.followers,
+          ] = getValuesFromNestedObject(jsonData, [
+            'relationships_followers.string_list_data.value',
+          ]);
 
           break;
         }
         case relevantFields.INSTAGRAM.FOLLOWINGS: {
-          const followings = getValueFromObjectArray(
-            jsonData,
-            'relationships_following',
-            ['string_list_data']
-          );
-
-          relevantJSON.relationships.followings = followings.map((follow) => {
-            return getValuesFromObject(follow[0], ['value'])[0];
-          });
+          [
+            relevantJSON.relationships.followings,
+          ] = getValuesFromNestedObject(jsonData, [
+            'relationships_following.string_list_data.value',
+          ]);
 
           break;
         }
         case relevantFields.INSTAGRAM.ADS_INTERESTS: {
-          const ads = getValueFromObjectArray(
-            jsonData,
-            'inferred_data_ig_interest',
-            ['string_map_data']
-          );
+          const ads = getValuesFromNestedObject(jsonData, [
+            'inferred_data_ig_interest.string_map_data',
+          ])[0];
 
-          relevantJSON.interests.ads = ads.map((ad) => {
+          relevantJSON.interests.ads = ads.map((ad: any) => {
             const interest = getValuesFromObject(ad, [Object.keys(ad)[0]])[0];
             return decodeString(getValuesFromObject(interest, ['value'])[0]);
           });
@@ -306,13 +279,11 @@ export const processInstagram = async (
           break;
         }
         case relevantFields.INSTAGRAM.YOUR_TOPICS: {
-          const topics = getValueFromObjectArray(
-            jsonData,
-            'topics_your_topics',
-            ['string_map_data']
-          );
+          const topics = getValuesFromNestedObject(jsonData, [
+            'topics_your_topics.string_map_data',
+          ])[0];
 
-          relevantJSON.interests.topics = topics.map((topic) => {
+          relevantJSON.interests.topics = topics.map((topic: any) => {
             const name = getValuesFromObject(topic, [Object.keys(topic)[0]])[0];
             return decodeString(getValuesFromObject(name, ['value'])[0]);
           });
@@ -320,13 +291,10 @@ export const processInstagram = async (
           break;
         }
         case relevantFields.INSTAGRAM.STORIES: {
-          const stories = getValueFromObjectArray(jsonData, 'ig_stories', [
-            'creation_timestamp',
-          ]);
-
-          relevantJSON.contributions.stories = stories.map((story) => {
-            return new Date(story * 1000);
-          });
+          relevantJSON.contributions.stories = getValuesFromNestedObject(
+            jsonData,
+            ['ig_stories.creation_timestamp']
+          )[0].map((value: any) => new Date(value * 1000));
 
           break;
         }
