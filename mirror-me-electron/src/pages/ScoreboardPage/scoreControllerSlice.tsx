@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import store from '../../store';
 
 export type ScoreControllerState = {
   nickname: string;
@@ -17,6 +18,12 @@ export type ScoreControllerState = {
     };
   }[];
   uploadedScore: boolean;
+};
+
+const header = store.getState().userControl.authToken;
+
+const config = {
+  headers: header,
 };
 
 const initialState: ScoreControllerState = {
@@ -44,7 +51,11 @@ const addScoreThunk = createAsyncThunk(
       instaScore: number;
     };
   }) => {
-    const response = await scoreInstance.post('/addScore', { nickname, score });
+    const response = await scoreInstance.post(
+      '/addScore',
+      { nickname, score },
+      config
+    );
     return response;
   }
 );
@@ -52,7 +63,7 @@ const addScoreThunk = createAsyncThunk(
 const getAllScoresThunk = createAsyncThunk(
   'scoreController/getAll',
   async () => {
-    const response = await scoreInstance.get('/getAll', {});
+    const response = await scoreInstance.get('/getAll', config);
     return response;
   }
 );
@@ -70,7 +81,11 @@ const refreshScoreThunk = createAsyncThunk(
       instaScore: number;
     };
   }) => {
-    const response = await scoreInstance.put('/refresh', { nickname, score });
+    const response = await scoreInstance.put(
+      '/refresh',
+      { nickname, score },
+      config
+    );
     return response;
   }
 );
@@ -80,6 +95,7 @@ const deleteScoreThunk = createAsyncThunk(
   async ({ nickname }: { nickname: string }) => {
     const response = await scoreInstance.delete('/delete', {
       data: { nickname },
+      headers: header,
     });
     return response;
   }
@@ -100,6 +116,7 @@ const scoreControllerSlice = createSlice({
     });
     builder.addCase(getAllScoresThunk.fulfilled, (state, action) => {
       state.allScores = action.payload.data;
+      Object.values(action.payload.data).forEach((value) => console.log(value));
     });
     builder.addCase(deleteScoreThunk.fulfilled, (state) => {
       state.nickname = '';
