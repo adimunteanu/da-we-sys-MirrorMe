@@ -266,6 +266,7 @@
     "react-papaparse": "^3.14.0",
     "react-redux": "^7.2.4",
     "react-router-dom": "^5.2.0",
+    "react-wordcloud": "^1.2.7",
     "redux": "^4.1.0",
     "regenerator-runtime": "^0.13.5",
     "source-map-support": "^0.5.19"

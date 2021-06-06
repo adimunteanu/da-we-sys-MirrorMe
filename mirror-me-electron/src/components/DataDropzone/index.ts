@@ -1,12 +1,18 @@
 import JSZip from 'jszip';
 import jetpack from 'fs-jetpack';
 import { readString } from 'react-papaparse';
-import { DATA_DIR } from '../../globals';
+import { DATA_DIR, SUPPORTED_FILE_TYPES } from '../../globals';
 import {
   CompanyRelevantData,
   InstagramRelevantData,
   RedditRelevantData,
 } from '../../types';
+import {
+  decodeString,
+  getValuesFromNestedObject,
+  getValuesFromObject,
+  populateJsonArray,
+} from './jsonUtils';
 
 const relevantFields = {
   REDDIT: {
@@ -18,33 +24,22 @@ const relevantFields = {
     MESSAGES: 'messages.csv',
     SUBREDDITS: 'subscribed_subreddits.csv',
   },
+  INSTAGRAM: {
+    COMMENTS: 'post_comments.json',
+    MESSAGES: 'message_1.json',
+    POSTS: 'posts_1.json',
+    LIKES: 'liked_posts.json',
+    FOLLOWERS: 'followers.json',
+    FOLLOWINGS: 'following.json',
+    ADS_INTERESTS: 'ads_interests.json',
+    YOUR_TOPICS: 'your_topics.json',
+    STORIES: 'stories.json',
+  },
 };
 
 export const saveTextToFile = (name: string, content: string) => {
   jetpack.dir(DATA_DIR);
   jetpack.file(DATA_DIR + name, { content });
-};
-
-const getValuesFromObject = (object: unknown, keys: string[]): any[] => {
-  const values: any[] = [];
-  Object.entries(object as any).forEach(([key, value]) => {
-    if (keys.includes(key)) {
-      values.push(value);
-    }
-  });
-  return values;
-};
-
-const populateJsonArray = (array: any, data: unknown[], fields: string[]) => {
-  data.forEach((object) => {
-    const values = getValuesFromObject(object, fields);
-    const element: Record<string, any> = {};
-
-    for (let i = 0; i < fields.length; i += 1) {
-      element[fields[i]] = values[i];
-    }
-    array.push(element);
-  });
 };
 
 export const processCompany = async (
@@ -54,7 +49,8 @@ export const processCompany = async (
     data: unknown[],
     path: string
   ) => void,
-  acceptedFiles: Array<File>
+  acceptedFiles: Array<File>,
+  isJSON: boolean
 ): Promise<CompanyRelevantData> => {
   const promises = { promises: [] as Promise<string>[], paths: [] as string[] };
 
@@ -64,8 +60,15 @@ export const processCompany = async (
     .then(
       (zipped) => {
         zipped.forEach(async (relativePath, file) => {
-          promises.promises.push(file.async('text'));
-          promises.paths.push(relativePath);
+          if (!file.dir) {
+            const type = relativePath.substr(relativePath.lastIndexOf('.'));
+            if (SUPPORTED_FILE_TYPES.includes(type)) {
+              promises.promises.push(file.async('text'));
+              promises.paths.push(
+                relativePath.substr(relativePath.lastIndexOf('/') + 1)
+              );
+            }
+          }
         });
 
         return null;
@@ -78,7 +81,12 @@ export const processCompany = async (
 
   await Promise.all(promises.promises).then((values) => {
     for (let i = 0; i < values.length; i += 1) {
-      const jsonData = readString(values[i], { header: true }).data;
+      let jsonData: any;
+      if (isJSON) {
+        jsonData = JSON.parse(values[i]);
+      } else {
+        jsonData = readString(values[i], { header: true }).data;
+      }
       companySwitch(relevantJSON, jsonData, promises.paths[i]);
     }
 
@@ -156,7 +164,8 @@ export const processReddit = async (
       }
       json = { ...relevantJSON };
     },
-    acceptedFiles
+    acceptedFiles,
+    false
   ) as Promise<RedditRelevantData>;
 };
 
@@ -164,16 +173,21 @@ export const processInstagram = async (
   acceptedFiles: Array<File>
 ): Promise<InstagramRelevantData> => {
   const relevantJSON: InstagramRelevantData = {
-    bender: [],
-    ipLogs: [],
     contributions: {
-      comments: 0,
-      votes: 0,
-      posts: 0,
-      messages: 0,
+      comments: [],
+      messages: [],
+      posts: [],
+      likes: [],
+      stories: [],
     },
-    subreddits: 0,
-    transactions: [],
+    relationships: {
+      followers: [],
+      followings: [],
+    },
+    interests: {
+      ads: [],
+      topics: [],
+    },
   };
 
   return processCompany(
@@ -181,33 +195,117 @@ export const processInstagram = async (
     (json, jsonData, path) => {
       const relevantJSON = { ...json } as InstagramRelevantData;
       switch (path) {
-        case relevantFields.REDDIT.GENDER:
-          relevantJSON.bender = jsonData;
+        case relevantFields.INSTAGRAM.COMMENTS: {
+          relevantJSON.contributions.comments = getValuesFromNestedObject(
+            jsonData,
+            ['comments_media_comments.string_list_data.timestamp']
+          )[0].map((value: any) => new Date(value * 1000));
+
           break;
-        case relevantFields.REDDIT.IP_LOGS:
-          relevantJSON.ipLogs = jsonData;
+        }
+        case relevantFields.INSTAGRAM.MESSAGES: {
+          const messages: any[] = [];
+          const values = getValuesFromNestedObject(jsonData, [
+            'participants.name',
+            'messages.sender_name',
+            'messages.timestamp_ms',
+          ]);
+
+          const participant = decodeString(values[0][0]);
+          values[1].map((sender: any) => decodeString(sender));
+
+          for (let i = 0; i < values[1].length; i += 1) {
+            if (values[1][i] !== participant) {
+              messages.push({
+                participant,
+                date: new Date(values[2][i]),
+              });
+            }
+          }
+
+          relevantJSON.contributions.messages = [
+            ...relevantJSON.contributions.messages,
+            ...messages,
+          ];
           break;
-        case relevantFields.REDDIT.COMMENTS:
-          relevantJSON.contributions.comments = jsonData.length;
+        }
+        case relevantFields.INSTAGRAM.POSTS: {
+          relevantJSON.contributions.posts = jsonData.map((post) => {
+            return new Date(
+              getValuesFromNestedObject(post, [
+                'media.creation_timestamp',
+              ])[0][0] * 1000
+            );
+          });
+
           break;
-        case relevantFields.REDDIT.VOTES:
-          relevantJSON.contributions.votes = jsonData.length;
+        }
+        case relevantFields.INSTAGRAM.LIKES: {
+          relevantJSON.contributions.likes = getValuesFromNestedObject(
+            jsonData,
+            ['likes_media_likes.string_list_data.timestamp']
+          )[0].map((value: any) => new Date(value * 1000));
+
           break;
-        case relevantFields.REDDIT.POSTS:
-          relevantJSON.contributions.posts = jsonData.length;
+        }
+        case relevantFields.INSTAGRAM.FOLLOWERS: {
+          [
+            relevantJSON.relationships.followers,
+          ] = getValuesFromNestedObject(jsonData, [
+            'relationships_followers.string_list_data.value',
+          ]);
+
           break;
-        case relevantFields.REDDIT.MESSAGES:
-          relevantJSON.contributions.messages = jsonData.length;
+        }
+        case relevantFields.INSTAGRAM.FOLLOWINGS: {
+          [
+            relevantJSON.relationships.followings,
+          ] = getValuesFromNestedObject(jsonData, [
+            'relationships_following.string_list_data.value',
+          ]);
+
           break;
-        case relevantFields.REDDIT.SUBREDDITS:
-          relevantJSON.subreddits = jsonData.length;
+        }
+        case relevantFields.INSTAGRAM.ADS_INTERESTS: {
+          const ads = getValuesFromNestedObject(jsonData, [
+            'inferred_data_ig_interest.string_map_data',
+          ])[0];
+
+          relevantJSON.interests.ads = ads.map((ad: any) => {
+            const interest = getValuesFromObject(ad, [Object.keys(ad)[0]])[0];
+            return decodeString(getValuesFromObject(interest, ['value'])[0]);
+          });
+
           break;
-        default:
+        }
+        case relevantFields.INSTAGRAM.YOUR_TOPICS: {
+          const topics = getValuesFromNestedObject(jsonData, [
+            'topics_your_topics.string_map_data',
+          ])[0];
+
+          relevantJSON.interests.topics = topics.map((topic: any) => {
+            const name = getValuesFromObject(topic, [Object.keys(topic)[0]])[0];
+            return decodeString(getValuesFromObject(name, ['value'])[0]);
+          });
+
           break;
+        }
+        case relevantFields.INSTAGRAM.STORIES: {
+          relevantJSON.contributions.stories = getValuesFromNestedObject(
+            jsonData,
+            ['ig_stories.creation_timestamp']
+          )[0].map((value: any) => new Date(value * 1000));
+
+          break;
+        }
+        default: {
+          break;
+        }
       }
       json = { ...relevantJSON };
     },
-    acceptedFiles
+    acceptedFiles,
+    true
   ) as Promise<InstagramRelevantData>;
 };
 
