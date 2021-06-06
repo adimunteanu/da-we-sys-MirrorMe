@@ -300,8 +300,7 @@ export const processInstagram = async (
 
           relevantJSON.interests.ads = ads.map((ad) => {
             const interest = getValuesFromObject(ad, [Object.keys(ad)[0]])[0];
-            console.log(interest);
-            return getValuesFromObject(interest, ['value'])[0];
+            return decodeString(getValuesFromObject(interest, ['value'])[0]);
           });
 
           break;
@@ -315,7 +314,7 @@ export const processInstagram = async (
 
           relevantJSON.interests.topics = topics.map((topic) => {
             const name = getValuesFromObject(topic, [Object.keys(topic)[0]])[0];
-            return getValuesFromObject(name, ['value'])[0];
+            return decodeString(getValuesFromObject(name, ['value'])[0]);
           });
 
           break;
