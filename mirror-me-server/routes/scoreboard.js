@@ -17,7 +17,7 @@ const Scoreboard = require("../model/Scoreboard.js")
 
 router.post(
   "/addScore",
-
+  auth,
   [
     check("nickname", "Please enter a valid nickname")
       .isString()
@@ -66,7 +66,7 @@ router.post(
  * @description - get all scores
  */
 
-router.get("/getAll", async (req, res) => { //REMOVED AUTHENTICATION FOR TESTING
+router.get("/getAll", auth, async (req, res) => {
   try {
     const allScores = await Scoreboard.find({}, function (err, scores) {
       var scoreMap = {};
@@ -86,7 +86,7 @@ router.get("/getAll", async (req, res) => { //REMOVED AUTHENTICATION FOR TESTING
  * @param - /refresh
  * @description - refresh Score Object from Given Nickname
  */
-router.put("/refresh", async (req, res) => { //REMOVED AUTHENTICATION FOR TESTING
+router.put("/refresh", auth, async (req, res) => { //REMOVED AUTHENTICATION FOR TESTING
 
   const {nickname, score} = req.body;
   try {
@@ -113,7 +113,7 @@ router.put("/refresh", async (req, res) => { //REMOVED AUTHENTICATION FOR TESTIN
  * @param - /delete
  * @description - delete Nickname out of DB
  */
-router.delete("/delete", async (req, res) => { //REMOVED AUTHENTICATION FOR TESTING
+router.delete("/delete", auth, async (req, res) => { //REMOVED AUTHENTICATION FOR TESTING
   const {nickname} = req.body;
   try {
 
