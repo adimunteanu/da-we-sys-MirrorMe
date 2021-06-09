@@ -50,7 +50,7 @@ router.post(
       });
 
       await userScore.save();
-      res.status(200).send("Score Uploaded");
+      res.status(200).send("Score from "+ nickname + " uploaded");
 
     } catch (err) {
       console.log(err.message);
@@ -83,11 +83,11 @@ router.get("/getAll", auth, async (req, res) => {
 
 /**
  * @method - PUT
- * @param - /refresh
- * @description - refresh Scoreboard Object from Given Nickname
+ * @param - /update
+ * @description - update Scoreboard Object from Given Nickname
  */
 
-router.put("/refresh", auth, async (req, res) => { //REMOVED AUTHENTICATION FOR TESTING
+router.put("/update", auth, async (req, res) => { //REMOVED AUTHENTICATION FOR TESTING
 
   const {nickname, score} = req.body;
   try {
@@ -100,14 +100,15 @@ router.put("/refresh", auth, async (req, res) => { //REMOVED AUTHENTICATION FOR 
       });
     }
 
-    await Scoreboard.findOneAndReplace(nickname, {
-      // TODO: still not working right with a score object
-    });
-    res.status(200).send("Score Updated");
+    const filter = { nickname: nickname};
+    const update = { score: score };
+    const scoreboard = await Scoreboard.findOneAndUpdate(filter, update,{new: true});
+
+    res.status(200).send("Score from " + scoreboard.nickname +" updated to " + scoreboard.score);
 
   } catch (err) {
     console.log(err.message);
-    res.status(500).send("Error in Refreshing");
+    res.status(500).send("Error in Updating");
   }
 });
 
