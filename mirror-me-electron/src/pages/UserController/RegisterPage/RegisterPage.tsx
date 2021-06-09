@@ -16,11 +16,12 @@ import SlidingError from '../../../components/SlidingError/SlidingError';
 import './RegisterPage.scss';
 import { PAGES } from '../../../globals';
 import { selectIsAuthenticated, signupThunk } from '../userControllerSlice';
-import { isEmail, isPassword } from '..';
+import { isEmail, isNickname, isPassword } from '..';
 
 const RegisterPage = () => {
   const history = useHistory();
   const [errorOccured, setErrorOccured] = useState(false);
+  const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -31,6 +32,7 @@ const RegisterPage = () => {
   const trySignUpAndLogin = () => {
     dispatch(
       signupThunk({
+        nickname,
         email,
         password,
       })
@@ -54,7 +56,7 @@ const RegisterPage = () => {
   }, [errorOccured]);
 
   const register = () => {
-    if (!isEmail(email) || !isPassword(password)) {
+    if (!isNickname(nickname) || !isEmail(email) || !isPassword(password)) {
       // email gets checked on the server if it's an email that's why you're still able to produce bad requests
       setErrorOccured(true);
     } else if (password !== confirmPassword) {
@@ -77,6 +79,14 @@ const RegisterPage = () => {
         </IonCardHeader>
         <IonCardContent>
           <IonList>
+            <IonItem className="RegisterPage__Item">
+              <IonLabel position="floating">Nickname</IonLabel>
+              <IonInput
+                onIonChange={(event: any) => {
+                  setNickname(event.detail.value);
+                }}
+              />
+            </IonItem>
             <IonItem className="RegisterPage__Item">
               <IonLabel position="floating">Email</IonLabel>
               <IonInput
