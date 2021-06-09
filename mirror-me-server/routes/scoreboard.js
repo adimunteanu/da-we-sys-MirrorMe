@@ -84,8 +84,9 @@ router.get("/getAll", auth, async (req, res) => {
 /**
  * @method - PUT
  * @param - /refresh
- * @description - refresh Score Object from Given Nickname
+ * @description - refresh Scoreboard Object from Given Nickname
  */
+
 router.put("/refresh", auth, async (req, res) => { //REMOVED AUTHENTICATION FOR TESTING
 
   const {nickname, score} = req.body;
@@ -99,7 +100,9 @@ router.put("/refresh", auth, async (req, res) => { //REMOVED AUTHENTICATION FOR 
       });
     }
 
-    await Scoreboard.findOneAndReplace(nickname, {});
+    await Scoreboard.findOneAndReplace(nickname, {
+      // TODO: still not working right with a score object
+    });
     res.status(200).send("Score Updated");
 
   } catch (err) {
@@ -113,6 +116,7 @@ router.put("/refresh", auth, async (req, res) => { //REMOVED AUTHENTICATION FOR 
  * @param - /delete
  * @description - delete Nickname out of DB
  */
+
 router.delete("/delete", auth, async (req, res) => { //REMOVED AUTHENTICATION FOR TESTING
   const {nickname} = req.body;
   try {
