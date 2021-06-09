@@ -9,6 +9,10 @@ const UserSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    nickname: {
+        type: String,
+        required: true
+    },
 });
 
 // export model user with UserSchema
