@@ -9,6 +9,41 @@ const router = express.Router();
 const Scoreboard = require("../model/Scoreboard.js")
 
 
+
+
+router.post(
+  "/uploadedScore",
+  auth,
+  [
+    check("nickname", "Please enter a valid nickname")
+      .isLength({
+        min: 4,
+      }),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array(),
+      });
+    }
+    const {nickname} = req.body;
+    try {
+      let userScore = await Scoreboard.findOne({
+        nickname,
+      });
+      if (userScore) {
+        return res.status(200).json(true);
+      } else {
+        return res.status(200).json(false);
+      }
+
+    } catch (err) {
+      console.log(err.message);
+      res.status(500).send("Error in Requesting Me");
+    }
+  }
+);
 /**
  * @method - POST
  * @param - /addScore
@@ -31,7 +66,6 @@ router.post(
         errors: errors.array(),
       });
     }
-    console.log(req.body);
 
     const {nickname, score} = req.body;
     try {
