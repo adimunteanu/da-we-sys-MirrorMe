@@ -18,6 +18,9 @@ const User = require("../model/User.js");
 router.post(
   "/signup",
   [
+    check("nickname", "Please enter a valid nickname").isLength({
+      min: 4,
+    }),
     check("email", "Please enter a valid email").isEmail(),
     check("password", "Please enter a valid password").isLength({
       min: 4,
@@ -31,7 +34,8 @@ router.post(
       });
     }
 
-    const {email, password} = req.body;
+    const { nickname, email, password } = req.body;
+
     try {
       let user = await User.findOne({
         email,
@@ -41,8 +45,17 @@ router.post(
           msg: "User Already Exists",
         });
       }
+      user = await User.findOne({
+        nickname,
+      });
+      if (user) {
+        return res.status(400).json({
+          msg: "Nickname Already Exists",
+        });
+      }
 
       user = new User({
+        nickname,
         email,
         password,
       });
@@ -68,6 +81,7 @@ router.post(
           if (err) throw err;
           res.status(200).json({
             token,
+            nickname,
           });
         }
       );
@@ -121,7 +135,7 @@ router.post(
           id: user.id,
         },
       };
-
+      const nickname = user.nickname
       jwt.sign(
         payload,
         "randomString",
@@ -132,6 +146,7 @@ router.post(
           if (err) throw err;
           res.status(200).json({
             token,
+            nickname,
           });
         }
       );
@@ -146,10 +161,10 @@ router.post(
 
 /**
  * @method - GET
- * @description - Get LoggedIn User
+ * @description - useless for now/ could give back nickname
  * @param - /user/me
  */
-
+/**
 router.get("/me", auth, async (req, res) => {
   try {
     // request.user is getting fetched from Middleware after token authentication
@@ -159,5 +174,8 @@ router.get("/me", auth, async (req, res) => {
     res.send({message: "Error in Fetching user"});
   }
 });
+*/
+
+
 
 module.exports = router;

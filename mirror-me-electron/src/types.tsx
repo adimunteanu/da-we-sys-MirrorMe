@@ -35,16 +35,24 @@ export type RedditRelevantData = {
 };
 
 export type InstagramRelevantData = {
-  bender: any[];
-  ipLogs: any[];
   contributions: {
-    comments: number;
-    votes: number;
-    posts: number;
-    messages: number;
+    comments: Date[];
+    messages: {
+      participant: string;
+      date: Date;
+    }[];
+    posts: Date[];
+    likes: Date[];
+    stories: Date[];
   };
-  subreddits: number;
-  transactions: any[];
+  relationships: {
+    followers: string[];
+    followings: string[];
+  };
+  interests: {
+    ads: string[];
+    topics: string[];
+  };
 };
 
 export type CompanyRelevantData = RedditRelevantData | InstagramRelevantData;
