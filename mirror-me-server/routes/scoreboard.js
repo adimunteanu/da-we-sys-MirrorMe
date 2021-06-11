@@ -20,7 +20,6 @@ router.post(
   auth,
   [
     check("nickname", "Please enter a valid nickname")
-      .isString()
       .isLength({
         min: 4,
       }),
@@ -32,6 +31,7 @@ router.post(
         errors: errors.array(),
       });
     }
+    console.log(req.body);
 
     const {nickname, score} = req.body;
     try {

@@ -1,19 +1,20 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { RootState } from '../../store';
 
 export type ScoreControllerState = {
   nickname: string;
   score: {
-    totalScore: number;
-    redditScore: number;
-    instaScore: number;
+    scoreTotal: number;
+    scoreReddit: number;
+    scoreInsta: number;
   };
   allScores: {
     nickname: string;
     score: {
-      totalScore: number;
-      redditScore: number;
-      instaScore: number;
+      scoreTotal: number;
+      scoreReddit: number;
+      scoreInsta: number;
     };
   }[];
   uploadedScore: boolean;
@@ -21,7 +22,7 @@ export type ScoreControllerState = {
 
 const initialState: ScoreControllerState = {
   nickname: '',
-  score: { totalScore: 0, redditScore: 0, instaScore: 0 },
+  score: { scoreTotal: 0, scoreReddit: 0, scoreInsta: 0 },
   allScores: [],
   uploadedScore: false,
 };
@@ -40,17 +41,19 @@ const addScoreThunk = createAsyncThunk(
   }: {
     nickname: string;
     score: {
-      totalScore: number;
-      redditScore: number;
-      instaScore: number;
+      scoreTotal: number;
+      scoreReddit: number;
+      scoreInsta: number;
     };
     authToken: string;
   }) => {
+    console.log('before response');
     const response = await scoreInstance.post(
       '/addScore',
       { nickname, score },
-      { headers: authToken }
+      { headers: { token: authToken } }
     );
+    console.log(`response: ${response}`);
     return response;
   }
 );
@@ -59,13 +62,15 @@ const getAllScoresThunk = createAsyncThunk(
   'scoreController/getAll',
   async (authToken: string) => {
     console.log(authToken);
-    const response = await scoreInstance.get('/getAll', { headers: authToken });
+    const response = await scoreInstance.get('/getAll', {
+      headers: { token: authToken },
+    });
     return response;
   }
 );
 
-const refreshScoreThunk = createAsyncThunk(
-  'scoreController/refresh',
+const updateScoreThunk = createAsyncThunk(
+  'scoreController/update',
   async ({
     nickname,
     score,
@@ -73,16 +78,16 @@ const refreshScoreThunk = createAsyncThunk(
   }: {
     nickname: string;
     score: {
-      totalScore: number;
-      redditScore: number;
-      instaScore: number;
+      scoreTotal: number;
+      scoreReddit: number;
+      scoreInsta: number;
     };
     authToken: string;
   }) => {
     const response = await scoreInstance.put(
-      '/refresh',
+      '/update',
       { nickname, score },
-      { headers: authToken }
+      { headers: { token: authToken } }
     );
     return response;
   }
@@ -93,7 +98,7 @@ const deleteScoreThunk = createAsyncThunk(
   async ({ nickname, authToken }: { nickname: string; authToken: string }) => {
     const response = await scoreInstance.delete('/delete', {
       data: { nickname },
-      headers: authToken,
+      headers: { token: authToken },
     });
     return response;
   }
@@ -104,7 +109,7 @@ const scoreControllerSlice = createSlice({
   reducers: {
     deleteLocalScore: (state) => {
       state.nickname = '';
-      state.score = { totalScore: 0, redditScore: 0, instaScore: 0 };
+      state.score = { scoreTotal: 0, scoreReddit: 0, scoreInsta: 0 };
       state.allScores = [];
     },
   },
@@ -131,6 +136,9 @@ const scoreControllerSlice = createSlice({
   },
 });
 
+const selectUploadedScore = (state: RootState): boolean =>
+  state.scoreControl.uploadedScore;
+
 const { actions, reducer } = scoreControllerSlice;
 
 export const { deleteLocalScore } = actions;
@@ -138,8 +146,9 @@ export const { deleteLocalScore } = actions;
 export {
   addScoreThunk,
   getAllScoresThunk,
-  refreshScoreThunk,
+  updateScoreThunk,
   deleteScoreThunk,
+  selectUploadedScore,
 };
 
 export default reducer;
