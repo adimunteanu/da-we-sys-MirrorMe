@@ -1,28 +1,25 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState } from '../../store';
 
-export type UserScore = {
-  nickname: string;
-  score: {
-    scoreTotal: number;
-    scoreReddit: number;
-    scoreInsta: number;
-  };
+export type Scores = {
+  scoreTotal: number;
+  scoreReddit: number;
+  scoreInsta: number;
 };
-export type ScoreControllerState = {
+
+export type NicknameAndScore = {
   nickname: string;
-  score: {
-    scoreTotal: number;
-    scoreReddit: number;
-    scoreInsta: number;
-  };
-  allScores: UserScore[];
+  score: Scores;
+};
+
+export type ScoreControllerState = {
+  score: Scores;
+  allScores: NicknameAndScore[];
   uploadedScore: boolean;
 };
 
 const initialState: ScoreControllerState = {
-  nickname: '',
   score: { scoreTotal: 0, scoreReddit: 0, scoreInsta: 0 },
   allScores: [],
   uploadedScore: false,
@@ -36,9 +33,13 @@ const scoreInstance = axios.create({
 const uploadedScoreThunk = createAsyncThunk(
   'scoreController/uploadedScore',
   async ({ nickname, authToken }: { nickname: string; authToken: string }) => {
-    const response = await scoreInstance.post('/uploadedScore', nickname, {
-      headers: { token: authToken },
-    });
+    const response = await scoreInstance.post(
+      '/uploadedScore',
+      { nickname },
+      {
+        headers: { token: authToken },
+      }
+    );
     return response;
   }
 );
@@ -51,11 +52,7 @@ const addScoreThunk = createAsyncThunk(
     authToken,
   }: {
     nickname: string;
-    score: {
-      scoreTotal: number;
-      scoreReddit: number;
-      scoreInsta: number;
-    };
+    score: Scores;
     authToken: string;
   }) => {
     const response = await scoreInstance.post(
@@ -85,11 +82,7 @@ const updateScoreThunk = createAsyncThunk(
     authToken,
   }: {
     nickname: string;
-    score: {
-      scoreTotal: number;
-      scoreReddit: number;
-      scoreInsta: number;
-    };
+    score: Scores;
     authToken: string;
   }) => {
     const response = await scoreInstance.put(
@@ -111,21 +104,23 @@ const deleteScoreThunk = createAsyncThunk(
     return response;
   }
 );
+
 const scoreControllerSlice = createSlice({
   name: 'userControl',
   initialState,
   reducers: {
-    deleteLocalScore: (state) => {
-      state.nickname = '';
+    deleteScoreLocally: (state) => {
       state.score = { scoreTotal: 0, scoreReddit: 0, scoreInsta: 0 };
       state.allScores = [];
+    },
+    setScore: (state, action: PayloadAction<Scores>) => {
+      state.score = action.payload;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(uploadedScoreThunk.fulfilled, (state, action) => {
-      state.uploadedScore = action.payload.data;
-      console.log('lääääätzd');
-      console.log(state.uploadedScore);
+      state.score = action.payload.data.score;
+      state.uploadedScore = action.payload.data.uploadedScore;
     });
     builder.addCase(addScoreThunk.fulfilled, (state) => {
       state.uploadedScore = true;
@@ -139,7 +134,6 @@ const scoreControllerSlice = createSlice({
       });
     });
     builder.addCase(deleteScoreThunk.fulfilled, (state) => {
-      state.nickname = '';
       state.uploadedScore = false;
       state.allScores = [];
     });
@@ -149,12 +143,14 @@ const scoreControllerSlice = createSlice({
 const selectUploadedScore = (state: RootState): boolean =>
   state.scoreControl.uploadedScore;
 
-const selectAllScores = (state: RootState): UserScore[] =>
+const selectAllScores = (state: RootState): NicknameAndScore[] =>
   state.scoreControl.allScores;
+
+const selectScore = (state: RootState): Scores => state.scoreControl.score;
 
 const { actions, reducer } = scoreControllerSlice;
 
-export const { deleteLocalScore } = actions;
+export const { deleteScoreLocally, setScore } = actions;
 
 export {
   uploadedScoreThunk,
@@ -164,6 +160,7 @@ export {
   deleteScoreThunk,
   selectUploadedScore,
   selectAllScores,
+  selectScore,
 };
 
 export default reducer;
