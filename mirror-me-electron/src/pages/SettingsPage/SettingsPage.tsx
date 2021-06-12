@@ -63,7 +63,7 @@ const SettingsPage: React.FC = () => {
                 <IonCardTitle>Delete Score</IonCardTitle>
               </IonCardHeader>
               <IonCardContent>
-                In order to change your nickname, click here!
+                In order to delete your nickname, click here!
                 <IonGrid>
                   <IonRow>
                     <IonCol>
