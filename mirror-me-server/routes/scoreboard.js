@@ -10,9 +10,14 @@ const Scoreboard = require("../model/Scoreboard.js")
 
 
 
+/**
+ * @method - POST
+ * @param - /getMe
+ * @description - if score exists send it as response with true or just send false
+ */
 
 router.post(
-  "/uploadedScore",
+  "/getMe",
   auth,
   [
     check("nickname", "Please enter a valid nickname")
@@ -33,9 +38,12 @@ router.post(
         nickname,
       });
       if (userScore) {
-        return res.status(200).json({ uploadedScore: true});
+        return res.status(200).json({
+          score: userScore.score,
+          uploadedScore: true,
+        });
       } else {
-        return res.status(200).json({ uploadedScore: false});
+        return res.status(200).json({ uploadedScore: false });
       }
 
     } catch (err) {

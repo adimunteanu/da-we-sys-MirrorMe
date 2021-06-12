@@ -30,11 +30,11 @@ const scoreInstance = axios.create({
   timeout: 1000,
 });
 
-const uploadedScoreThunk = createAsyncThunk(
-  'scoreController/uploadedScore',
+const getMeScoreThunk = createAsyncThunk(
+  'scoreController/getMe',
   async ({ nickname, authToken }: { nickname: string; authToken: string }) => {
     const response = await scoreInstance.post(
-      '/uploadedScore',
+      '/getMe',
       { nickname },
       {
         headers: { token: authToken },
@@ -64,7 +64,7 @@ const addScoreThunk = createAsyncThunk(
   }
 );
 
-const getAllScoresThunk = createAsyncThunk(
+const getAllScoreThunk = createAsyncThunk(
   'scoreController/getAll',
   async (authToken: string) => {
     const response = await scoreInstance.get('/getAll', {
@@ -118,14 +118,16 @@ const scoreControllerSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(uploadedScoreThunk.fulfilled, (state, action) => {
-      state.score = action.payload.data.score;
-      state.uploadedScore = action.payload.data.uploadedScore;
+    builder.addCase(getMeScoreThunk.fulfilled, (state, action) => {
+      if (action.payload.data.uploadedScore) {
+        state.uploadedScore = action.payload.data.uploadedScore;
+        state.score = action.payload.data.score;
+      }
     });
     builder.addCase(addScoreThunk.fulfilled, (state) => {
       state.uploadedScore = true;
     });
-    builder.addCase(getAllScoresThunk.fulfilled, (state, action) => {
+    builder.addCase(getAllScoreThunk.fulfilled, (state, action) => {
       state.allScores = action.payload.data;
       // console.log(state.allScores);
       Object.values(action.payload.data).forEach((value) => {
@@ -153,9 +155,9 @@ const { actions, reducer } = scoreControllerSlice;
 export const { deleteScoreLocally, setScore } = actions;
 
 export {
-  uploadedScoreThunk,
+  getMeScoreThunk,
   addScoreThunk,
-  getAllScoresThunk,
+  getAllScoreThunk,
   updateScoreThunk,
   deleteScoreThunk,
   selectUploadedScore,
