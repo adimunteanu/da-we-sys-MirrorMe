@@ -33,9 +33,9 @@ router.post(
         nickname,
       });
       if (userScore) {
-        return res.status(200).json(true);
+        return res.status(200).json({ uploadedScore: true});
       } else {
-        return res.status(200).json(false);
+        return res.status(200).json({ uploadedScore: false});
       }
 
     } catch (err) {
@@ -104,9 +104,13 @@ router.get("/getAll", auth, async (req, res) => {
   try {
     const allScores = await Scoreboard.find({}, function (err, scores) {
       var scoreMap = {};
-
+      let i=0;
       scores.forEach(function (userScore) {
-        scoreMap[userScore._id] = userScore;
+        scoreMap[userScore.nickname] = {
+          scoreTotal: userScore.score.scoreTotal,
+          scoreReddit: userScore.score.scoreReddit,
+          scoreInsta: userScore.score.scoreInsta,
+        };
       });
       res.json(scoreMap);
     });
