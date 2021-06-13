@@ -1,0 +1,10 @@
+.ConsentForm {
+  &-Card {
+    height: 150px;
+    overflow: hidden;
+    overflow-y: auto;
+    scroll-behavior: auto;
+    display: flex;
+    flex-direction: column;
+  }
+}
