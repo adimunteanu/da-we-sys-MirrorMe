@@ -26,7 +26,6 @@ const loadFiles = createAsyncThunk('data/loadFiles', async () => {
         dataArray.push({
           company: company.name,
           logo: company.logo,
-          summarized_card: company.summarized_component,
           data: currentJson,
         });
       }

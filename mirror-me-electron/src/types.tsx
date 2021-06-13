@@ -1,5 +1,3 @@
-import React from 'react';
-
 export type Route = string;
 
 export type Page = {
@@ -60,7 +58,6 @@ export type CompanyRelevantData = RedditRelevantData | InstagramRelevantData;
 export type CompanyRelevantDataObject = {
   company: string;
   logo: string;
-  summarized_card: React.ReactNode;
   data: CompanyRelevantData;
 };
 
