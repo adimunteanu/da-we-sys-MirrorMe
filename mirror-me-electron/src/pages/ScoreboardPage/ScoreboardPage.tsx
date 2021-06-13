@@ -47,7 +47,6 @@ const ScoreboardPage = () => {
 
   const getScoreboardList = () => {
     const items: any[] = [];
-    let ownItemIndex = -1;
 
     const sortedScores: any[] = [];
     switch (selectedCompany) {
@@ -89,7 +88,6 @@ const ScoreboardPage = () => {
 
     sortedScores.forEach((score, i) => {
       if (score.nickname === nickname) {
-        ownItemIndex = i;
         items.push(
           <IonItem className="ScoreItem" color="primary">
             <span>

@@ -1,6 +1,6 @@
 import { IonApp } from '@ionic/react';
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.global.scss';
 import Header from './components/Header/Header';
@@ -14,10 +14,36 @@ import {
   ScoreboardPage,
   SettingsPage,
 } from './pages';
-import { selectIsAuthenticated } from './pages/UserController/userControllerSlice';
+import {
+  selectData,
+  selectIsLoadingFiles,
+} from './pages/OverviewPage/dataSlice';
+import { computeScore } from './pages/ScoreboardPage';
+import {
+  selectUploadedScore,
+  updateScoreThunk,
+} from './pages/ScoreboardPage/scoreControllerSlice';
+import {
+  selectAuthToken,
+  selectIsAuthenticated,
+  selectNickname,
+} from './pages/UserController/userControllerSlice';
 
 const App = () => {
+  const dispatch = useDispatch();
   const isAuthenticated = useSelector(selectIsAuthenticated);
+  const hasScore = useSelector(selectUploadedScore);
+  const isLoadingFiles = useSelector(selectIsLoadingFiles);
+  const data = useSelector(selectData);
+  const nickname = useSelector(selectNickname);
+  const authToken = useSelector(selectAuthToken);
+
+  useEffect(() => {
+    if (hasScore && !isLoadingFiles) {
+      const score = computeScore(data);
+      dispatch(updateScoreThunk({ nickname, score, authToken }));
+    }
+  }, [isLoadingFiles]);
 
   return (
     <IonApp>
