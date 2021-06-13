@@ -1,5 +1,6 @@
 const express = require("express");
 const user = require("./routes/user.js");
+const scoreboard = require("./routes/scoreboard.js")
 const InitiateMongoServer = require("./config/db.js");
 
 // Initiate Mongo Server
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
  * Method - *
  */
 app.use("/user", user);
+app.use("/scoreboard", scoreboard);
 
 app.listen(PORT, (req, res) => {
   console.log(`Server Started at PORT ${PORT}`);
