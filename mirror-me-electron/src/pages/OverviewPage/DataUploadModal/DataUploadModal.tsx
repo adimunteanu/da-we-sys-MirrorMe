@@ -24,9 +24,19 @@ import { COMPANIES } from '../../../globals';
 import {
   loadFiles,
   selectCanUpload,
+  selectData,
   selectStringifiedData,
 } from '../dataSlice';
 import './DataUploadModal.scss';
+import {
+  selectUploadedScore,
+  updateScoreThunk,
+} from '../../ScoreboardPage/scoreControllerSlice';
+import { computeScore } from '../../ScoreboardPage';
+import {
+  selectAuthToken,
+  selectNickname,
+} from '../../UserController/userControllerSlice';
 
 interface Props {
   onDismiss: () => void;
@@ -37,6 +47,10 @@ const DataUploadModal: FunctionComponent<Props> = (props: Props) => {
   const [selectedCompany, setSelectedCompany] = useState<string>('Reddit');
   const canUpload = useSelector(selectCanUpload);
   const stringifiedData = useSelector(selectStringifiedData);
+  const hasScore = useSelector(selectUploadedScore);
+  const data = useSelector(selectData);
+  const nickname = useSelector(selectNickname);
+  const authToken = useSelector(selectAuthToken);
   const { onDismiss } = props;
 
   const handleUpload = () => {
@@ -47,6 +61,10 @@ const DataUploadModal: FunctionComponent<Props> = (props: Props) => {
       saveTextToFile(fileName, stringifiedData);
     }
     dispatch(loadFiles());
+    if (hasScore) {
+      const score = computeScore(data);
+      dispatch(updateScoreThunk({ nickname, score, authToken }));
+    }
     onDismiss();
   };
 

@@ -51,8 +51,8 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      dispatch(getMeScoreThunk({ nickname, authToken }));
       dispatch(loadFiles());
+      dispatch(getMeScoreThunk({ nickname, authToken }));
       history.push(PAGES.OVERVIEW.route);
     }
   }, [isAuthenticated]);
