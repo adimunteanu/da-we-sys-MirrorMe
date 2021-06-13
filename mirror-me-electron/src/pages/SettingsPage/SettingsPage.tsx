@@ -16,13 +16,17 @@ import {
   selectAuthToken,
   selectNickname,
 } from '../UserController/userControllerSlice';
-import { deleteScoreThunk } from '../ScoreboardPage/scoreControllerSlice';
+import {
+  deleteScoreThunk,
+  selectUploadedScore,
+} from '../ScoreboardPage/scoreControllerSlice';
 
 const SettingsPage: React.FC = () => {
   const dispatch = useDispatch();
 
   const nickname = useSelector(selectNickname);
   const authToken = useSelector(selectAuthToken);
+  const hasScore = useSelector(selectUploadedScore);
 
   const tryDeleteScore = () => {
     dispatch(
@@ -35,10 +39,9 @@ const SettingsPage: React.FC = () => {
 
   return (
     <IonContent className="SettingsPage">
-      <p>Settings page</p>
       <IonGrid className="CardGrid">
         <IonRow>
-          <IonCol>
+          <IonCol size="4">
             <IonCard className="SettingsPage_Card">
               <IonCardHeader>
                 <IonCardTitle>Change Nickname</IonCardTitle>
@@ -57,29 +60,31 @@ const SettingsPage: React.FC = () => {
               </IonCardContent>
             </IonCard>
           </IonCol>
-          <IonCol>
-            <IonCard className="SettingsPage_Card">
-              <IonCardHeader>
-                <IonCardTitle>Delete Score</IonCardTitle>
-              </IonCardHeader>
-              <IonCardContent>
-                In order to delete your nickname, click here!
-                <IonGrid>
-                  <IonRow>
-                    <IonCol>
-                      <IonButton
-                        id="delete-score"
-                        size="large"
-                        onClick={tryDeleteScore}
-                      >
-                        Delete Score
-                      </IonButton>
-                    </IonCol>
-                  </IonRow>
-                </IonGrid>
-              </IonCardContent>
-            </IonCard>
-          </IonCol>
+          {hasScore && (
+            <IonCol size="4">
+              <IonCard className="SettingsPage_Card">
+                <IonCardHeader>
+                  <IonCardTitle>Delete Score</IonCardTitle>
+                </IonCardHeader>
+                <IonCardContent>
+                  In order to delete your nickname, click here!
+                  <IonGrid>
+                    <IonRow>
+                      <IonCol>
+                        <IonButton
+                          id="delete-score"
+                          size="large"
+                          onClick={tryDeleteScore}
+                        >
+                          Delete Score
+                        </IonButton>
+                      </IonCol>
+                    </IonRow>
+                  </IonGrid>
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
+          )}
         </IonRow>
       </IonGrid>
     </IonContent>
