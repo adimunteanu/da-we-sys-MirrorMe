@@ -4,3 +4,9 @@
   align-items: center;
   justify-content: center;
 }
+
+.ScoreItem {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

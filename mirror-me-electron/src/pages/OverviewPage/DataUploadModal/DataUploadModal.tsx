@@ -37,6 +37,7 @@ const DataUploadModal: FunctionComponent<Props> = (props: Props) => {
   const [selectedCompany, setSelectedCompany] = useState<string>('Reddit');
   const canUpload = useSelector(selectCanUpload);
   const stringifiedData = useSelector(selectStringifiedData);
+
   const { onDismiss } = props;
 
   const handleUpload = () => {
@@ -47,6 +48,7 @@ const DataUploadModal: FunctionComponent<Props> = (props: Props) => {
       saveTextToFile(fileName, stringifiedData);
     }
     dispatch(loadFiles());
+
     onDismiss();
   };
 
