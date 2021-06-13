@@ -1,18 +1,13 @@
 import { IonCol, IonContent, IonGrid, IonRow } from '@ionic/react';
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import SummarizedCard from '../../components/SummarizedCard/SummarizedCard';
-import { loadFiles, selectData, selectHasData } from './dataSlice';
+import { selectData, selectHasData } from './dataSlice';
 import EmptyView from './EmptyView';
 
 const OverviewPage = () => {
-  const dispatch = useDispatch();
   const hasData = useSelector(selectHasData);
   const relevantData = useSelector(selectData);
-
-  useEffect(() => {
-    dispatch(loadFiles());
-  }, []);
 
   return (
     <IonContent className="OverviewPage">

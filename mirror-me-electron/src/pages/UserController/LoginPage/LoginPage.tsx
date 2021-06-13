@@ -14,9 +14,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { PAGES } from '../../../globals';
 import './LoginPage.scss';
-import { loginThunk, selectIsAuthenticated } from '../userControllerSlice';
+import {
+  loginThunk,
+  selectAuthToken,
+  selectIsAuthenticated,
+  selectNickname,
+} from '../userControllerSlice';
 import { isEmail, isPassword } from '..';
 import SlidingError from '../../../components/SlidingError/SlidingError';
+import { getMeScoreThunk } from '../../ScoreboardPage/scoreControllerSlice';
+import { loadFiles } from '../../OverviewPage/dataSlice';
 
 const LoginPage = () => {
   const history = useHistory();
@@ -25,6 +32,8 @@ const LoginPage = () => {
   const [errorOccured, setErrorOccured] = useState(false);
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(selectIsAuthenticated);
+  const authToken = useSelector(selectAuthToken);
+  const nickname = useSelector(selectNickname);
 
   const tryLogin = () => {
     if (isEmail(email) && isPassword(password)) {
@@ -41,7 +50,11 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
-    if (isAuthenticated) history.push(PAGES.OVERVIEW.route);
+    if (isAuthenticated) {
+      dispatch(getMeScoreThunk({ nickname, authToken }));
+      dispatch(loadFiles());
+      history.push(PAGES.OVERVIEW.route);
+    }
   }, [isAuthenticated]);
 
   useEffect(() => {
