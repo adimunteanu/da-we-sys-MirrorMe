@@ -1,20 +1,10 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState } from '../../store';
-
-export type Scores = {
-  scoreTotal: number;
-  scoreReddit: number;
-  scoreInsta: number;
-};
-
-export type NicknameAndScore = {
-  nickname: string;
-  score: Scores;
-};
+import { NicknameAndScore, ScoresObject } from '../../types';
 
 export type ScoreControllerState = {
-  score: Scores;
+  score: ScoresObject;
   allScores: NicknameAndScore[];
   uploadedScore: boolean;
 };
@@ -52,7 +42,7 @@ const addScoreThunk = createAsyncThunk(
     authToken,
   }: {
     nickname: string;
-    score: Scores;
+    score: ScoresObject;
     authToken: string;
   }) => {
     const response = await scoreInstance.post(
@@ -82,7 +72,7 @@ const updateScoreThunk = createAsyncThunk(
     authToken,
   }: {
     nickname: string;
-    score: Scores;
+    score: ScoresObject;
     authToken: string;
   }) => {
     const response = await scoreInstance.put(
@@ -106,21 +96,21 @@ const deleteScoreThunk = createAsyncThunk(
 );
 
 const scoreControllerSlice = createSlice({
-  name: 'userControl',
+  name: 'scoreController',
   initialState,
   reducers: {
     deleteScoreLocally: (state) => {
       state.score = { scoreTotal: 0, scoreReddit: 0, scoreInsta: 0 };
       state.allScores = [];
     },
-    setScore: (state, action: PayloadAction<Scores>) => {
+    setScore: (state, action: PayloadAction<ScoresObject>) => {
       state.score = action.payload;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(getMeScoreThunk.fulfilled, (state, action) => {
-      if (action.payload.data.uploadedScore) {
-        state.uploadedScore = action.payload.data.uploadedScore;
+      state.uploadedScore = action.payload.data.uploadedScore;
+      if (state.uploadedScore) {
         state.score = action.payload.data.score;
       }
     });
@@ -128,16 +118,15 @@ const scoreControllerSlice = createSlice({
       state.uploadedScore = true;
     });
     builder.addCase(getAllScoreThunk.fulfilled, (state, action) => {
-      state.allScores = action.payload.data;
-      // console.log(state.allScores);
-      Object.values(action.payload.data).forEach((value) => {
-        console.log(value);
-        state.allScores.push(); // #TODO
+      state.allScores = [];
+      Object.entries(action.payload.data).forEach(([key, value]) => {
+        state.allScores.push({ nickname: key, score: value as ScoresObject });
       });
     });
     builder.addCase(deleteScoreThunk.fulfilled, (state) => {
       state.uploadedScore = false;
       state.allScores = [];
+      state.score = { scoreTotal: 0, scoreReddit: 0, scoreInsta: 0 };
     });
   },
 });
@@ -148,7 +137,8 @@ const selectUploadedScore = (state: RootState): boolean =>
 const selectAllScores = (state: RootState): NicknameAndScore[] =>
   state.scoreControl.allScores;
 
-const selectScore = (state: RootState): Scores => state.scoreControl.score;
+const selectScore = (state: RootState): ScoresObject =>
+  state.scoreControl.score;
 
 const { actions, reducer } = scoreControllerSlice;
 

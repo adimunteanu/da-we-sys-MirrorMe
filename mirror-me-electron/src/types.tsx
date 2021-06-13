@@ -70,3 +70,14 @@ export enum ChartType {
   PIE,
   DONUT,
 }
+
+export type ScoresObject = {
+  scoreTotal: number;
+  scoreReddit: number;
+  scoreInsta: number;
+};
+
+export type NicknameAndScore = {
+  nickname: string;
+  score: ScoresObject;
+};
