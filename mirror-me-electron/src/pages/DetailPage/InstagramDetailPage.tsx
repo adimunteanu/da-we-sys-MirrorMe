@@ -14,6 +14,7 @@ import ReactWordcloud, { Word } from 'react-wordcloud';
 import {
   createChartDataset,
   createChartDatasetFromMap,
+  getFieldPerHour,
   getFieldsPerMonth,
 } from '../../components/ChartCard/chartUtils';
 import ChartCard from '../../components/ChartCard/ChartCard';
@@ -28,13 +29,7 @@ const InstagramDetailPage = () => {
   const getContributionsPerMonth = () => {
     const { messages, posts, likes, stories, comments } = data.contributions;
     return getFieldsPerMonth(
-      [
-        messages.map((message) => message.date),
-        posts,
-        likes,
-        stories,
-        comments,
-      ],
+      [messages, posts, likes, stories, comments],
       [
         '# of messages',
         '# of posts',
@@ -103,6 +98,30 @@ const InstagramDetailPage = () => {
     return createChartDatasetFromMap('Participants', participantMap);
   };
 
+  const getLikesActivity = () => {
+    const { likes } = data.contributions;
+
+    return getFieldPerHour(likes, 'Likes activity');
+  };
+
+  const getMessagesActivity = () => {
+    const { messages } = data.contributions;
+
+    return getFieldPerHour(messages, 'Messages activity');
+  };
+
+  const getStoriesActivity = () => {
+    const { stories } = data.contributions;
+
+    return getFieldPerHour(stories, 'Stories activity');
+  };
+
+  const getCommentsActivity = () => {
+    const { comments } = data.contributions;
+
+    return getFieldPerHour(comments, 'Comments activity');
+  };
+
   return (
     <IonContent>
       <IonGrid>
@@ -156,6 +175,38 @@ const InstagramDetailPage = () => {
               title="Message distribution"
               chartType={ChartType.PIE}
               data={getMessageDistribution}
+            />
+          </IonCol>
+        </IonRow>
+        <IonRow>
+          <IonCol size="6">
+            <ChartCard
+              title="Likes per hour"
+              chartType={ChartType.BAR}
+              data={getLikesActivity}
+            />
+          </IonCol>
+          <IonCol size="6">
+            <ChartCard
+              title="Messages per hour"
+              chartType={ChartType.BAR}
+              data={getMessagesActivity}
+            />
+          </IonCol>
+        </IonRow>
+        <IonRow>
+          <IonCol size="6">
+            <ChartCard
+              title="Stories per hour"
+              chartType={ChartType.BAR}
+              data={getStoriesActivity}
+            />
+          </IonCol>
+          <IonCol size="6">
+            <ChartCard
+              title="Comments per hour"
+              chartType={ChartType.BAR}
+              data={getCommentsActivity}
             />
           </IonCol>
         </IonRow>

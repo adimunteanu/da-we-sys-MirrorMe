@@ -34,14 +34,22 @@ export type RedditRelevantData = {
 
 export type InstagramRelevantData = {
   contributions: {
-    comments: Date[];
+    comments: {
+      date: Date;
+    }[];
     messages: {
       participant: string;
       date: Date;
     }[];
-    posts: Date[];
-    likes: Date[];
-    stories: Date[];
+    posts: {
+      date: Date;
+    }[];
+    likes: {
+      date: Date;
+    }[];
+    stories: {
+      date: Date;
+    }[];
   };
   relationships: {
     followers: string[];

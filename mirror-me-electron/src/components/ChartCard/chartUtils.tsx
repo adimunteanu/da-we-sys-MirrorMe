@@ -53,13 +53,39 @@ export const getFieldPerMonth = (field: any[], datasetLabel: string) => {
   return createChartDatasetFromMap(datasetLabel, monthsMap);
 };
 
+export const getFieldPerHour = (field: any[], datasetLabel: string) => {
+  const sortedArray = [...field];
+
+  sortedArray.sort(
+    (a, b) => new Date(a.date).getHours() - new Date(b.date).getHours()
+  );
+
+  const hoursMap = new Map();
+
+  for (let i = 0; i < 24; i += 1) {
+    hoursMap.set(`${i}`, 0);
+  }
+
+  sortedArray.forEach((object) => {
+    const time = `${new Date(object.date).getHours().toString()}`;
+
+    if (object.date !== null && !time.toLowerCase().includes('nan')) {
+      hoursMap.set(time, hoursMap.get(time) + 1);
+    }
+  });
+
+  return createChartDatasetFromMap(datasetLabel, hoursMap);
+};
+
 export const getFieldsPerMonth = (fields: any[][], datasetLabels: string[]) => {
   const sortedArrays = [] as any[];
   const monthsMaps = [] as Map<string, number>[];
 
   fields.forEach((field) => {
     sortedArrays.push(
-      [...field].sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
+      [...field].sort(
+        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+      )
     );
     monthsMaps.push(new Map());
   });
@@ -67,8 +93,10 @@ export const getFieldsPerMonth = (fields: any[][], datasetLabels: string[]) => {
   for (let i = 0; i < sortedArrays.length; i += 1) {
     for (let j = 0; j < (sortedArrays[i] as any[]).length; j += 1) {
       const time = `${(
-        new Date(sortedArrays[i][j]).getMonth() + 1
-      ).toString()}-${new Date(sortedArrays[i][j]).getFullYear().toString()}`;
+        new Date(sortedArrays[i][j].date).getMonth() + 1
+      ).toString()}-${new Date(sortedArrays[i][j].date)
+        .getFullYear()
+        .toString()}`;
 
       if (!time.toLowerCase().includes('nan')) {
         const hasTime = monthsMaps[i].has(time);

@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import {
   createChartDataset,
   createChartDatasetFromMap,
+  getFieldPerHour,
   getFieldPerMonth,
 } from '../../components/ChartCard/chartUtils';
 import ChartCard from '../../components/ChartCard/ChartCard';
@@ -79,6 +80,18 @@ const RedditDetailPage = () => {
     return createChartDatasetFromMap('Cities', citiesMap);
   };
 
+  const getCommentsActivity = () => {
+    const { comments } = data.contributions;
+
+    return getFieldPerHour(comments, 'Comment activity');
+  };
+
+  const getMessagesActivity = () => {
+    const { messages } = data.contributions;
+
+    return getFieldPerHour(messages, 'Messages activity');
+  };
+
   return (
     <IonContent>
       <IonGrid>
@@ -118,6 +131,22 @@ const RedditDetailPage = () => {
               title="Messages per month"
               chartType={ChartType.LINE}
               data={getMessagesPerMonth}
+            />
+          </IonCol>
+        </IonRow>
+        <IonRow>
+          <IonCol size="6">
+            <ChartCard
+              title="Comments distribution per day"
+              chartType={ChartType.BAR}
+              data={getCommentsActivity}
+            />
+          </IonCol>
+          <IonCol size="6">
+            <ChartCard
+              title="Messages distribution per day"
+              chartType={ChartType.BAR}
+              data={getMessagesActivity}
             />
           </IonCol>
         </IonRow>
