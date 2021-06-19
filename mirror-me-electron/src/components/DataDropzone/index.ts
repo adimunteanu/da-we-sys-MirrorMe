@@ -127,7 +127,7 @@ export const processReddit = async (
           break;
         }
         case relevantFields.REDDIT.COMMENTS: {
-          populateJsonArray(comments, jsonData, ['date', 'subreddit']);
+          populateJsonArray(comments, jsonData, ['date', 'subreddit', 'body']);
           break;
         }
         case relevantFields.REDDIT.VOTES: {
@@ -153,7 +153,7 @@ export const processReddit = async (
           break;
         }
         case relevantFields.REDDIT.MESSAGES: {
-          populateJsonArray(messages, jsonData, ['date', 'from']);
+          populateJsonArray(messages, jsonData, ['date', 'from', 'body']);
           break;
         }
         case relevantFields.REDDIT.SUBREDDITS:

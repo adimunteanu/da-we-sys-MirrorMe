@@ -63,7 +63,7 @@ const InstagramDetailPage = () => {
     shuffledAds.forEach((ad) => {
       words.push({
         text: ad,
-        value: Math.round(Math.random() * 50),
+        value: 10,
       });
     });
     return words.slice(0, 30);
@@ -76,7 +76,7 @@ const InstagramDetailPage = () => {
     shuffledTopics.forEach((topic) => {
       words.push({
         text: topic,
-        value: Math.round(Math.random() * 50),
+        value: 15,
       });
     });
     return words.slice(0, 30);
@@ -134,7 +134,7 @@ const InstagramDetailPage = () => {
               <IonCardContent>
                 <ReactWordcloud
                   words={getAddWordCloud()}
-                  options={{ enableTooltip: false }}
+                  options={{ enableTooltip: false, enableOptimizations: true }}
                 />
               </IonCardContent>
             </IonCard>
@@ -147,7 +147,7 @@ const InstagramDetailPage = () => {
               <IonCardContent>
                 <ReactWordcloud
                   words={getTopicWordCloud()}
-                  options={{ enableTooltip: false }}
+                  options={{ enableTooltip: false, enableOptimizations: true }}
                 />
               </IonCardContent>
             </IonCard>

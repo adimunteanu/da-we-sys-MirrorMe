@@ -14,6 +14,7 @@ export type RedditRelevantData = {
   contributions: {
     comments: {
       subreddit: string;
+      body: string;
       date: Date;
     }[];
     votes: {
@@ -26,6 +27,7 @@ export type RedditRelevantData = {
     }[];
     messages: {
       date: Date;
+      body: string;
       from: string;
     }[];
   };
