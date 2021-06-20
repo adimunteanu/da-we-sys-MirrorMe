@@ -14,6 +14,7 @@ export type RedditRelevantData = {
   contributions: {
     comments: {
       subreddit: string;
+      body: string;
       date: Date;
     }[];
     votes: {
@@ -26,6 +27,7 @@ export type RedditRelevantData = {
     }[];
     messages: {
       date: Date;
+      body: string;
       from: string;
     }[];
   };
@@ -34,14 +36,22 @@ export type RedditRelevantData = {
 
 export type InstagramRelevantData = {
   contributions: {
-    comments: Date[];
+    comments: {
+      date: Date;
+    }[];
     messages: {
       participant: string;
       date: Date;
     }[];
-    posts: Date[];
-    likes: Date[];
-    stories: Date[];
+    posts: {
+      date: Date;
+    }[];
+    likes: {
+      date: Date;
+    }[];
+    stories: {
+      date: Date;
+    }[];
   };
   relationships: {
     followers: string[];
@@ -78,3 +88,15 @@ export type NicknameAndScore = {
   nickname: string;
   score: ScoresObject;
 };
+
+export interface ChartCardProps {
+  title: string;
+  chart: JSX.Element;
+  isFullscreen?: boolean;
+  onDismiss?: () => void;
+}
+
+export interface ChartProps {
+  data: unknown;
+  chartType: ChartType;
+}

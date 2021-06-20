@@ -1,14 +1,27 @@
-import { IonCol, IonContent, IonGrid, IonRow } from '@ionic/react';
+import {
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonCol,
+  IonContent,
+  IonGrid,
+  IonRow,
+} from '@ionic/react';
 import React from 'react';
 import { useSelector } from 'react-redux';
+import ReactWordcloud, { Word } from 'react-wordcloud';
 import {
   createChartDataset,
   createChartDatasetFromMap,
+  getFieldPerHour,
   getFieldPerMonth,
 } from '../../components/ChartCard/chartUtils';
 import ChartCard from '../../components/ChartCard/ChartCard';
 import { ChartType, RedditRelevantData } from '../../types';
 import { selectData } from '../OverviewPage/dataSlice';
+import DefaultChart from '../../components/ChartCard/DefaultChart';
+import SegmentChart from '../../components/ChartCard/SegmentChart';
 
 const geoip = require('offline-geo-from-ip');
 
@@ -79,6 +92,76 @@ const RedditDetailPage = () => {
     return createChartDatasetFromMap('Cities', citiesMap);
   };
 
+  const getCommentsActivity = () => {
+    const { comments } = data.contributions;
+
+    return getFieldPerHour(comments, 'Comment activity');
+  };
+
+  const getMessagesActivity = () => {
+    const { messages } = data.contributions;
+
+    return getFieldPerHour(messages, 'Messages activity');
+  };
+
+  const getMostUsedInCommentWordCloud = (): Array<Word> => {
+    const { comments } = data.contributions;
+
+    const mostUsedWordsMap = new Map();
+
+    comments.forEach((comment) => {
+      if (comment.body) {
+        comment.body.split(' ').forEach((word) => {
+          const hasWord = mostUsedWordsMap.has(word);
+
+          mostUsedWordsMap.set(
+            word,
+            !hasWord ? 1 : mostUsedWordsMap.get(word) + 1
+          );
+        });
+      }
+    });
+
+    const topTenWords = Array.from(mostUsedWordsMap.entries())
+      .sort((a, b) => a[1] - b[1])
+      .slice(0, 30);
+
+    const words: Array<Word> = topTenWords.map((word) => {
+      return { text: word[0], value: word[1] };
+    });
+
+    return words;
+  };
+
+  const getMostUsedInMessageWordCloud = (): Array<Word> => {
+    const { messages } = data.contributions;
+
+    const mostUsedWordsMap = new Map();
+
+    messages.forEach((message) => {
+      if (message.body) {
+        message.body.split(' ').forEach((word) => {
+          const hasWord = mostUsedWordsMap.has(word);
+
+          mostUsedWordsMap.set(
+            word,
+            !hasWord ? 1 : mostUsedWordsMap.get(word) + 1
+          );
+        });
+      }
+    });
+
+    const topTenWords = Array.from(mostUsedWordsMap.entries())
+      .sort((a, b) => a[1] - b[1])
+      .slice(0, 20);
+
+    const words: Array<Word> = topTenWords.map((word) => {
+      return { text: word[0], value: word[1] };
+    });
+
+    return words;
+  };
+
   return (
     <IonContent>
       <IonGrid>
@@ -86,22 +169,31 @@ const RedditDetailPage = () => {
           <IonCol size="4">
             <ChartCard
               title="Access Locations"
-              chartType={ChartType.PIE}
-              data={getLocationCounts}
+              chart={
+                <DefaultChart
+                  data={getLocationCounts}
+                  chartType={ChartType.PIE}
+                />
+              }
             />
           </IonCol>
           <IonCol size="4">
             <ChartCard
               title="Votes Positivity"
-              chartType={ChartType.BAR}
-              data={getUpDownVotes}
+              chart={
+                <DefaultChart data={getUpDownVotes} chartType={ChartType.BAR} />
+              }
             />
           </IonCol>
           <IonCol size="4">
             <ChartCard
               title="Votes Distribution"
-              chartType={ChartType.DONUT}
-              data={getVotesDistribution}
+              chart={
+                <DefaultChart
+                  data={getVotesDistribution}
+                  chartType={ChartType.DONUT}
+                />
+              }
             />
           </IonCol>
         </IonRow>
@@ -109,16 +201,80 @@ const RedditDetailPage = () => {
           <IonCol size="6">
             <ChartCard
               title="Comments per month"
-              chartType={ChartType.LINE}
-              data={getCommentsPerMonth}
+              chart={
+                <DefaultChart
+                  data={getCommentsPerMonth}
+                  chartType={ChartType.LINE}
+                />
+              }
             />
           </IonCol>
           <IonCol size="6">
             <ChartCard
               title="Messages per month"
-              chartType={ChartType.LINE}
-              data={getMessagesPerMonth}
+              chart={
+                <DefaultChart
+                  data={getMessagesPerMonth}
+                  chartType={ChartType.LINE}
+                />
+              }
             />
+          </IonCol>
+        </IonRow>
+        <IonRow>
+          <IonCol size="6">
+            <ChartCard
+              title="Comments distribution per day"
+              chart={
+                <SegmentChart
+                  chartType={ChartType.BAR}
+                  data={getCommentsActivity()[0]}
+                  chartTypeOverview={ChartType.DONUT}
+                  dataOverview={getCommentsActivity()[1]}
+                />
+              }
+            />
+          </IonCol>
+          <IonCol size="6">
+            <ChartCard
+              title="Messages distribution per day"
+              chart={
+                <SegmentChart
+                  chartType={ChartType.BAR}
+                  data={getMessagesActivity()[0]}
+                  chartTypeOverview={ChartType.DONUT}
+                  dataOverview={getMessagesActivity()[1]}
+                />
+              }
+            />
+          </IonCol>
+        </IonRow>
+        <IonRow>
+          <IonCol size="6">
+            <IonCard>
+              <IonCardHeader>
+                <IonCardTitle>Top 10 words used in comments</IonCardTitle>
+              </IonCardHeader>
+              <IonCardContent>
+                <ReactWordcloud
+                  words={getMostUsedInCommentWordCloud()}
+                  options={{ enableTooltip: false, enableOptimizations: true }}
+                />
+              </IonCardContent>
+            </IonCard>
+          </IonCol>
+          <IonCol size="6">
+            <IonCard>
+              <IonCardHeader>
+                <IonCardTitle>Top 10 words used in messages</IonCardTitle>
+              </IonCardHeader>
+              <IonCardContent>
+                <ReactWordcloud
+                  words={getMostUsedInMessageWordCloud()}
+                  options={{ enableTooltip: false, enableOptimizations: true }}
+                />
+              </IonCardContent>
+            </IonCard>
           </IonCol>
         </IonRow>
       </IonGrid>

@@ -127,7 +127,7 @@ export const processReddit = async (
           break;
         }
         case relevantFields.REDDIT.COMMENTS: {
-          populateJsonArray(comments, jsonData, ['date', 'subreddit']);
+          populateJsonArray(comments, jsonData, ['date', 'subreddit', 'body']);
           break;
         }
         case relevantFields.REDDIT.VOTES: {
@@ -153,7 +153,7 @@ export const processReddit = async (
           break;
         }
         case relevantFields.REDDIT.MESSAGES: {
-          populateJsonArray(messages, jsonData, ['date', 'from']);
+          populateJsonArray(messages, jsonData, ['date', 'from', 'body']);
           break;
         }
         case relevantFields.REDDIT.SUBREDDITS:
@@ -199,7 +199,11 @@ export const processInstagram = async (
           relevantJSON.contributions.comments = getValuesFromNestedObject(
             jsonData,
             ['comments_media_comments.string_list_data.timestamp']
-          )[0].map((value: any) => new Date(value * 1000));
+          )[0].map((value: any) => {
+            return {
+              date: new Date(value * 1000),
+            };
+          });
 
           break;
         }
@@ -231,11 +235,13 @@ export const processInstagram = async (
         }
         case relevantFields.INSTAGRAM.POSTS: {
           relevantJSON.contributions.posts = jsonData.map((post) => {
-            return new Date(
-              getValuesFromNestedObject(post, [
-                'media.creation_timestamp',
-              ])[0][0] * 1000
-            );
+            return {
+              date: new Date(
+                getValuesFromNestedObject(post, [
+                  'media.creation_timestamp',
+                ])[0][0] * 1000
+              ),
+            };
           });
 
           break;
@@ -244,7 +250,11 @@ export const processInstagram = async (
           relevantJSON.contributions.likes = getValuesFromNestedObject(
             jsonData,
             ['likes_media_likes.string_list_data.timestamp']
-          )[0].map((value: any) => new Date(value * 1000));
+          )[0].map((value: any) => {
+            return {
+              date: new Date(value * 1000),
+            };
+          });
 
           break;
         }
@@ -294,7 +304,11 @@ export const processInstagram = async (
           relevantJSON.contributions.stories = getValuesFromNestedObject(
             jsonData,
             ['ig_stories.creation_timestamp']
-          )[0].map((value: any) => new Date(value * 1000));
+          )[0].map((value: any) => {
+            return {
+              date: new Date(value * 1000),
+            };
+          });
 
           break;
         }

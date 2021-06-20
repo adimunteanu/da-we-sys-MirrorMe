@@ -14,11 +14,14 @@ import ReactWordcloud, { Word } from 'react-wordcloud';
 import {
   createChartDataset,
   createChartDatasetFromMap,
+  getFieldPerHour,
   getFieldsPerMonth,
 } from '../../components/ChartCard/chartUtils';
 import ChartCard from '../../components/ChartCard/ChartCard';
 import { ChartType, InstagramRelevantData } from '../../types';
 import { selectData } from '../OverviewPage/dataSlice';
+import SegmentChart from '../../components/ChartCard/SegmentChart';
+import DefaultChart from '../../components/ChartCard/DefaultChart';
 
 const InstagramDetailPage = () => {
   const data = useSelector(selectData).find(
@@ -28,13 +31,7 @@ const InstagramDetailPage = () => {
   const getContributionsPerMonth = () => {
     const { messages, posts, likes, stories, comments } = data.contributions;
     return getFieldsPerMonth(
-      [
-        messages.map((message) => message.date),
-        posts,
-        likes,
-        stories,
-        comments,
-      ],
+      [messages, posts, likes, stories, comments],
       [
         '# of messages',
         '# of posts',
@@ -68,7 +65,7 @@ const InstagramDetailPage = () => {
     shuffledAds.forEach((ad) => {
       words.push({
         text: ad,
-        value: Math.round(Math.random() * 50),
+        value: 10,
       });
     });
     return words.slice(0, 30);
@@ -81,7 +78,7 @@ const InstagramDetailPage = () => {
     shuffledTopics.forEach((topic) => {
       words.push({
         text: topic,
-        value: Math.round(Math.random() * 50),
+        value: 15,
       });
     });
     return words.slice(0, 30);
@@ -103,6 +100,30 @@ const InstagramDetailPage = () => {
     return createChartDatasetFromMap('Participants', participantMap);
   };
 
+  const getLikesActivity = () => {
+    const { likes } = data.contributions;
+
+    return getFieldPerHour(likes, 'Likes activity');
+  };
+
+  const getMessagesActivity = () => {
+    const { messages } = data.contributions;
+
+    return getFieldPerHour(messages, 'Messages activity');
+  };
+
+  const getStoriesActivity = () => {
+    const { stories } = data.contributions;
+
+    return getFieldPerHour(stories, 'Stories activity');
+  };
+
+  const getCommentsActivity = () => {
+    const { comments } = data.contributions;
+
+    return getFieldPerHour(comments, 'Comments activity');
+  };
+
   return (
     <IonContent>
       <IonGrid>
@@ -115,7 +136,7 @@ const InstagramDetailPage = () => {
               <IonCardContent>
                 <ReactWordcloud
                   words={getAddWordCloud()}
-                  options={{ enableTooltip: false }}
+                  options={{ enableTooltip: false, enableOptimizations: true }}
                 />
               </IonCardContent>
             </IonCard>
@@ -128,7 +149,7 @@ const InstagramDetailPage = () => {
               <IonCardContent>
                 <ReactWordcloud
                   words={getTopicWordCloud()}
-                  options={{ enableTooltip: false }}
+                  options={{ enableTooltip: false, enableOptimizations: true }}
                 />
               </IonCardContent>
             </IonCard>
@@ -138,8 +159,12 @@ const InstagramDetailPage = () => {
           <IonCol size="12">
             <ChartCard
               title="Contributions"
-              chartType={ChartType.LINE}
-              data={getContributionsPerMonth}
+              chart={
+                <DefaultChart
+                  data={getContributionsPerMonth}
+                  chartType={ChartType.LINE}
+                />
+              }
             />
           </IonCol>
         </IonRow>
@@ -147,15 +172,79 @@ const InstagramDetailPage = () => {
           <IonCol size="6">
             <ChartCard
               title="Relationships"
-              chartType={ChartType.BAR}
-              data={getRelationships}
+              chart={
+                <DefaultChart
+                  data={getRelationships}
+                  chartType={ChartType.BAR}
+                />
+              }
             />
           </IonCol>
           <IonCol size="6">
             <ChartCard
               title="Message distribution"
-              chartType={ChartType.PIE}
-              data={getMessageDistribution}
+              chart={
+                <DefaultChart
+                  data={getMessageDistribution}
+                  chartType={ChartType.PIE}
+                />
+              }
+            />
+          </IonCol>
+        </IonRow>
+        <IonRow>
+          <IonCol size="6">
+            <ChartCard
+              title="Likes per hour"
+              chart={
+                <SegmentChart
+                  chartType={ChartType.BAR}
+                  data={getLikesActivity()[0]}
+                  chartTypeOverview={ChartType.DONUT}
+                  dataOverview={getLikesActivity()[1]}
+                />
+              }
+            />
+          </IonCol>
+          <IonCol size="6">
+            <ChartCard
+              title="Messages per hour"
+              chart={
+                <SegmentChart
+                  chartType={ChartType.BAR}
+                  data={getMessagesActivity()[0]}
+                  chartTypeOverview={ChartType.DONUT}
+                  dataOverview={getMessagesActivity()[1]}
+                />
+              }
+            />
+          </IonCol>
+        </IonRow>
+        <IonRow>
+          <IonCol size="6">
+            <ChartCard
+              title="Stories per hour"
+              chart={
+                <SegmentChart
+                  chartType={ChartType.BAR}
+                  data={getStoriesActivity()[0]}
+                  chartTypeOverview={ChartType.DONUT}
+                  dataOverview={getStoriesActivity()[1]}
+                />
+              }
+            />
+          </IonCol>
+          <IonCol size="6">
+            <ChartCard
+              title="Comments per hour"
+              chart={
+                <SegmentChart
+                  chartType={ChartType.BAR}
+                  data={getCommentsActivity()[0]}
+                  chartTypeOverview={ChartType.DONUT}
+                  dataOverview={getCommentsActivity()[1]}
+                />
+              }
             />
           </IonCol>
         </IonRow>
