@@ -9,7 +9,7 @@ export type UserControllerState = {
 };
 
 const initialState: UserControllerState = {
-  isAuthenticated: true,
+  isAuthenticated: false,
   authToken: '',
   nickname: '',
 };
