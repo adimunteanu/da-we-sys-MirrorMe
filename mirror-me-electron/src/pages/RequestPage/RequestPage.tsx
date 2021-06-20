@@ -12,7 +12,7 @@ import {
 } from '@ionic/react';
 import { shell } from 'electron';
 import FacebookImg from '../../images/Facebook.png';
-import YouTubeImg from '../../images/YouTube.jpg';
+import RedditImg from '../../images/Reddit.jpg';
 import GitHubImg from '../../images/GitHub.png';
 import InstagramImg from '../../images/Instagram.png';
 import SpotifyImg from '../../images/Spotify.jpg';
@@ -79,13 +79,14 @@ const RequestPage: React.FC = () => {
           </IonCol> */}
           <IonCol>
             <IonCard className="RequestPage_Card">
-              <img className="youtube-img" src={YouTubeImg} alt="YouTube" />
+              <img className="reddit-img" src={RedditImg} alt="Reddit" />
               <IonCardHeader>
                 <IonCardTitle>Reddit</IonCardTitle>
               </IonCardHeader>
               <IonCardContent>
-                YouTube is an online video platform owned by Google. In total,
-                users watch more than one billion hours of videos each day.
+                Reddit is a network of communities based on people&apos;s
+                interests. Find communities you&apos;re interested in, and
+                become part of an online community!
                 <IonGrid>
                   <IonRow>
                     <IonCol>
