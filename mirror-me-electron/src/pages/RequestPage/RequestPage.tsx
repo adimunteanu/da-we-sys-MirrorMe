@@ -112,6 +112,7 @@ const RequestPage: React.FC = () => {
               <IonCardContent>
                 Instagram is an American photo and video sharing social
                 networking service created by Kevin Systrom and Mike Krieger.
+                Please request in JSON format!
                 <IonGrid>
                   <IonRow>
                     <IonCol>
