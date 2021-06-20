@@ -3,7 +3,7 @@ import { useDropzone } from 'react-dropzone';
 import { useDispatch } from 'react-redux';
 import { processInstagram, processReddit } from './index';
 import { COMPANIES } from '../../globals';
-import { CompanyRelevantData } from '../../types';
+import { CompanyRelevantData, RedditRelevantData } from '../../types';
 import {
   updateCanUpload,
   updateStringifiedData,
@@ -32,6 +32,13 @@ const DataDropzone = ({ selectedCompany }: Props) => {
     }
 
     await relevantData.then((data) => {
+      if ('account' in data) {
+        const redditData = data as RedditRelevantData;
+        redditData.contributions.messages = redditData.contributions.messages.filter(
+          (message) => message.from === redditData.account[0]
+        );
+      }
+
       dispatch(updateStringifiedData(JSON.stringify(data)));
       dispatch(updateCanUpload(true));
       return JSON.stringify(data);

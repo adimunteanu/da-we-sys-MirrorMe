@@ -104,7 +104,7 @@ const RedditDetailPage = () => {
     return getFieldPerHour(messages, 'Messages activity');
   };
 
-  const getMostUsedInCommentWordCloud = (): Array<Word> => {
+  const getMostUsedInCommentWordCloud = (wordCount: number): Array<Word> => {
     const { comments } = data.contributions;
 
     const mostUsedWordsMap = new Map();
@@ -122,18 +122,18 @@ const RedditDetailPage = () => {
       }
     });
 
-    const topTenWords = Array.from(mostUsedWordsMap.entries())
+    const topWords = Array.from(mostUsedWordsMap.entries())
       .sort((a, b) => a[1] - b[1])
-      .slice(0, 30);
+      .slice(0, wordCount);
 
-    const words: Array<Word> = topTenWords.map((word) => {
+    const words: Array<Word> = topWords.map((word) => {
       return { text: word[0], value: word[1] };
     });
 
     return words;
   };
 
-  const getMostUsedInMessageWordCloud = (): Array<Word> => {
+  const getMostUsedInMessageWordCloud = (wordCount: number): Array<Word> => {
     const { messages } = data.contributions;
 
     const mostUsedWordsMap = new Map();
@@ -151,11 +151,11 @@ const RedditDetailPage = () => {
       }
     });
 
-    const topTenWords = Array.from(mostUsedWordsMap.entries())
+    const topWords = Array.from(mostUsedWordsMap.entries())
       .sort((a, b) => a[1] - b[1])
-      .slice(0, 20);
+      .slice(0, wordCount);
 
-    const words: Array<Word> = topTenWords.map((word) => {
+    const words: Array<Word> = topWords.map((word) => {
       return { text: word[0], value: word[1] };
     });
 
@@ -253,11 +253,11 @@ const RedditDetailPage = () => {
           <IonCol size="6">
             <IonCard>
               <IonCardHeader>
-                <IonCardTitle>Top 10 words used in comments</IonCardTitle>
+                <IonCardTitle>Top 20 words used in comments</IonCardTitle>
               </IonCardHeader>
               <IonCardContent>
                 <ReactWordcloud
-                  words={getMostUsedInCommentWordCloud()}
+                  words={getMostUsedInCommentWordCloud(20)}
                   options={{ enableTooltip: false, enableOptimizations: true }}
                 />
               </IonCardContent>
@@ -266,11 +266,11 @@ const RedditDetailPage = () => {
           <IonCol size="6">
             <IonCard>
               <IonCardHeader>
-                <IonCardTitle>Top 10 words used in messages</IonCardTitle>
+                <IonCardTitle>Top 20 words used in messages</IonCardTitle>
               </IonCardHeader>
               <IonCardContent>
                 <ReactWordcloud
-                  words={getMostUsedInMessageWordCloud()}
+                  words={getMostUsedInMessageWordCloud(20)}
                   options={{ enableTooltip: false, enableOptimizations: true }}
                 />
               </IonCardContent>

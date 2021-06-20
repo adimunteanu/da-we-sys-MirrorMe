@@ -16,7 +16,7 @@ import {
 
 const relevantFields = {
   REDDIT: {
-    GENDER: 'account_gender.csv',
+    ACCOUNT: 'statistics.csv',
     IP_LOGS: 'ip_logs.csv',
     COMMENTS: 'comments.csv',
     POSTS: 'posts.csv',
@@ -100,7 +100,7 @@ export const processReddit = async (
   acceptedFiles: Array<File>
 ): Promise<RedditRelevantData> => {
   const relevantJSON: RedditRelevantData = {
-    gender: '',
+    account: [],
     ipLogs: [],
     contributions: {
       comments: [],
@@ -117,9 +117,9 @@ export const processReddit = async (
       const relevantJSON = { ...json } as RedditRelevantData;
       const { comments, messages, posts } = relevantJSON.contributions;
       switch (path) {
-        case relevantFields.REDDIT.GENDER: {
-          const values = getValuesFromObject(jsonData[0], ['account_gender']);
-          [relevantJSON.gender] = values;
+        case relevantFields.REDDIT.ACCOUNT: {
+          const values = getValuesFromObject(jsonData[0], ['value']);
+          relevantJSON.account.push(values[0]);
           break;
         }
         case relevantFields.REDDIT.IP_LOGS: {

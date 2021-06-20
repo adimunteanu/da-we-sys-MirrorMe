@@ -6,7 +6,7 @@ export type Page = {
 };
 
 export type RedditRelevantData = {
-  gender: string;
+  account: string[];
   ipLogs: {
     date: Date;
     ip: string;
