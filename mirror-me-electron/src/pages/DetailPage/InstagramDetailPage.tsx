@@ -20,6 +20,8 @@ import {
 import ChartCard from '../../components/ChartCard/ChartCard';
 import { ChartType, InstagramRelevantData } from '../../types';
 import { selectData } from '../OverviewPage/dataSlice';
+import SegmentChart from '../../components/ChartCard/SegmentChart';
+import DefaultChart from '../../components/ChartCard/DefaultChart';
 
 const InstagramDetailPage = () => {
   const data = useSelector(selectData).find(
@@ -157,8 +159,12 @@ const InstagramDetailPage = () => {
           <IonCol size="12">
             <ChartCard
               title="Contributions"
-              chartType={ChartType.LINE}
-              data={getContributionsPerMonth}
+              chart={
+                <DefaultChart
+                  data={getContributionsPerMonth}
+                  chartType={ChartType.LINE}
+                />
+              }
             />
           </IonCol>
         </IonRow>
@@ -166,15 +172,23 @@ const InstagramDetailPage = () => {
           <IonCol size="6">
             <ChartCard
               title="Relationships"
-              chartType={ChartType.BAR}
-              data={getRelationships}
+              chart={
+                <DefaultChart
+                  data={getRelationships}
+                  chartType={ChartType.BAR}
+                />
+              }
             />
           </IonCol>
           <IonCol size="6">
             <ChartCard
               title="Message distribution"
-              chartType={ChartType.PIE}
-              data={getMessageDistribution}
+              chart={
+                <DefaultChart
+                  data={getMessageDistribution}
+                  chartType={ChartType.PIE}
+                />
+              }
             />
           </IonCol>
         </IonRow>
@@ -182,15 +196,27 @@ const InstagramDetailPage = () => {
           <IonCol size="6">
             <ChartCard
               title="Likes per hour"
-              chartType={ChartType.BAR}
-              data={getLikesActivity}
+              chart={
+                <SegmentChart
+                  chartType={ChartType.BAR}
+                  data={getLikesActivity()[0]}
+                  chartTypeOverview={ChartType.DONUT}
+                  dataOverview={getLikesActivity()[1]}
+                />
+              }
             />
           </IonCol>
           <IonCol size="6">
             <ChartCard
               title="Messages per hour"
-              chartType={ChartType.BAR}
-              data={getMessagesActivity}
+              chart={
+                <SegmentChart
+                  chartType={ChartType.BAR}
+                  data={getMessagesActivity()[0]}
+                  chartTypeOverview={ChartType.DONUT}
+                  dataOverview={getMessagesActivity()[1]}
+                />
+              }
             />
           </IonCol>
         </IonRow>
@@ -198,15 +224,27 @@ const InstagramDetailPage = () => {
           <IonCol size="6">
             <ChartCard
               title="Stories per hour"
-              chartType={ChartType.BAR}
-              data={getStoriesActivity}
+              chart={
+                <SegmentChart
+                  chartType={ChartType.BAR}
+                  data={getStoriesActivity()[0]}
+                  chartTypeOverview={ChartType.DONUT}
+                  dataOverview={getStoriesActivity()[1]}
+                />
+              }
             />
           </IonCol>
           <IonCol size="6">
             <ChartCard
               title="Comments per hour"
-              chartType={ChartType.BAR}
-              data={getCommentsActivity}
+              chart={
+                <SegmentChart
+                  chartType={ChartType.BAR}
+                  data={getCommentsActivity()[0]}
+                  chartTypeOverview={ChartType.DONUT}
+                  dataOverview={getCommentsActivity()[1]}
+                />
+              }
             />
           </IonCol>
         </IonRow>

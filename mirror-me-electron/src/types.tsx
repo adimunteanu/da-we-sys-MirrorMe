@@ -88,3 +88,15 @@ export type NicknameAndScore = {
   nickname: string;
   score: ScoresObject;
 };
+
+export interface ChartCardProps {
+  title: string;
+  chart: JSX.Element;
+  isFullscreen?: boolean;
+  onDismiss?: () => void;
+}
+
+export interface ChartProps {
+  data: unknown;
+  chartType: ChartType;
+}

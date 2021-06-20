@@ -20,6 +20,8 @@ import {
 import ChartCard from '../../components/ChartCard/ChartCard';
 import { ChartType, RedditRelevantData } from '../../types';
 import { selectData } from '../OverviewPage/dataSlice';
+import DefaultChart from '../../components/ChartCard/DefaultChart';
+import SegmentChart from '../../components/ChartCard/SegmentChart';
 
 const geoip = require('offline-geo-from-ip');
 
@@ -167,22 +169,31 @@ const RedditDetailPage = () => {
           <IonCol size="4">
             <ChartCard
               title="Access Locations"
-              chartType={ChartType.PIE}
-              data={getLocationCounts}
+              chart={
+                <DefaultChart
+                  data={getLocationCounts}
+                  chartType={ChartType.PIE}
+                />
+              }
             />
           </IonCol>
           <IonCol size="4">
             <ChartCard
               title="Votes Positivity"
-              chartType={ChartType.BAR}
-              data={getUpDownVotes}
+              chart={
+                <DefaultChart data={getUpDownVotes} chartType={ChartType.BAR} />
+              }
             />
           </IonCol>
           <IonCol size="4">
             <ChartCard
               title="Votes Distribution"
-              chartType={ChartType.DONUT}
-              data={getVotesDistribution}
+              chart={
+                <DefaultChart
+                  data={getVotesDistribution}
+                  chartType={ChartType.DONUT}
+                />
+              }
             />
           </IonCol>
         </IonRow>
@@ -190,15 +201,23 @@ const RedditDetailPage = () => {
           <IonCol size="6">
             <ChartCard
               title="Comments per month"
-              chartType={ChartType.LINE}
-              data={getCommentsPerMonth}
+              chart={
+                <DefaultChart
+                  data={getCommentsPerMonth}
+                  chartType={ChartType.LINE}
+                />
+              }
             />
           </IonCol>
           <IonCol size="6">
             <ChartCard
               title="Messages per month"
-              chartType={ChartType.LINE}
-              data={getMessagesPerMonth}
+              chart={
+                <DefaultChart
+                  data={getMessagesPerMonth}
+                  chartType={ChartType.LINE}
+                />
+              }
             />
           </IonCol>
         </IonRow>
@@ -206,15 +225,27 @@ const RedditDetailPage = () => {
           <IonCol size="6">
             <ChartCard
               title="Comments distribution per day"
-              chartType={ChartType.BAR}
-              data={getCommentsActivity}
+              chart={
+                <SegmentChart
+                  chartType={ChartType.BAR}
+                  data={getCommentsActivity()[0]}
+                  chartTypeOverview={ChartType.DONUT}
+                  dataOverview={getCommentsActivity()[1]}
+                />
+              }
             />
           </IonCol>
           <IonCol size="6">
             <ChartCard
               title="Messages distribution per day"
-              chartType={ChartType.BAR}
-              data={getMessagesActivity}
+              chart={
+                <SegmentChart
+                  chartType={ChartType.BAR}
+                  data={getMessagesActivity()[0]}
+                  chartTypeOverview={ChartType.DONUT}
+                  dataOverview={getMessagesActivity()[1]}
+                />
+              }
             />
           </IonCol>
         </IonRow>

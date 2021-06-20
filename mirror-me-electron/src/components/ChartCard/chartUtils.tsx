@@ -74,7 +74,32 @@ export const getFieldPerHour = (field: any[], datasetLabel: string) => {
     }
   });
 
-  return createChartDatasetFromMap(datasetLabel, hoursMap);
+  const overviewMap = new Map();
+  overviewMap.set('morning', 0);
+  overviewMap.set('noon', 0);
+  overviewMap.set('evening', 0);
+  overviewMap.set('night', 0);
+  Array.from(hoursMap).forEach(([key, value]) => {
+    const hour = +key;
+    if (hour >= 6 && hour <= 12) {
+      overviewMap.set('morning', overviewMap.get('morning') + value);
+    } else if (hour > 12 && hour <= 18) {
+      overviewMap.set('noon', overviewMap.get('noon') + value);
+    } else if (hour > 18 && hour <= 22) {
+      overviewMap.set('evening', overviewMap.get('evening') + value);
+    } else {
+      overviewMap.set('night', overviewMap.get('night') + value);
+    }
+  });
+
+  // Array.from(overviewMap).forEach(([key, value]) => {
+  //   overviewMap.set(key, (value / field.length) * 100);
+  // });
+
+  return [
+    createChartDatasetFromMap(datasetLabel, hoursMap),
+    createChartDatasetFromMap(datasetLabel, overviewMap),
+  ];
 };
 
 export const getFieldsPerMonth = (fields: any[][], datasetLabels: string[]) => {

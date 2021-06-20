@@ -3,32 +3,57 @@ import {
   IonCardContent,
   IonCardHeader,
   IonCardTitle,
+  IonToolbar,
+  useIonModal,
 } from '@ionic/react';
 import React from 'react';
-import { Bar, Doughnut, Line, Pie } from 'react-chartjs-2';
-import { ChartType } from '../../types';
+import { close, resizeOutline } from 'ionicons/icons';
+import { ChartCardProps } from '../../types';
+import IconButton from '../Buttons/IconButton/IconButton';
 
-interface Props {
-  data: unknown;
-  title: string;
-  chartType: ChartType;
-}
+const ChartCard = ({
+  title,
+  chart,
+  isFullscreen = false,
+  onDismiss = () => {},
+}: ChartCardProps) => {
+  const [present, dismiss] = useIonModal(
+    <ChartCard
+      title={title}
+      chart={chart}
+      isFullscreen
+      onDismiss={() => dismiss()}
+    />
+  );
 
-const ChartCard = ({ data, title, chartType }: Props) => {
   return (
-    <IonCard>
-      <IonCardHeader>
-        <IonCardTitle>{title}</IonCardTitle>
-      </IonCardHeader>
-      <IonCardContent>
-        {chartType === ChartType.BAR && <Bar type="bar" data={data} />}
-        {chartType === ChartType.PIE && <Pie type="pie" data={data} />}
-        {chartType === ChartType.LINE && <Line type="line" data={data} />}
-        {chartType === ChartType.DONUT && (
-          <Doughnut type="doughnut" data={data} />
-        )}
-      </IonCardContent>
-    </IonCard>
+    <div>
+      <IonCard>
+        <IonCardHeader>
+          <IonToolbar>
+            <IonCardTitle>{title}</IonCardTitle>
+            {isFullscreen ? (
+              <IconButton
+                onClick={() => onDismiss()}
+                size="large"
+                slot="end"
+                icon={close}
+              />
+            ) : (
+              <IconButton
+                onClick={() => present({ cssClass: 'ChartCardModal' })}
+                size="large"
+                slot="end"
+                icon={resizeOutline}
+              />
+            )}
+          </IonToolbar>
+        </IonCardHeader>
+        <IonCardContent className={`${isFullscreen ? 'ContentScroll' : ''}`}>
+          {chart}
+        </IonCardContent>
+      </IonCard>
+    </div>
   );
 };
 
