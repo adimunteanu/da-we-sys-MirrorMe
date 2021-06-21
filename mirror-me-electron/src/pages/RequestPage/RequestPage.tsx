@@ -10,20 +10,49 @@ import {
   IonRow,
   IonCol,
 } from '@ionic/react';
+import { shell } from 'electron';
 import FacebookImg from '../../images/Facebook.png';
-import YouTubeImg from '../../images/YouTube.jpg';
+import RedditImg from '../../images/Reddit.jpg';
 import GitHubImg from '../../images/GitHub.png';
 import InstagramImg from '../../images/Instagram.png';
 import SpotifyImg from '../../images/Spotify.jpg';
 import NetflixImg from '../../images/Netflix.png';
 
 const RequestPage: React.FC = () => {
+  const openExternalBrowser = (route: string) => {
+    shell.openExternal(route);
+  };
+
+  const facebookBrowser = () => {
+    openExternalBrowser('https://www.facebook.com/dyi');
+  };
+
+  const githubBrowser = () => {
+    openExternalBrowser('https://github.com/settings/admin');
+  };
+
+  const instagramBrowser = () => {
+    openExternalBrowser('https://www.instagram.com/download/request/');
+  };
+
+  const netflixBrowser = () => {
+    openExternalBrowser('https://www.netflix.com/account/getmyinfo');
+  };
+
+  const spotifyBrowser = () => {
+    openExternalBrowser('https://www.spotify.com/de/account/privacy/');
+  };
+
+  const redditBrowser = () => {
+    openExternalBrowser('https://www.reddit.com/settings/data-request');
+  };
+
   return (
     <IonContent className="RequestPage">
       <p>Request your Data from one of the following Companies!</p>
       <IonGrid className="CardGrid">
         <IonRow>
-          <IonCol>
+          {/** <IonCol>
             <IonCard className="RequestPage_Card">
               <img className="youtube-img" src={YouTubeImg} alt="YouTube" />
               <IonCardHeader>
@@ -38,7 +67,33 @@ const RequestPage: React.FC = () => {
                       <IonButton
                         id="youtube"
                         size="small"
-                        href="https://takeout.google.com/"
+                        onClick={youtube}
+                      >
+                        Request
+                      </IonButton>
+                    </IonCol>
+                  </IonRow>
+                </IonGrid>
+              </IonCardContent>
+            </IonCard>
+          </IonCol> */}
+          <IonCol>
+            <IonCard className="RequestPage_Card">
+              <img className="reddit-img" src={RedditImg} alt="Reddit" />
+              <IonCardHeader>
+                <IonCardTitle>Reddit</IonCardTitle>
+              </IonCardHeader>
+              <IonCardContent>
+                Reddit is a network of communities based on people&apos;s
+                interests. Find communities you&apos;re interested in, and
+                become part of an online community!
+                <IonGrid>
+                  <IonRow>
+                    <IonCol>
+                      <IonButton
+                        id="redditBrowser"
+                        size="small"
+                        onClick={redditBrowser}
                       >
                         Request
                       </IonButton>
@@ -57,13 +112,14 @@ const RequestPage: React.FC = () => {
               <IonCardContent>
                 Instagram is an American photo and video sharing social
                 networking service created by Kevin Systrom and Mike Krieger.
+                Please request in JSON format!
                 <IonGrid>
                   <IonRow>
                     <IonCol>
                       <IonButton
-                        id="instagram"
+                        id="instagramBrowser"
                         size="small"
-                        href="https://www.instagram.com/download/request/ "
+                        onClick={instagramBrowser}
                       >
                         Request
                       </IonButton>
@@ -87,9 +143,9 @@ const RequestPage: React.FC = () => {
                   <IonRow>
                     <IonCol>
                       <IonButton
-                        id="facebook"
+                        id="facebookBrowser"
                         size="small"
-                        href="https://www.facebook.com/dyi"
+                        onClick={facebookBrowser}
                       >
                         Request
                       </IonButton>
@@ -114,10 +170,7 @@ const RequestPage: React.FC = () => {
                 <IonGrid>
                   <IonRow>
                     <IonCol>
-                      <IonButton
-                        size="small"
-                        href="https://www.spotify.com/de/account/privacy/"
-                      >
+                      <IonButton size="small" onClick={spotifyBrowser}>
                         Request
                       </IonButton>
                     </IonCol>
@@ -140,10 +193,7 @@ const RequestPage: React.FC = () => {
                 <IonGrid>
                   <IonRow>
                     <IonCol>
-                      <IonButton
-                        size="small"
-                        href="https://github.com/settings/admin"
-                      >
+                      <IonButton size="small" onClick={githubBrowser}>
                         Request
                       </IonButton>
                     </IonCol>
@@ -166,10 +216,7 @@ const RequestPage: React.FC = () => {
                 <IonGrid>
                   <IonRow>
                     <IonCol>
-                      <IonButton
-                        size="small"
-                        href="https://www.netflix.com/account/getmyinfo"
-                      >
+                      <IonButton size="small" onClick={netflixBrowser}>
                         Request
                       </IonButton>
                     </IonCol>
