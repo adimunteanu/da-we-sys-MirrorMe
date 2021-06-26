@@ -10,6 +10,7 @@ import {
 } from '../../types';
 import {
   updateCanUpload,
+  updateIsUploadingFiles,
   updateStringifiedData,
 } from '../../pages/OverviewPage/dataSlice';
 
@@ -22,6 +23,7 @@ const DataDropzone = ({ selectedCompany }: Props) => {
   const handleData = async (acceptedFiles: Array<File>) => {
     let relevantData: Promise<CompanyRelevantData>;
     dispatch(updateCanUpload(false));
+    dispatch(updateIsUploadingFiles(true));
     let company = '';
     switch (selectedCompany) {
       case COMPANIES.REDDIT.name:
@@ -56,6 +58,7 @@ const DataDropzone = ({ selectedCompany }: Props) => {
 
       dispatch(updateStringifiedData(JSON.stringify(data)));
       dispatch(updateCanUpload(true));
+      dispatch(updateIsUploadingFiles(false));
       return JSON.stringify(data);
     });
   };

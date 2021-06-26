@@ -9,6 +9,7 @@ export type DataState = {
   canUpload: boolean;
   companyRelevantDataArray: CompanyRelevantDataObject[];
   isLoadingFiles: boolean;
+  isUploadingFiles: boolean;
 };
 
 const initialState: DataState = {
@@ -16,6 +17,7 @@ const initialState: DataState = {
   canUpload: false,
   companyRelevantDataArray: [],
   isLoadingFiles: false,
+  isUploadingFiles: false,
 };
 
 const loadFiles = createAsyncThunk('data/loadFiles', async () => {
@@ -46,6 +48,9 @@ const dataSlice = createSlice({
     updateCanUpload: (state, action: PayloadAction<boolean>) => {
       state.canUpload = action.payload;
     },
+    updateIsUploadingFiles: (state, action: PayloadAction<boolean>) => {
+      state.isUploadingFiles = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(loadFiles.pending, (state) => {
@@ -74,7 +79,14 @@ const selectData = (state: RootState): CompanyRelevantDataObject[] =>
 const selectIsLoadingFiles = (state: RootState): boolean =>
   state.data.isLoadingFiles;
 
-export const { updateStringifiedData, updateCanUpload } = actions;
+const selectIsUploadingFiles = (state: RootState): boolean =>
+  state.data.isUploadingFiles;
+
+export const {
+  updateStringifiedData,
+  updateCanUpload,
+  updateIsUploadingFiles,
+} = actions;
 
 export {
   selectStringifiedData,
@@ -83,6 +95,7 @@ export {
   selectHasData,
   selectData,
   selectIsLoadingFiles,
+  selectIsUploadingFiles,
 };
 
 export default reducer;
