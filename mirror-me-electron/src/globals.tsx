@@ -36,6 +36,13 @@ export const COMPANIES = {
     detail_page: InstagramDetailPage,
     save_file: 'instagram_data.json',
   },
+  FACEBOOK: {
+    name: 'Facebook',
+    logo: INSTAGRAM_LOGO,
+    summarized_component: <SummarizedInstagramCard />,
+    detail_page: InstagramDetailPage,
+    save_file: 'facebook_data.json',
+  },
 };
 
 export const DATA_DIR = 'data/';
@@ -48,5 +55,15 @@ export const CHART_COLORS = [
   'rgb(153, 102, 255)',
   'rgb(102, 255, 255)',
 ];
+
+export const REACTION_EMOJIS: Record<string, string> = {
+  HAHA: '😂',
+  LOVE: '❤️',
+  LIKE: '👍',
+  WOW: '😯',
+  SAD: '😢',
+  ANGER: '😡',
+  CARE: '🤗',
+};
 
 export default APP_NAME;

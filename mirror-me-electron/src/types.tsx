@@ -63,7 +63,44 @@ export type InstagramRelevantData = {
   };
 };
 
-export type CompanyRelevantData = RedditRelevantData | InstagramRelevantData;
+export type FacebookRelevantData = {
+  account: string[];
+  contributions: {
+    comments: {
+      date: Date;
+    }[];
+    messages: {
+      title: string;
+      sender: string;
+      date: Date;
+    }[];
+    posts: {
+      location:
+        | {
+            longitude: number;
+            latitude: number;
+          }
+        | undefined;
+      date: Date;
+    }[];
+    reactions: {
+      type: string;
+      date: Date;
+    }[];
+  };
+  relationships: {
+    friends: string[];
+  };
+  interests: {
+    advertisors: string[];
+    topics: string[];
+  };
+};
+
+export type CompanyRelevantData =
+  | RedditRelevantData
+  | InstagramRelevantData
+  | FacebookRelevantData;
 
 export type CompanyRelevantDataObject = {
   company: string;

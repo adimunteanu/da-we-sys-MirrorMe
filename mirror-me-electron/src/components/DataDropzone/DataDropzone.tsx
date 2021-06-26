@@ -1,9 +1,13 @@
 import React from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useDispatch } from 'react-redux';
-import { processInstagram, processReddit } from './index';
+import { processFacebook, processInstagram, processReddit } from './index';
 import { COMPANIES } from '../../globals';
-import { CompanyRelevantData, RedditRelevantData } from '../../types';
+import {
+  CompanyRelevantData,
+  FacebookRelevantData,
+  RedditRelevantData,
+} from '../../types';
 import {
   updateCanUpload,
   updateStringifiedData,
@@ -18,13 +22,19 @@ const DataDropzone = ({ selectedCompany }: Props) => {
   const handleData = async (acceptedFiles: Array<File>) => {
     let relevantData: Promise<CompanyRelevantData>;
     dispatch(updateCanUpload(false));
-
+    let company = '';
     switch (selectedCompany) {
       case COMPANIES.REDDIT.name:
         relevantData = processReddit(acceptedFiles);
+        company = COMPANIES.REDDIT.name;
         break;
       case COMPANIES.INSTAGRAM.name:
         relevantData = processInstagram(acceptedFiles);
+        company = COMPANIES.INSTAGRAM.name;
+        break;
+      case COMPANIES.FACEBOOK.name:
+        relevantData = processFacebook(acceptedFiles);
+        company = COMPANIES.FACEBOOK.name;
         break;
       default:
         relevantData = processReddit(acceptedFiles);
@@ -32,10 +42,15 @@ const DataDropzone = ({ selectedCompany }: Props) => {
     }
 
     await relevantData.then((data) => {
-      if ('account' in data) {
+      if (COMPANIES.REDDIT.name === company) {
         const redditData = data as RedditRelevantData;
         redditData.contributions.messages = redditData.contributions.messages.filter(
           (message) => message.from === redditData.account[0]
+        );
+      } else if (COMPANIES.FACEBOOK.name === company) {
+        const facebookData = data as FacebookRelevantData;
+        facebookData.contributions.messages = facebookData.contributions.messages.filter(
+          (message) => message.sender === facebookData.account[0]
         );
       }
 
