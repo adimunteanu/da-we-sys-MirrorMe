@@ -6,6 +6,7 @@ export const computeScore = (data: CompanyRelevantDataObject[]) => {
     scoreTotal: 0,
     scoreInsta: 0,
     scoreReddit: 0,
+    scoreFacebook: 0,
   };
 
   data.forEach((company) => {
@@ -26,6 +27,15 @@ export const computeScore = (data: CompanyRelevantDataObject[]) => {
           0
         );
         score.scoreTotal += score.scoreInsta;
+        break;
+      }
+      case COMPANIES.FACEBOOK.name: {
+        score.scoreFacebook = Object.values(company.data.contributions).reduce(
+          (total: number, contribution: Array<any>) =>
+            total + contribution.length,
+          0
+        );
+        score.scoreTotal += score.scoreFacebook;
         break;
       }
       default: {

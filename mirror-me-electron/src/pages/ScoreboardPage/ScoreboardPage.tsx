@@ -72,6 +72,17 @@ const ScoreboardPage = () => {
         });
         sortedScores.sort((a, b) => a.score - b.score);
         break;
+      case COMPANIES.FACEBOOK.name:
+        allScores.forEach((score) => {
+          if (score.score.scoreFacebook > 0) {
+            sortedScores.push({
+              nickname: score.nickname,
+              score: score.score.scoreFacebook,
+            });
+          }
+        });
+        sortedScores.sort((a, b) => a.score - b.score);
+        break;
       default: {
         allScores.forEach((score) => {
           if (score.score.scoreTotal > 0) {

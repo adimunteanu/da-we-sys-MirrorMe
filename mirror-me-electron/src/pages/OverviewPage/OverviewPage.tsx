@@ -9,6 +9,7 @@ import EmptyView from './EmptyView';
 const OverviewPage = () => {
   const hasData = useSelector(selectHasData);
   const relevantData = useSelector(selectData);
+  const isEven = relevantData.length % 2 === 0;
 
   return (
     <IonContent className="OverviewPage">
@@ -17,11 +18,16 @@ const OverviewPage = () => {
       ) : (
         <IonGrid>
           <IonRow>
-            <IonCol offset="3" size="6">
-              {relevantData.map((companyObject) => {
-                return (
+            {relevantData.map((companyObject, index) => {
+              return (
+                <IonCol
+                  offset={
+                    !isEven && index === relevantData.length - 1 ? '3' : '0'
+                  }
+                  size="6"
+                  key={companyObject.company}
+                >
                   <SummarizedCard
-                    key={companyObject.company}
                     title={companyObject.company}
                     logo={companyObject.logo}
                   >
@@ -31,9 +37,9 @@ const OverviewPage = () => {
                       )?.summarized_component
                     }
                   </SummarizedCard>
-                );
-              })}
-            </IonCol>
+                </IonCol>
+              );
+            })}
           </IonRow>
         </IonGrid>
       )}

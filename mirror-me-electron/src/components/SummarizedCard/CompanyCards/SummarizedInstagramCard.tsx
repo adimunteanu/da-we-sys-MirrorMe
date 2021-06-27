@@ -5,10 +5,11 @@ import { useSelector } from 'react-redux';
 import { createChartDataset } from '../../ChartCard/chartUtils';
 import { selectData } from '../../../pages/OverviewPage/dataSlice';
 import { InstagramRelevantData } from '../../../types';
+import { COMPANIES } from '../../../globals';
 
 const SummarizedInstagramCard = () => {
   const data = useSelector(selectData).find(
-    (object) => object.company === 'Instagram'
+    (object) => object.company === COMPANIES.INSTAGRAM.name
   )!.data as InstagramRelevantData;
 
   const getPieChartData = () => {

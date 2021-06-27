@@ -1,9 +1,10 @@
 import JSZip from 'jszip';
 import jetpack from 'fs-jetpack';
 import { readString } from 'react-papaparse';
-import { DATA_DIR, SUPPORTED_FILE_TYPES } from '../../globals';
+import { DATA_DIR, REACTION_EMOJIS, SUPPORTED_FILE_TYPES } from '../../globals';
 import {
   CompanyRelevantData,
+  FacebookRelevantData,
   InstagramRelevantData,
   RedditRelevantData,
 } from '../../types';
@@ -13,6 +14,8 @@ import {
   getValuesFromObject,
   populateJsonArray,
 } from './jsonUtils';
+
+const geoip = require('offline-geo-from-ip');
 
 const relevantFields = {
   REDDIT: {
@@ -34,6 +37,17 @@ const relevantFields = {
     ADS_INTERESTS: 'ads_interests.json',
     YOUR_TOPICS: 'your_topics.json',
     STORIES: 'stories.json',
+  },
+  FACEBOOK: {
+    ACCOUNT: 'profile_information.json',
+    COMMENTS: 'comments.json',
+    MESSAGES: 'message_1.json',
+    POSTS: 'your_posts_1.json',
+    REACTIONS: 'posts_and_comments.json',
+    FRIENDS: 'friends.json',
+    ADVERTISORS:
+      'advertisers_who_uploaded_a_contact_list_with_your_information.json',
+    YOUR_TOPICS: 'your_topics.json',
   },
 };
 
@@ -196,14 +210,17 @@ export const processInstagram = async (
       const relevantJSON = { ...json } as InstagramRelevantData;
       switch (path) {
         case relevantFields.INSTAGRAM.COMMENTS: {
-          relevantJSON.contributions.comments = getValuesFromNestedObject(
-            jsonData,
-            ['comments_media_comments.string_list_data.timestamp']
-          )[0].map((value: any) => {
-            return {
-              date: new Date(value * 1000),
-            };
-          });
+          const values = getValuesFromNestedObject(jsonData, [
+            'comments_media_comments.string_list_data.timestamp',
+            'comments_media_comments.string_list_data.value',
+          ]);
+
+          for (let i = 0; i < values[0].length; i += 1) {
+            relevantJSON.contributions.comments.push({
+              date: new Date(values[0][i] * 1000),
+              content: decodeString(values[1][i]),
+            });
+          }
 
           break;
         }
@@ -213,6 +230,7 @@ export const processInstagram = async (
             'participants.name',
             'messages.sender_name',
             'messages.timestamp_ms',
+            'messages.content',
           ]);
 
           const participant = decodeString(values[0][0]);
@@ -222,6 +240,7 @@ export const processInstagram = async (
             if (values[1][i] !== participant) {
               messages.push({
                 participant,
+                content: decodeString(values[3][i]),
                 date: new Date(values[2][i]),
               });
             }
@@ -321,6 +340,160 @@ export const processInstagram = async (
     acceptedFiles,
     true
   ) as Promise<InstagramRelevantData>;
+};
+
+export const processFacebook = async (
+  acceptedFiles: Array<File>
+): Promise<FacebookRelevantData> => {
+  const relevantJSON: FacebookRelevantData = {
+    account: [],
+    contributions: {
+      comments: [],
+      messages: [],
+      posts: [],
+      reactions: [],
+    },
+    relationships: { friends: [] },
+    interests: {
+      advertisors: [],
+      topics: [],
+    },
+  };
+
+  return processCompany(
+    relevantJSON,
+    (json, jsonData, path) => {
+      const relevantJSON = { ...json } as FacebookRelevantData;
+      switch (path) {
+        case relevantFields.FACEBOOK.ACCOUNT: {
+          relevantJSON.account.push(
+            getValuesFromNestedObject(jsonData, [
+              'profile_v2.name.full_name',
+            ])[0]
+          );
+          break;
+        }
+        case relevantFields.FACEBOOK.COMMENTS: {
+          relevantJSON.contributions.comments = getValuesFromNestedObject(
+            jsonData,
+            ['comments_v2.data.comment.timestamp']
+          )[0].map((value: any) => {
+            return {
+              date: new Date(value * 1000),
+            };
+          });
+
+          break;
+        }
+        case relevantFields.FACEBOOK.MESSAGES: {
+          const messages: any[] = [];
+          const values = getValuesFromNestedObject(jsonData, [
+            'title',
+            'messages.sender_name',
+            'messages.timestamp_ms',
+            'messages.content',
+          ]);
+
+          const title = decodeString(values[0]);
+          values[1].map((sender: any) => decodeString(sender));
+
+          for (let i = 0; i < values[1].length; i += 1) {
+            messages.push({
+              title,
+              sender: decodeString(values[1][i]),
+              content: decodeString(values[3][i]),
+              date: new Date(values[2][i]),
+            });
+          }
+
+          relevantJSON.contributions.messages = [
+            ...relevantJSON.contributions.messages,
+            ...messages,
+          ];
+          break;
+        }
+        case relevantFields.FACEBOOK.POSTS: {
+          jsonData.forEach((post) => {
+            const values = getValuesFromNestedObject(post, [
+              'attachments.data.media.creation_timestamp',
+              'attachments.data.media.media_metadata.photo_metadata.exif_data.upload_ip',
+            ]);
+
+            if (values.length > 0) {
+              if (values[0][0] !== undefined) {
+                let location;
+
+                if (values[1][0] !== undefined) {
+                  const { longitude, latitude } = geoip.allData(
+                    values[1][0]
+                  ).location;
+                  location = { longitude, latitude };
+                }
+
+                relevantJSON.contributions.posts.push({
+                  date: new Date(values[0][0] * 1000),
+                  location,
+                });
+              }
+            }
+          });
+          break;
+        }
+        case relevantFields.FACEBOOK.REACTIONS: {
+          const values = getValuesFromNestedObject(jsonData, [
+            'reactions_v2.timestamp',
+            'reactions_v2.data.reaction.reaction',
+          ]);
+
+          for (let i = 0; i < values[0].length; i += 1) {
+            if (REACTION_EMOJIS[values[1][i]] !== undefined) {
+              relevantJSON.contributions.reactions.push({
+                date: new Date(values[0][i] * 1000),
+                type: REACTION_EMOJIS[values[1][i]],
+              });
+            }
+          }
+
+          break;
+        }
+        case relevantFields.FACEBOOK.FRIENDS: {
+          [
+            relevantJSON.relationships.friends,
+          ] = getValuesFromNestedObject(jsonData, ['friends_v2.name']);
+
+          break;
+        }
+        case relevantFields.FACEBOOK.ADVERTISORS: {
+          const advertisors = getValuesFromNestedObject(jsonData, [
+            'custom_audiences_v2',
+          ])[0];
+
+          relevantJSON.interests.advertisors = advertisors.map(
+            (advertisor: string) => decodeString(advertisor)
+          );
+
+          break;
+        }
+        case relevantFields.FACEBOOK.YOUR_TOPICS: {
+          const topics = getValuesFromNestedObject(jsonData, [
+            'inferred_topics_v2',
+          ])[0];
+
+          relevantJSON.interests.topics = topics.map((topic: string) =>
+            decodeString(topic)
+          );
+
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+      json = { ...relevantJSON };
+    },
+    acceptedFiles,
+    true
+  ) as Promise<FacebookRelevantData>;
 };
 
 export default '';

@@ -1,10 +1,20 @@
 export const getValuesFromObject = (object: unknown, keys: string[]): any[] => {
   const values: any[] = [];
+  let foundKeys: boolean[] = new Array(keys.length);
+  foundKeys = foundKeys.map(() => false);
   Object.entries(object as any).forEach(([key, value]) => {
-    if (keys.includes(key)) {
+    const index = keys.findIndex((arrKey) => arrKey === key);
+    if (index !== -1) {
       values.push(value);
+      foundKeys[index] = true;
     }
   });
+  foundKeys.forEach((key, index) => {
+    if (!key) {
+      values.splice(index, 0, undefined);
+    }
+  });
+
   return values;
 };
 

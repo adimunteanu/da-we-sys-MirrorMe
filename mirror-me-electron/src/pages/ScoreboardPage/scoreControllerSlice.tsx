@@ -10,7 +10,7 @@ export type ScoreControllerState = {
 };
 
 const initialState: ScoreControllerState = {
-  score: { scoreTotal: 0, scoreReddit: 0, scoreInsta: 0 },
+  score: { scoreTotal: 0, scoreReddit: 0, scoreInsta: 0, scoreFacebook: 0 },
   allScores: [],
   uploadedScore: false,
 };
@@ -100,7 +100,12 @@ const scoreControllerSlice = createSlice({
   initialState,
   reducers: {
     deleteScoreLocally: (state) => {
-      state.score = { scoreTotal: 0, scoreReddit: 0, scoreInsta: 0 };
+      state.score = {
+        scoreTotal: 0,
+        scoreReddit: 0,
+        scoreInsta: 0,
+        scoreFacebook: 0,
+      };
       state.allScores = [];
     },
     setScore: (state, action: PayloadAction<ScoresObject>) => {
@@ -126,7 +131,12 @@ const scoreControllerSlice = createSlice({
     builder.addCase(deleteScoreThunk.fulfilled, (state) => {
       state.uploadedScore = false;
       state.allScores = [];
-      state.score = { scoreTotal: 0, scoreReddit: 0, scoreInsta: 0 };
+      state.score = {
+        scoreTotal: 0,
+        scoreReddit: 0,
+        scoreInsta: 0,
+        scoreFacebook: 0,
+      };
     });
   },
 });
