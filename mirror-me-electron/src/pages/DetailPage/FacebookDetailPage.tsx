@@ -11,6 +11,7 @@ import {
 import React from 'react';
 import { useSelector } from 'react-redux';
 import ReactWordcloud, { Word } from 'react-wordcloud';
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 import {
   createChartDataset,
   createChartDatasetFromMap,
@@ -150,6 +151,32 @@ const FacebookDetailPage = () => {
     return words;
   };
 
+  const getPostsWithLocation = () => {
+    const { posts } = data.contributions;
+    const locationsMap: Map<string, Date[]> = new Map();
+    posts
+      .filter((post) => post.location !== undefined)
+      .forEach((post) => {
+        const { longitude, latitude } = post.location!;
+        const key = `${latitude},${longitude}`;
+        const hasLocation = locationsMap.has(key);
+        if (!hasLocation) {
+          locationsMap.set(key, [post.date]);
+        } else {
+          locationsMap.get(key)?.push(post.date);
+        }
+      });
+    return locationsMap;
+  };
+
+  const formatDate = (date: Date) => {
+    const day = new Date(date).getDay() + 1;
+    const month = new Date(date).getMonth() + 1;
+    const year = new Date(date).getFullYear();
+
+    return `${day}/${month}/${year}`;
+  };
+
   return (
     <IonContent>
       <IonGrid>
@@ -274,6 +301,58 @@ const FacebookDetailPage = () => {
                   words={getMostUsedInMessageWordCloud(25)}
                   options={{ enableTooltip: false, enableOptimizations: true }}
                 />
+              </IonCardContent>
+            </IonCard>
+          </IonCol>
+        </IonRow>
+        <IonRow>
+          <IonCol>
+            <IonCard>
+              <IonCardHeader>
+                <IonCardTitle>Map of posts</IonCardTitle>
+              </IonCardHeader>
+              <IonCardContent>
+                <MapContainer
+                  style={{ height: '500px' }}
+                  center={[51.505, -0.09]}
+                  zoom={4}
+                  scrollWheelZoom={false}
+                  dragging
+                >
+                  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                  {Array.from(getPostsWithLocation().entries()).map(
+                    ([coordinates, posts]) => {
+                      return (
+                        <Marker
+                          key={coordinates}
+                          position={[
+                            +coordinates.split(',')[0],
+                            +coordinates.split(',')[1],
+                          ]}
+                        >
+                          <Popup>
+                            <div className="MarkerPopup">
+                              <h4>
+                                <strong>{`You posted ${posts.length} times here on the following dates:`}</strong>
+                              </h4>
+                              <br />
+                              {posts.map((post: Date) => {
+                                return (
+                                  <p key={+post}>{`${formatDate(post)}`}</p>
+                                );
+                              })}
+                            </div>
+                          </Popup>
+                        </Marker>
+                      );
+                    }
+                  )}
+                  {/* <Marker position={[51.505, -0.09]}>
+                    <Popup>
+                      A pretty CSS3 popup. <br /> Easily customizable.
+                    </Popup>
+                  </Marker> */}
+                </MapContainer>
               </IonCardContent>
             </IonCard>
           </IonCol>

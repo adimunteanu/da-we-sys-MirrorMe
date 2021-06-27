@@ -124,7 +124,7 @@ const RedditDetailPage = () => {
     });
 
     const topWords = Array.from(mostUsedWordsMap.entries())
-      .sort((a, b) => a[1] - b[1])
+      .sort((a, b) => b[1] - a[1])
       .slice(0, wordCount);
 
     const words: Array<Word> = topWords.map((word) => {
