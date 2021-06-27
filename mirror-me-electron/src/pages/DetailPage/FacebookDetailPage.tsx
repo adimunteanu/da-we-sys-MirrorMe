@@ -26,7 +26,7 @@ import {
 import { selectData } from '../OverviewPage/dataSlice';
 import SegmentChart from '../../components/ChartCard/SegmentChart';
 import DefaultChart from '../../components/ChartCard/DefaultChart';
-import { COMPANIES, REACTION_EMOJIS } from '../../globals';
+import { COMPANIES, REACTION_COLORS, REACTION_EMOJIS } from '../../globals';
 
 const FacebookDetailPage = () => {
   const data = useSelector(selectData).find(
@@ -113,7 +113,11 @@ const FacebookDetailPage = () => {
       reactionMap.set(reaction.type, reactionMap.get(reaction.type) + 1);
     });
 
-    return createChartDatasetFromMap('Reaction distribution', reactionMap);
+    return createChartDatasetFromMap(
+      'Reaction distribution',
+      reactionMap,
+      REACTION_COLORS
+    );
   };
 
   return (

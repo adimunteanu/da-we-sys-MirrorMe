@@ -57,6 +57,34 @@ export const CHART_COLORS = [
   'rgb(51, 204, 51)',
   'rgb(153, 102, 255)',
   'rgb(102, 255, 255)',
+  'rgb(143,188,219)',
+  'rgb(255,225,131)',
+  'rgb(206,73,147)',
+  'rgb(46,26,71)',
+  'rgb(249,255,198)',
+  'rgb(255,73,108)',
+  'rgb(59,89,152)',
+  'rgb(104,50,227)',
+  'rgb(109,196,240)',
+  'rgb(255,104,70)',
+  'rgb(228,191,205)',
+];
+
+export const ACTIVITY_CHART_COLORS = [
+  'rgb(143,188,219)',
+  'rgb(255,225,131)',
+  'rgb(206,73,147)',
+  'rgb(46,26,71)',
+];
+
+export const REACTION_COLORS = [
+  'rgb(249,255,198)',
+  'rgb(255,73,108)',
+  'rgb(59,89,152)',
+  'rgb(104,50,227)',
+  'rgb(109,196,240)',
+  'rgb(255,104,70)',
+  'rgb(228,191,205)',
 ];
 
 export const REACTION_EMOJIS: Record<string, string> = {
