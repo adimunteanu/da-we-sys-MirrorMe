@@ -118,6 +118,7 @@ router.get("/getAll", auth, async (req, res) => {
           scoreTotal: userScore.score.scoreTotal,
           scoreReddit: userScore.score.scoreReddit,
           scoreInsta: userScore.score.scoreInsta,
+          scoreFacebook: userScore.score.scoreFacebook,
         };
       });
       res.json(scoreMap);
