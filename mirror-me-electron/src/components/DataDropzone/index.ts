@@ -439,10 +439,12 @@ export const processFacebook = async (
           ]);
 
           for (let i = 0; i < values[0].length; i += 1) {
-            relevantJSON.contributions.reactions.push({
-              date: new Date(values[0][i] * 1000),
-              type: REACTION_EMOJIS[values[1][i]],
-            });
+            if (REACTION_EMOJIS[values[1][i]] !== undefined) {
+              relevantJSON.contributions.reactions.push({
+                date: new Date(values[0][i] * 1000),
+                type: REACTION_EMOJIS[values[1][i]],
+              });
+            }
           }
 
           break;

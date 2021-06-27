@@ -22,12 +22,13 @@ import { ChartType, RedditRelevantData } from '../../types';
 import { selectData } from '../OverviewPage/dataSlice';
 import DefaultChart from '../../components/ChartCard/DefaultChart';
 import SegmentChart from '../../components/ChartCard/SegmentChart';
+import { COMPANIES } from '../../globals';
 
 const geoip = require('offline-geo-from-ip');
 
 const RedditDetailPage = () => {
   const data = useSelector(selectData).find(
-    (object) => object.company === 'Reddit'
+    (object) => object.company === COMPANIES.REDDIT.name
   )!.data as RedditRelevantData;
 
   const getUpDownVotes = () => {

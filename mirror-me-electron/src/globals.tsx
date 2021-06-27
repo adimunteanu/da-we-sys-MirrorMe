@@ -7,6 +7,7 @@ import RedditDetailPage from './pages/DetailPage/RedditDetailPage';
 import SummarizedInstagramCard from './components/SummarizedCard/CompanyCards/SummarizedInstagramCard';
 import InstagramDetailPage from './pages/DetailPage/InstagramDetailPage';
 import SummarizedFacebookCard from './components/SummarizedCard/CompanyCards/SummarizedFacebookCard';
+import FacebookDetailPage from './pages/DetailPage/FacebookDetailPage';
 
 const APP_NAME = 'MirrorMe';
 
@@ -42,7 +43,7 @@ export const COMPANIES = {
     name: 'Facebook',
     logo: FACEBOOK_LOGO,
     summarized_component: <SummarizedFacebookCard />,
-    detail_page: InstagramDetailPage,
+    detail_page: FacebookDetailPage,
     save_file: 'facebook_data.json',
   },
 };
