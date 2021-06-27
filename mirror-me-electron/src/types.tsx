@@ -38,9 +38,11 @@ export type InstagramRelevantData = {
   contributions: {
     comments: {
       date: Date;
+      content: string;
     }[];
     messages: {
       participant: string;
+      content: string;
       date: Date;
     }[];
     posts: {

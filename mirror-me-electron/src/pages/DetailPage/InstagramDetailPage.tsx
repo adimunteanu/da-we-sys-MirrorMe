@@ -125,6 +125,64 @@ const InstagramDetailPage = () => {
     return getFieldPerHour(comments, 'Comments activity');
   };
 
+  const getMostUsedInMessageWordCloud = (wordCount: number): Array<Word> => {
+    const { messages } = data.contributions;
+
+    const mostUsedWordsMap = new Map();
+
+    messages.forEach((message) => {
+      if (message.content) {
+        message.content.split(' ').forEach((word) => {
+          const hasWord = mostUsedWordsMap.has(word);
+
+          mostUsedWordsMap.set(
+            word,
+            !hasWord ? 1 : mostUsedWordsMap.get(word) + 1
+          );
+        });
+      }
+    });
+
+    const topWords = Array.from(mostUsedWordsMap.entries())
+      .sort((a, b) => a[1] - b[1])
+      .slice(0, wordCount);
+
+    const words: Array<Word> = topWords.map((word) => {
+      return { text: word[0], value: 10 };
+    });
+
+    return words;
+  };
+
+  const getMostUsedInCommentWordCloud = (wordCount: number): Array<Word> => {
+    const { comments } = data.contributions;
+
+    const mostUsedWordsMap = new Map();
+
+    comments.forEach((comment) => {
+      if (comment.content) {
+        comment.content.split(' ').forEach((word) => {
+          const hasWord = mostUsedWordsMap.has(word);
+
+          mostUsedWordsMap.set(
+            word,
+            !hasWord ? 1 : mostUsedWordsMap.get(word) + 1
+          );
+        });
+      }
+    });
+
+    const topWords = Array.from(mostUsedWordsMap.entries())
+      .sort((a, b) => a[1] - b[1])
+      .slice(0, wordCount);
+
+    const words: Array<Word> = topWords.map((word) => {
+      return { text: word[0], value: 10 };
+    });
+
+    return words;
+  };
+
   return (
     <IonContent>
       <IonGrid>
@@ -247,6 +305,34 @@ const InstagramDetailPage = () => {
                 />
               }
             />
+          </IonCol>
+        </IonRow>
+        <IonRow>
+          <IonCol size="6">
+            <IonCard>
+              <IonCardHeader>
+                <IonCardTitle>Top 20 words used in comments</IonCardTitle>
+              </IonCardHeader>
+              <IonCardContent>
+                <ReactWordcloud
+                  words={getMostUsedInCommentWordCloud(25)}
+                  options={{ enableTooltip: false, enableOptimizations: true }}
+                />
+              </IonCardContent>
+            </IonCard>
+          </IonCol>
+          <IonCol size="6">
+            <IonCard>
+              <IonCardHeader>
+                <IonCardTitle>Top 20 words used in messages</IonCardTitle>
+              </IonCardHeader>
+              <IonCardContent>
+                <ReactWordcloud
+                  words={getMostUsedInMessageWordCloud(25)}
+                  options={{ enableTooltip: false, enableOptimizations: true }}
+                />
+              </IonCardContent>
+            </IonCard>
           </IonCol>
         </IonRow>
       </IonGrid>
