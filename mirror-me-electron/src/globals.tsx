@@ -1,10 +1,12 @@
 import React from 'react';
 import REDDIT_LOGO from './images/Reddit.jpg';
+import FACEBOOK_LOGO from './images/Facebook.png';
 import INSTAGRAM_LOGO from './images/Instagram.png';
 import SummarizedRedditCard from './components/SummarizedCard/CompanyCards/SummarizedRedditCard';
 import RedditDetailPage from './pages/DetailPage/RedditDetailPage';
 import SummarizedInstagramCard from './components/SummarizedCard/CompanyCards/SummarizedInstagramCard';
 import InstagramDetailPage from './pages/DetailPage/InstagramDetailPage';
+import SummarizedFacebookCard from './components/SummarizedCard/CompanyCards/SummarizedFacebookCard';
 
 const APP_NAME = 'MirrorMe';
 
@@ -38,8 +40,8 @@ export const COMPANIES = {
   },
   FACEBOOK: {
     name: 'Facebook',
-    logo: INSTAGRAM_LOGO,
-    summarized_component: <SummarizedInstagramCard />,
+    logo: FACEBOOK_LOGO,
+    summarized_component: <SummarizedFacebookCard />,
     detail_page: InstagramDetailPage,
     save_file: 'facebook_data.json',
   },
