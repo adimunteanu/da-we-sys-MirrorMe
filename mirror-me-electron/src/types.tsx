@@ -119,6 +119,7 @@ export type ScoresObject = {
   scoreTotal: number;
   scoreReddit: number;
   scoreInsta: number;
+  scoreFacebook: number;
 };
 
 export type NicknameAndScore = {
