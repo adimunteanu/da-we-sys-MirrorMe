@@ -120,6 +120,36 @@ const FacebookDetailPage = () => {
     );
   };
 
+  const getMostUsedInMessageWordCloud = (wordCount: number): Array<Word> => {
+    const { messages } = data.contributions;
+
+    const mostUsedWordsMap = new Map();
+
+    messages.forEach((message) => {
+      if (message.content) {
+        message.content.split(' ').forEach((word) => {
+          const hasWord = mostUsedWordsMap.has(word);
+          if (word.length <= 30) {
+            mostUsedWordsMap.set(
+              word,
+              !hasWord ? 1 : mostUsedWordsMap.get(word) + 1
+            );
+          }
+        });
+      }
+    });
+
+    const topWords = Array.from(mostUsedWordsMap.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, wordCount);
+
+    const words: Array<Word> = topWords.map((word) => {
+      return { text: word[0], value: 10 };
+    });
+
+    return words;
+  };
+
   return (
     <IonContent>
       <IonGrid>
@@ -231,6 +261,21 @@ const FacebookDetailPage = () => {
                 />
               }
             />
+          </IonCol>
+        </IonRow>
+        <IonRow>
+          <IonCol size="6">
+            <IonCard>
+              <IonCardHeader>
+                <IonCardTitle>Top 20 words used in messages</IonCardTitle>
+              </IonCardHeader>
+              <IonCardContent>
+                <ReactWordcloud
+                  words={getMostUsedInMessageWordCloud(25)}
+                  options={{ enableTooltip: false, enableOptimizations: true }}
+                />
+              </IonCardContent>
+            </IonCard>
           </IonCol>
         </IonRow>
       </IonGrid>

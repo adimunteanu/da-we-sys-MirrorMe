@@ -75,6 +75,7 @@ export type FacebookRelevantData = {
       title: string;
       sender: string;
       date: Date;
+      content: string;
     }[];
     posts: {
       location:

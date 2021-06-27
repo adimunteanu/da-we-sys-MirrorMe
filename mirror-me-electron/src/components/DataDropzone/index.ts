@@ -391,6 +391,7 @@ export const processFacebook = async (
             'title',
             'messages.sender_name',
             'messages.timestamp_ms',
+            'messages.content',
           ]);
 
           const title = decodeString(values[0]);
@@ -399,7 +400,8 @@ export const processFacebook = async (
           for (let i = 0; i < values[1].length; i += 1) {
             messages.push({
               title,
-              sender: values[1][i],
+              sender: decodeString(values[1][i]),
+              content: decodeString(values[3][i]),
               date: new Date(values[2][i]),
             });
           }
