@@ -1,9 +1,10 @@
-import { CHART_COLORS } from '../../globals';
+import { ACTIVITY_CHART_COLORS, CHART_COLORS } from '../../globals';
 
 export const createChartDataset = (
   labels: any[],
   datasetLabel: string,
-  data: any[]
+  data: any[],
+  colors: string[] = CHART_COLORS
 ) => {
   return {
     labels,
@@ -11,7 +12,7 @@ export const createChartDataset = (
       {
         label: datasetLabel,
         data,
-        backgroundColor: CHART_COLORS,
+        backgroundColor: colors,
         hoverOffset: 4,
       },
     ],
@@ -20,12 +21,14 @@ export const createChartDataset = (
 
 export const createChartDatasetFromMap = (
   datasetLabel: string,
-  map: Map<any, any>
+  map: Map<any, any>,
+  colors?: string[]
 ) => {
   return createChartDataset(
     Array.from(map.keys()),
     datasetLabel,
-    Array.from(map.values())
+    Array.from(map.values()),
+    colors
   );
 };
 
@@ -50,7 +53,9 @@ export const getFieldPerMonth = (field: any[], datasetLabel: string) => {
     }
   });
 
-  return createChartDatasetFromMap(datasetLabel, monthsMap);
+  return createChartDatasetFromMap(datasetLabel, monthsMap, [
+    CHART_COLORS[Math.round(Math.random() * (CHART_COLORS.length - 1))],
+  ]);
 };
 
 export const getFieldPerHour = (field: any[], datasetLabel: string) => {
@@ -74,6 +79,18 @@ export const getFieldPerHour = (field: any[], datasetLabel: string) => {
     }
   });
 
+  const hoursColors = [];
+  for (let i = 0; i < 24; i += 1) {
+    if (i >= 6 && i <= 12) {
+      hoursColors.push(ACTIVITY_CHART_COLORS[0]);
+    } else if (i > 12 && i <= 18) {
+      hoursColors.push(ACTIVITY_CHART_COLORS[1]);
+    } else if (i > 18 && i <= 22) {
+      hoursColors.push(ACTIVITY_CHART_COLORS[2]);
+    } else {
+      hoursColors.push(ACTIVITY_CHART_COLORS[3]);
+    }
+  }
   const overviewMap = new Map();
   overviewMap.set('morning', 0);
   overviewMap.set('noon', 0);
@@ -97,8 +114,8 @@ export const getFieldPerHour = (field: any[], datasetLabel: string) => {
   // });
 
   return [
-    createChartDatasetFromMap(datasetLabel, hoursMap),
-    createChartDatasetFromMap(datasetLabel, overviewMap),
+    createChartDatasetFromMap(datasetLabel, hoursMap, hoursColors),
+    createChartDatasetFromMap(datasetLabel, overviewMap, ACTIVITY_CHART_COLORS),
   ];
 };
 

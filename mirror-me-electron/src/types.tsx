@@ -38,9 +38,11 @@ export type InstagramRelevantData = {
   contributions: {
     comments: {
       date: Date;
+      content: string;
     }[];
     messages: {
       participant: string;
+      content: string;
       date: Date;
     }[];
     posts: {
@@ -73,6 +75,7 @@ export type FacebookRelevantData = {
       title: string;
       sender: string;
       date: Date;
+      content: string;
     }[];
     posts: {
       location:

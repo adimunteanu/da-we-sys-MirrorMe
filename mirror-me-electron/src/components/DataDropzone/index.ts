@@ -210,14 +210,17 @@ export const processInstagram = async (
       const relevantJSON = { ...json } as InstagramRelevantData;
       switch (path) {
         case relevantFields.INSTAGRAM.COMMENTS: {
-          relevantJSON.contributions.comments = getValuesFromNestedObject(
-            jsonData,
-            ['comments_media_comments.string_list_data.timestamp']
-          )[0].map((value: any) => {
-            return {
-              date: new Date(value * 1000),
-            };
-          });
+          const values = getValuesFromNestedObject(jsonData, [
+            'comments_media_comments.string_list_data.timestamp',
+            'comments_media_comments.string_list_data.value',
+          ]);
+
+          for (let i = 0; i < values[0].length; i += 1) {
+            relevantJSON.contributions.comments.push({
+              date: new Date(values[0][i] * 1000),
+              content: decodeString(values[1][i]),
+            });
+          }
 
           break;
         }
@@ -227,6 +230,7 @@ export const processInstagram = async (
             'participants.name',
             'messages.sender_name',
             'messages.timestamp_ms',
+            'messages.content',
           ]);
 
           const participant = decodeString(values[0][0]);
@@ -236,6 +240,7 @@ export const processInstagram = async (
             if (values[1][i] !== participant) {
               messages.push({
                 participant,
+                content: decodeString(values[3][i]),
                 date: new Date(values[2][i]),
               });
             }
@@ -386,6 +391,7 @@ export const processFacebook = async (
             'title',
             'messages.sender_name',
             'messages.timestamp_ms',
+            'messages.content',
           ]);
 
           const title = decodeString(values[0]);
@@ -394,7 +400,8 @@ export const processFacebook = async (
           for (let i = 0; i < values[1].length; i += 1) {
             messages.push({
               title,
-              sender: values[1][i],
+              sender: decodeString(values[1][i]),
+              content: decodeString(values[3][i]),
               date: new Date(values[2][i]),
             });
           }
@@ -439,10 +446,12 @@ export const processFacebook = async (
           ]);
 
           for (let i = 0; i < values[0].length; i += 1) {
-            relevantJSON.contributions.reactions.push({
-              date: new Date(values[0][i] * 1000),
-              type: REACTION_EMOJIS[values[1][i]],
-            });
+            if (REACTION_EMOJIS[values[1][i]] !== undefined) {
+              relevantJSON.contributions.reactions.push({
+                date: new Date(values[0][i] * 1000),
+                type: REACTION_EMOJIS[values[1][i]],
+              });
+            }
           }
 
           break;
