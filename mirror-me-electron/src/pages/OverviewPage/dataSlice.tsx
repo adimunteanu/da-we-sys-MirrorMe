@@ -48,6 +48,19 @@ const dataSlice = createSlice({
     updateCanUpload: (state, action: PayloadAction<boolean>) => {
       state.canUpload = action.payload;
     },
+    updateRelevantData: (state, action: PayloadAction<string>) => {
+      const dataArray = [] as CompanyRelevantDataObject[];
+      Object.entries(state.companyRelevantDataArray).forEach(([key, value]) => {
+        if (value.company !== action.payload) {
+          dataArray.push({
+            company: value.company,
+            logo: value.logo,
+            data: value.data,
+          });
+        }
+      });
+      state.companyRelevantDataArray = dataArray;
+    },
     updateIsUploadingFiles: (state, action: PayloadAction<boolean>) => {
       state.isUploadingFiles = action.payload;
     },
@@ -86,6 +99,7 @@ export const {
   updateStringifiedData,
   updateCanUpload,
   updateIsUploadingFiles,
+  updateRelevantData,
 } = actions;
 
 export {
