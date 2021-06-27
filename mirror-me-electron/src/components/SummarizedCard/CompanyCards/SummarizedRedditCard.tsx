@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux';
 import { createChartDataset } from '../../ChartCard/chartUtils';
 import { selectData } from '../../../pages/OverviewPage/dataSlice';
 import { RedditRelevantData } from '../../../types';
-import './SummarizedRedditCard.scss';
 import { COMPANIES } from '../../../globals';
 
 const SummarizedRedditCard = () => {
