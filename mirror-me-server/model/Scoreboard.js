@@ -19,6 +19,10 @@ const ScoreSchema = mongoose.Schema({
       type: Number,
       default: 0,
     },
+    scoreFacebook: {
+      type: Number,
+      default: 0,
+    },
   },
 });
 

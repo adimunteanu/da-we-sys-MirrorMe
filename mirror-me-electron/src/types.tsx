@@ -38,9 +38,11 @@ export type InstagramRelevantData = {
   contributions: {
     comments: {
       date: Date;
+      content: string;
     }[];
     messages: {
       participant: string;
+      content: string;
       date: Date;
     }[];
     posts: {
@@ -63,7 +65,45 @@ export type InstagramRelevantData = {
   };
 };
 
-export type CompanyRelevantData = RedditRelevantData | InstagramRelevantData;
+export type FacebookRelevantData = {
+  account: string[];
+  contributions: {
+    comments: {
+      date: Date;
+    }[];
+    messages: {
+      title: string;
+      sender: string;
+      date: Date;
+      content: string;
+    }[];
+    posts: {
+      location:
+        | {
+            longitude: number;
+            latitude: number;
+          }
+        | undefined;
+      date: Date;
+    }[];
+    reactions: {
+      type: string;
+      date: Date;
+    }[];
+  };
+  relationships: {
+    friends: string[];
+  };
+  interests: {
+    advertisors: string[];
+    topics: string[];
+  };
+};
+
+export type CompanyRelevantData =
+  | RedditRelevantData
+  | InstagramRelevantData
+  | FacebookRelevantData;
 
 export type CompanyRelevantDataObject = {
   company: string;
@@ -82,6 +122,7 @@ export type ScoresObject = {
   scoreTotal: number;
   scoreReddit: number;
   scoreInsta: number;
+  scoreFacebook: number;
 };
 
 export type NicknameAndScore = {
