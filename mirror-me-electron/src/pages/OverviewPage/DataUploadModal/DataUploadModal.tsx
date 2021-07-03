@@ -108,7 +108,7 @@ const DataUploadModal: FunctionComponent<Props> = (props: Props) => {
           <DataDropzone selectedCompany={selectedCompany} />
           <IonList className="DataUploadModal__Item">
             <IonButton onClick={() => handleUpload()} disabled={!canUpload}>
-              Upload
+              Read Data
             </IonButton>
           </IonList>
         </IonCardContent>
