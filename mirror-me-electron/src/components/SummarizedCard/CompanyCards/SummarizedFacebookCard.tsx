@@ -4,20 +4,20 @@ import { Pie } from 'react-chartjs-2';
 import { useSelector } from 'react-redux';
 import { createChartDataset } from '../../ChartCard/chartUtils';
 import { selectData } from '../../../pages/OverviewPage/dataSlice';
-import { RedditRelevantData } from '../../../types';
+import { FacebookRelevantData } from '../../../types';
 import { COMPANIES } from '../../../globals';
 
-const SummarizedRedditCard = () => {
+const SummarizedInstagramCard = () => {
   const data = useSelector(selectData).find(
-    (object) => object.company === COMPANIES.REDDIT.name
-  )!.data as RedditRelevantData;
+    (object) => object.company === COMPANIES.FACEBOOK.name
+  )!.data as FacebookRelevantData;
 
   const getPieChartData = () => {
-    const { posts, messages, votes, comments } = data.contributions;
+    const { posts, messages, comments, reactions } = data.contributions;
     return createChartDataset(
-      ['Posts', 'Messages', 'Votes', 'Comments'],
+      ['Posts', 'Messages', 'Comments', 'Reactions'],
       'Contributions',
-      [posts.length, messages.length, votes.length, comments.length]
+      [posts.length, messages.length, comments.length, reactions.length]
     );
   };
 
@@ -44,4 +44,4 @@ const SummarizedRedditCard = () => {
   );
 };
 
-export default SummarizedRedditCard;
+export default SummarizedInstagramCard;

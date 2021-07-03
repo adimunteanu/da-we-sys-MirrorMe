@@ -22,12 +22,13 @@ import { ChartType, RedditRelevantData } from '../../types';
 import { selectData } from '../OverviewPage/dataSlice';
 import DefaultChart from '../../components/ChartCard/DefaultChart';
 import SegmentChart from '../../components/ChartCard/SegmentChart';
+import { COMPANIES } from '../../globals';
 
 const geoip = require('offline-geo-from-ip');
 
 const RedditDetailPage = () => {
   const data = useSelector(selectData).find(
-    (object) => object.company === 'Reddit'
+    (object) => object.company === COMPANIES.REDDIT.name
   )!.data as RedditRelevantData;
 
   const getUpDownVotes = () => {
@@ -123,7 +124,7 @@ const RedditDetailPage = () => {
     });
 
     const topWords = Array.from(mostUsedWordsMap.entries())
-      .sort((a, b) => a[1] - b[1])
+      .sort((a, b) => b[1] - a[1])
       .slice(0, wordCount);
 
     const words: Array<Word> = topWords.map((word) => {
@@ -152,7 +153,7 @@ const RedditDetailPage = () => {
     });
 
     const topWords = Array.from(mostUsedWordsMap.entries())
-      .sort((a, b) => a[1] - b[1])
+      .sort((a, b) => b[1] - a[1])
       .slice(0, wordCount);
 
     const words: Array<Word> = topWords.map((word) => {

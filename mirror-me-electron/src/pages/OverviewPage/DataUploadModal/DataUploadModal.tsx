@@ -12,8 +12,9 @@ import {
   IonSelectOption,
   IonText,
   IonToolbar,
+  useIonLoading,
 } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { close } from 'ionicons/icons';
 import { FunctionComponent } from 'react-router/node_modules/@types/react';
@@ -24,6 +25,7 @@ import { COMPANIES } from '../../../globals';
 import {
   loadFiles,
   selectCanUpload,
+  selectIsUploadingFiles,
   selectStringifiedData,
 } from '../dataSlice';
 import './DataUploadModal.scss';
@@ -37,8 +39,21 @@ const DataUploadModal: FunctionComponent<Props> = (props: Props) => {
   const [selectedCompany, setSelectedCompany] = useState<string>('Reddit');
   const canUpload = useSelector(selectCanUpload);
   const stringifiedData = useSelector(selectStringifiedData);
+  const isUploadingFiles = useSelector(selectIsUploadingFiles);
+  const [present, dismiss] = useIonLoading();
 
   const { onDismiss } = props;
+
+  useEffect(() => {
+    const updateLoading = async () => {
+      if (isUploadingFiles) {
+        await present();
+      } else {
+        await dismiss();
+      }
+    };
+    updateLoading();
+  }, [dismiss, isUploadingFiles, present]);
 
   const handleUpload = () => {
     const fileName = Object.values(COMPANIES).find(
@@ -93,7 +108,7 @@ const DataUploadModal: FunctionComponent<Props> = (props: Props) => {
           <DataDropzone selectedCompany={selectedCompany} />
           <IonList className="DataUploadModal__Item">
             <IonButton onClick={() => handleUpload()} disabled={!canUpload}>
-              Upload
+              Read Data
             </IonButton>
           </IonList>
         </IonCardContent>
