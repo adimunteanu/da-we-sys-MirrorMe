@@ -26,6 +26,7 @@ const relevantFields = {
     VOTES: 'post_votes.csv',
     MESSAGES: 'messages.csv',
     SUBREDDITS: 'subscribed_subreddits.csv',
+    LINKED_IDENTITIES: 'linked_identities.csv',
   },
   INSTAGRAM: {
     COMMENTS: 'post_comments.json',
@@ -37,6 +38,9 @@ const relevantFields = {
     ADS_INTERESTS: 'ads_interests.json',
     YOUR_TOPICS: 'your_topics.json',
     STORIES: 'stories.json',
+    DEVICES: 'devices.json',
+    SYNCED_CONTACTS: 'synced_contacts.json',
+    ADS_VIEWED: 'ads_viewed.json',
   },
   FACEBOOK: {
     ACCOUNT: 'profile_information.json',
@@ -48,6 +52,10 @@ const relevantFields = {
     ADVERTISORS:
       'advertisers_who_uploaded_a_contact_list_with_your_information.json',
     YOUR_TOPICS: 'your_topics.json',
+    PICTURES: 'photos_and_videos',
+    IPS: 'ip_address_activity.json',
+    ADVERTISERS_INTERACTED: 'advertisers_youve_interacted_with.json',
+    OFF_FACEBOOK_ACTIVITES: 'your_off-facebook_activity.json',
   },
 };
 
@@ -123,6 +131,7 @@ export const processReddit = async (
       messages: [],
     },
     subreddits: 0,
+    linkedIdentites: 0,
   };
 
   return processCompany(
@@ -202,6 +211,9 @@ export const processInstagram = async (
       ads: [],
       topics: [],
     },
+    devices: 0,
+    syncedContacts: 0,
+    adsViewed: 0,
   };
 
   return processCompany(
@@ -352,12 +364,16 @@ export const processFacebook = async (
       messages: [],
       posts: [],
       reactions: [],
+      pictures: 0,
     },
     relationships: { friends: [] },
     interests: {
       advertisors: [],
       topics: [],
     },
+    ips: 0,
+    advertisersInteracted: 0,
+    offFacebookActivities: 0,
   };
 
   return processCompany(
