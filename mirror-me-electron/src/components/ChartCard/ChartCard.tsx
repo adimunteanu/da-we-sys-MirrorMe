@@ -14,13 +14,14 @@ import IconButton from '../Buttons/IconButton/IconButton';
 const ChartCard = ({
   title,
   chart,
+  fullscreenChart = undefined,
   isFullscreen = false,
   onDismiss = () => {},
 }: ChartCardProps) => {
   const [present, dismiss] = useIonModal(
     <ChartCard
       title={title}
-      chart={chart}
+      chart={fullscreenChart !== undefined ? fullscreenChart : chart}
       isFullscreen
       onDismiss={() => dismiss()}
     />

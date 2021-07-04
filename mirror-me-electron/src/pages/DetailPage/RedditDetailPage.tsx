@@ -11,6 +11,7 @@ import {
 import React from 'react';
 import { useSelector } from 'react-redux';
 import ReactWordcloud, { Word } from 'react-wordcloud';
+import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 import {
   createChartDataset,
   createChartDatasetFromMap,
@@ -18,7 +19,7 @@ import {
   getFieldPerMonth,
 } from '../../components/ChartCard/chartUtils';
 import ChartCard from '../../components/ChartCard/ChartCard';
-import { ChartType, RedditRelevantData } from '../../types';
+import { ChartType, RedditRelevantData, Location } from '../../types';
 import { selectData } from '../OverviewPage/dataSlice';
 import DefaultChart from '../../components/ChartCard/DefaultChart';
 import SegmentChart from '../../components/ChartCard/SegmentChart';
@@ -163,6 +164,22 @@ const RedditDetailPage = () => {
     return words;
   };
 
+  const getLocationsSet = () => {
+    const { ipLogs } = data;
+
+    const locationsSet = new Set<Location>();
+
+    ipLogs.forEach((log) => {
+      if (log.ip) {
+        const { longitude, latitude } = geoip.allData(log.ip).location;
+
+        locationsSet.add({ longitude, latitude });
+      }
+    });
+
+    return locationsSet;
+  };
+
   return (
     <IonContent>
       <IonGrid>
@@ -175,6 +192,34 @@ const RedditDetailPage = () => {
                   data={getLocationCounts}
                   chartType={ChartType.PIE}
                 />
+              }
+              fullscreenChart={
+                <IonCard>
+                  <IonCardHeader>
+                    <IonCardTitle>Map of posts</IonCardTitle>
+                  </IonCardHeader>
+                  <IonCardContent>
+                    <MapContainer
+                      style={{ height: '500px' }}
+                      center={[51.505, -0.09]}
+                      zoom={4}
+                      scrollWheelZoom={false}
+                      dragging
+                    >
+                      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                      {Array.from(getLocationsSet().values()).map(
+                        (location: Location) => {
+                          return (
+                            <Marker
+                              key={`${location.latitude},${location.longitude}`}
+                              position={[location.latitude, location.longitude]}
+                            />
+                          );
+                        }
+                      )}
+                    </MapContainer>
+                  </IonCardContent>
+                </IonCard>
               }
             />
           </IonCol>

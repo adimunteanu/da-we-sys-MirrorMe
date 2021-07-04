@@ -13,17 +13,12 @@ import { useSelector } from 'react-redux';
 import ReactWordcloud, { Word } from 'react-wordcloud';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 import {
-  createChartDataset,
   createChartDatasetFromMap,
   getFieldPerHour,
   getFieldsPerMonth,
 } from '../../components/ChartCard/chartUtils';
 import ChartCard from '../../components/ChartCard/ChartCard';
-import {
-  ChartType,
-  FacebookRelevantData,
-  InstagramRelevantData,
-} from '../../types';
+import { ChartType, FacebookRelevantData } from '../../types';
 import { selectData } from '../OverviewPage/dataSlice';
 import SegmentChart from '../../components/ChartCard/SegmentChart';
 import DefaultChart from '../../components/ChartCard/DefaultChart';
