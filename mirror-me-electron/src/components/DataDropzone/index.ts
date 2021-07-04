@@ -52,10 +52,10 @@ const relevantFields = {
     ADVERTISORS:
       'advertisers_who_uploaded_a_contact_list_with_your_information.json',
     YOUR_TOPICS: 'your_topics.json',
-    PICTURES: 'photos_and_videos',
+    PICTURES: '.jpg',
     IPS: 'ip_address_activity.json',
-    ADVERTISERS_INTERACTED: 'advertisers_youve_interacted_with.json',
-    OFF_FACEBOOK_ACTIVITES: 'your_off-facebook_activity.json',
+    ADVERTISERS_INTERACTED: "advertisers_you've_interacted_with.json",
+    OFF_FACEBOOK_ACTIVITIES: 'your_off-facebook_activity.json',
   },
 };
 
@@ -131,7 +131,7 @@ export const processReddit = async (
       messages: [],
     },
     subreddits: 0,
-    linkedIdentites: 0,
+    linkedIdentities: 0,
   };
 
   return processCompany(

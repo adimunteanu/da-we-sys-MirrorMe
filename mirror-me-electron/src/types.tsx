@@ -32,7 +32,7 @@ export type RedditRelevantData = {
     }[];
   };
   subreddits: number;
-  linkedIdentites: number;
+  linkedIdentities: number;
 };
 
 export type InstagramRelevantData = {
