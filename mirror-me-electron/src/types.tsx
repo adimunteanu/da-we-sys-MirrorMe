@@ -141,9 +141,12 @@ export type NicknameAndScore = {
 export interface ChartCardProps {
   title: string;
   chart: JSX.Element;
+  fullscreenChart?: JSX.Element;
   isFullscreen?: boolean;
   onDismiss?: () => void;
 }
+
+export type Location = { longitude: number; latitude: number };
 
 export interface ChartProps {
   data: unknown;
