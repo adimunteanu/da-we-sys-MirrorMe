@@ -12,6 +12,7 @@ import FacebookDetailPage from './pages/DetailPage/FacebookDetailPage';
 const APP_NAME = 'MirrorMe';
 
 export const SUPPORTED_FILE_TYPES = ['.json', '.csv'];
+export const SUPPORTED_MEDIA_TYPES = ['.jpg', '.jpeg', '.png', '.mp4', '.aac'];
 
 export const PAGES = {
   LANDING: { route: '/', title: '' },

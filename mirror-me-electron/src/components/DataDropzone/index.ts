@@ -1,7 +1,12 @@
 import JSZip from 'jszip';
 import jetpack from 'fs-jetpack';
 import { readString } from 'react-papaparse';
-import { DATA_DIR, REACTION_EMOJIS, SUPPORTED_FILE_TYPES } from '../../globals';
+import {
+  DATA_DIR,
+  REACTION_EMOJIS,
+  SUPPORTED_FILE_TYPES,
+  SUPPORTED_MEDIA_TYPES,
+} from '../../globals';
 import {
   CompanyRelevantData,
   FacebookRelevantData,
@@ -26,6 +31,7 @@ const relevantFields = {
     VOTES: 'post_votes.csv',
     MESSAGES: 'messages.csv',
     SUBREDDITS: 'subscribed_subreddits.csv',
+    LINKED_IDENTITIES: 'linked_identities.csv',
   },
   INSTAGRAM: {
     COMMENTS: 'post_comments.json',
@@ -37,6 +43,9 @@ const relevantFields = {
     ADS_INTERESTS: 'ads_interests.json',
     YOUR_TOPICS: 'your_topics.json',
     STORIES: 'stories.json',
+    DEVICES: 'devices.json',
+    SYNCED_CONTACTS: 'synced_contacts.json',
+    ADS_VIEWED: 'ads_viewed.json',
   },
   FACEBOOK: {
     ACCOUNT: 'profile_information.json',
@@ -48,6 +57,10 @@ const relevantFields = {
     ADVERTISORS:
       'advertisers_who_uploaded_a_contact_list_with_your_information.json',
     YOUR_TOPICS: 'your_topics.json',
+    PICTURES: '.jpg',
+    IPS: 'ip_address_activity.json',
+    ADS_INTERACTED: "advertisers_you've_interacted_with.json",
+    OFF_FACEBOOK_ACTIVITIES: 'your_off-facebook_activity.json',
   },
 };
 
@@ -66,7 +79,10 @@ export const processCompany = async (
   acceptedFiles: Array<File>,
   isJSON: boolean
 ): Promise<CompanyRelevantData> => {
-  const promises = { promises: [] as Promise<string>[], paths: [] as string[] };
+  const promises = {
+    promises: [] as Promise<string | void>[],
+    paths: [] as string[],
+  };
 
   const zip = new JSZip();
   await zip
@@ -78,6 +94,13 @@ export const processCompany = async (
             const type = relativePath.substr(relativePath.lastIndexOf('.'));
             if (SUPPORTED_FILE_TYPES.includes(type)) {
               promises.promises.push(file.async('text'));
+              promises.paths.push(
+                relativePath.substr(relativePath.lastIndexOf('/') + 1)
+              );
+            }
+
+            if (SUPPORTED_MEDIA_TYPES.includes(type)) {
+              promises.promises.push(Promise.resolve());
               promises.paths.push(
                 relativePath.substr(relativePath.lastIndexOf('/') + 1)
               );
@@ -96,10 +119,12 @@ export const processCompany = async (
   await Promise.all(promises.promises).then((values) => {
     for (let i = 0; i < values.length; i += 1) {
       let jsonData: any;
-      if (isJSON) {
-        jsonData = JSON.parse(values[i]);
-      } else {
-        jsonData = readString(values[i], { header: true }).data;
+      if (typeof values[i] === 'string') {
+        if (isJSON) {
+          jsonData = JSON.parse(values[i] as string);
+        } else {
+          jsonData = readString(values[i] as string, { header: true }).data;
+        }
       }
       companySwitch(relevantJSON, jsonData, promises.paths[i]);
     }
@@ -122,7 +147,8 @@ export const processReddit = async (
       posts: [],
       messages: [],
     },
-    subreddits: 0,
+    subreddits: [],
+    linkedIdentities: [],
   };
 
   return processCompany(
@@ -130,6 +156,7 @@ export const processReddit = async (
     (json, jsonData, path) => {
       const relevantJSON = { ...json } as RedditRelevantData;
       const { comments, messages, posts } = relevantJSON.contributions;
+
       switch (path) {
         case relevantFields.REDDIT.ACCOUNT: {
           const values = getValuesFromObject(jsonData[0], ['value']);
@@ -171,7 +198,10 @@ export const processReddit = async (
           break;
         }
         case relevantFields.REDDIT.SUBREDDITS:
-          relevantJSON.subreddits = jsonData.length;
+          relevantJSON.subreddits.push(jsonData.length - 1);
+          break;
+        case relevantFields.REDDIT.LINKED_IDENTITIES:
+          relevantJSON.linkedIdentities.push(jsonData.length - 1);
           break;
         default:
           break;
@@ -197,11 +227,14 @@ export const processInstagram = async (
     relationships: {
       followers: [],
       followings: [],
+      syncedContacts: [0],
     },
     interests: {
       ads: [],
+      adsViewed: [0],
       topics: [],
     },
+    devices: [0],
   };
 
   return processCompany(
@@ -331,6 +364,28 @@ export const processInstagram = async (
 
           break;
         }
+        case relevantFields.INSTAGRAM.DEVICES: {
+          relevantJSON.devices[0] = getValuesFromObject(jsonData, [
+            'devices_devices',
+          ])[0].length;
+
+          break;
+        }
+        case relevantFields.INSTAGRAM.SYNCED_CONTACTS: {
+          relevantJSON.relationships.syncedContacts[0] = getValuesFromObject(
+            jsonData,
+            ['contacts_contact_info']
+          )[0].length;
+
+          break;
+        }
+        case relevantFields.INSTAGRAM.ADS_VIEWED: {
+          relevantJSON.interests.adsViewed[0] = getValuesFromObject(jsonData, [
+            'impressions_history_ads_seen',
+          ])[0].length;
+
+          break;
+        }
         default: {
           break;
         }
@@ -352,18 +407,32 @@ export const processFacebook = async (
       messages: [],
       posts: [],
       reactions: [],
+      media: [0],
     },
     relationships: { friends: [] },
     interests: {
       advertisors: [],
+      advertisersInteracted: [0],
       topics: [],
     },
+    ips: [],
+    offFacebookActivities: [0],
   };
 
   return processCompany(
     relevantJSON,
     (json, jsonData, path) => {
       const relevantJSON = { ...json } as FacebookRelevantData;
+      let isMedia = false;
+
+      SUPPORTED_MEDIA_TYPES.forEach((type) => {
+        isMedia = isMedia || path.endsWith(type);
+      });
+
+      if (isMedia) {
+        relevantJSON.contributions.media[0] += 1;
+      }
+
       switch (path) {
         case relevantFields.FACEBOOK.ACCOUNT: {
           relevantJSON.account.push(
@@ -483,6 +552,36 @@ export const processFacebook = async (
             decodeString(topic)
           );
 
+          break;
+        }
+        case relevantFields.FACEBOOK.OFF_FACEBOOK_ACTIVITIES: {
+          relevantJSON.offFacebookActivities[0] = getValuesFromObject(
+            jsonData,
+            ['off_facebook_activity_v2']
+          )[0].length;
+          break;
+        }
+        case relevantFields.FACEBOOK.ADS_INTERACTED: {
+          relevantJSON.interests.advertisersInteracted[0] = getValuesFromObject(
+            jsonData,
+            ['history_v2']
+          )[0].length;
+          break;
+        }
+        case relevantFields.FACEBOOK.IPS: {
+          const ips: Set<string> = new Set();
+          const ipsObjs = getValuesFromObject(jsonData, [
+            'used_ip_address_v2',
+          ])[0];
+          ipsObjs.forEach((obj: any) => {
+            if (obj.action === 'Login') {
+              ips.add(obj.ip);
+            }
+          });
+
+          ips.forEach((ip) => {
+            relevantJSON.ips.push(ip);
+          });
           break;
         }
         default: {
