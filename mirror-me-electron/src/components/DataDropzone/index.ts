@@ -374,7 +374,7 @@ export const processInstagram = async (
         case relevantFields.INSTAGRAM.SYNCED_CONTACTS: {
           relevantJSON.relationships.syncedContacts[0] = getValuesFromObject(
             jsonData,
-            ['??']
+            ['contacts_contact_info']
           )[0].length;
 
           break;
