@@ -24,9 +24,9 @@ export const computeScore = (data: CompanyRelevantDataObject[]) => {
             total + contribution.length,
           0
         );
-        const { linkedIdentities } = company.data as RedditRelevantData;
-        const ips = (company.data as RedditRelevantData).ipLogs.length;
-        score.scoreReddit = contributions + linkedIdentities * 10 + ips * 2;
+        const { linkedIdentities, ipLogs } = company.data as RedditRelevantData;
+        score.scoreReddit =
+          contributions + linkedIdentities[0] * 10 + ipLogs.length * 2;
         score.scoreTotal += score.scoreReddit;
         break;
       }
@@ -36,20 +36,22 @@ export const computeScore = (data: CompanyRelevantDataObject[]) => {
             total + contribution.length,
           0
         );
-        const adsInterests = (company.data as InstagramRelevantData).interests
-          .ads.length;
-        const topics = (company.data as InstagramRelevantData).interests.topics
-          .length;
+        const {
+          ads,
+          topics,
+          adsViewed,
+        } = (company.data as InstagramRelevantData).interests;
         const { devices } = company.data as InstagramRelevantData;
-        const { syncedContacts } = company.data as InstagramRelevantData;
-        const { adsViewed } = company.data as InstagramRelevantData;
+        const {
+          syncedContacts,
+        } = (company.data as InstagramRelevantData).relationships;
         score.scoreInsta =
           contributions +
-          adsInterests * 5 +
-          topics +
-          devices * 10 +
-          syncedContacts +
-          adsViewed * 1.5;
+          ads.length * 5 +
+          topics.length +
+          devices[0] * 10 +
+          syncedContacts[0] +
+          adsViewed[0] * 1.5;
         score.scoreTotal += score.scoreInsta;
         break;
       }
@@ -59,24 +61,24 @@ export const computeScore = (data: CompanyRelevantDataObject[]) => {
             total + contribution.length,
           0
         );
+        const { media } = (company.data as FacebookRelevantData).contributions;
         const {
-          pictures,
-        } = (company.data as FacebookRelevantData).contributions;
-        const topics = (company.data as FacebookRelevantData).interests.topics
-          .length;
-        const advertisersUploaded = (company.data as FacebookRelevantData)
-          .interests.advertisors.length;
-        const { advertisersInteracted } = company.data as FacebookRelevantData;
-        const { offFacebookActivities } = company.data as FacebookRelevantData;
-        const { ips } = company.data as FacebookRelevantData;
+          topics,
+          advertisersInteracted,
+          advertisors,
+        } = (company.data as FacebookRelevantData).interests;
+        const {
+          ips,
+          offFacebookActivities,
+        } = company.data as FacebookRelevantData;
         score.scoreFacebook =
           contributions +
-          pictures * 2.5 +
-          topics +
-          advertisersUploaded * 5 +
-          advertisersInteracted * 2 +
-          offFacebookActivities +
-          ips * 1.5;
+          media[0] * 2.5 +
+          topics.length +
+          advertisors.length * 5 +
+          advertisersInteracted[0] * 2 +
+          offFacebookActivities[0] +
+          ips.length * 1.5;
         score.scoreTotal += score.scoreFacebook;
         break;
       }
