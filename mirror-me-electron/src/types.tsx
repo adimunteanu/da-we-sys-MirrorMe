@@ -31,8 +31,8 @@ export type RedditRelevantData = {
       from: string;
     }[];
   };
-  subreddits: number;
-  linkedIdentities: number;
+  subreddits: number[];
+  linkedIdentities: number[];
 };
 
 export type InstagramRelevantData = {
@@ -59,14 +59,14 @@ export type InstagramRelevantData = {
   relationships: {
     followers: string[];
     followings: string[];
+    syncedContacts: number[];
   };
   interests: {
     ads: string[];
+    adsViewed: number[];
     topics: string[];
   };
-  devices: number;
-  syncedContacts: number;
-  adsViewed: number;
+  devices: number[];
 };
 
 export type FacebookRelevantData = {
@@ -94,18 +94,18 @@ export type FacebookRelevantData = {
       type: string;
       date: Date;
     }[];
-    pictures: number;
+    media: number[];
   };
   relationships: {
     friends: string[];
   };
   interests: {
     advertisors: string[];
+    advertisersInteracted: number[];
     topics: string[];
   };
-  ips: number;
-  advertisersInteracted: number;
-  offFacebookActivities: number;
+  ips: string[];
+  offFacebookActivities: number[];
 };
 
 export type CompanyRelevantData =
