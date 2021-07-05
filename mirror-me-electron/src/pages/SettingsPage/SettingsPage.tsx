@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './SettingsPage.scss';
 import * as fs from 'fs';
 import {
@@ -20,8 +20,14 @@ import {
 import {
   deleteScoreThunk,
   selectUploadedScore,
+  updateScoreThunk,
 } from '../ScoreboardPage/scoreControllerSlice';
-import { updateRelevantData } from '../OverviewPage/dataSlice';
+import {
+  selectData,
+  deleteCompanyRelevantData,
+} from '../OverviewPage/dataSlice';
+import { COMPANIES } from '../../globals';
+import { computeScore } from '../ScoreboardPage';
 
 const dataPathFacebook = './data/facebook_data.json';
 const dataPathInstagram = './data/instagram_data.json';
@@ -33,6 +39,18 @@ const SettingsPage: React.FC = () => {
   const nickname = useSelector(selectNickname);
   const authToken = useSelector(selectAuthToken);
   const hasScore = useSelector(selectUploadedScore);
+  const data = useSelector(selectData);
+
+  const [hasDeletedData, setHasDeletedData] = useState(false);
+
+  useEffect(() => {
+    if (hasDeletedData) {
+      dispatch(
+        updateScoreThunk({ nickname, score: computeScore(data), authToken })
+      );
+      setHasDeletedData(false);
+    }
+  }, [data]);
 
   const deleteLocalData = (company: string) => {
     let path = '';
@@ -58,20 +76,21 @@ const SettingsPage: React.FC = () => {
         }
         console.log('File succesfully deleted');
       });
-      dispatch(updateRelevantData(company));
+      setHasDeletedData(true);
+      dispatch(deleteCompanyRelevantData(company));
     } else {
       alert("This file doesn't exist, cannot delete");
     }
   };
 
   const deleteLocalFacebookData = () => {
-    deleteLocalData('Facebook');
+    deleteLocalData(COMPANIES.FACEBOOK.name);
   };
   const deleteLocalInstagramData = () => {
-    deleteLocalData('Instagram');
+    deleteLocalData(COMPANIES.INSTAGRAM.name);
   };
   const deleteLocalRedditData = () => {
-    deleteLocalData('Reddit');
+    deleteLocalData(COMPANIES.REDDIT.name);
   };
 
   const tryDeleteScore = () => {
