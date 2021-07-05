@@ -15,6 +15,7 @@ const ChartCard = ({
   title,
   chart,
   fullscreenChart = undefined,
+  fullscreenIcon = undefined,
   isFullscreen = false,
   onDismiss = () => {},
 }: ChartCardProps) => {
@@ -45,7 +46,9 @@ const ChartCard = ({
                 onClick={() => present({ cssClass: 'ChartCardModal' })}
                 size="large"
                 slot="end"
-                icon={resizeOutline}
+                icon={
+                  fullscreenIcon === undefined ? resizeOutline : fullscreenIcon
+                }
               />
             )}
           </IonToolbar>

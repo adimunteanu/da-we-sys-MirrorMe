@@ -12,6 +12,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import ReactWordcloud, { Word } from 'react-wordcloud';
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
+import { mapOutline } from 'ionicons/icons';
 import {
   createChartDataset,
   createChartDatasetFromMap,
@@ -193,6 +194,7 @@ const RedditDetailPage = () => {
                   chartType={ChartType.PIE}
                 />
               }
+              fullscreenIcon={mapOutline}
               fullscreenChart={
                 <IonCard>
                   <IonCardHeader>
