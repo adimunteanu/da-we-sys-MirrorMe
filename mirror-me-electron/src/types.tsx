@@ -142,6 +142,7 @@ export interface ChartCardProps {
   title: string;
   chart: JSX.Element;
   fullscreenChart?: JSX.Element;
+  fullscreenIcon?: string;
   isFullscreen?: boolean;
   onDismiss?: () => void;
 }
