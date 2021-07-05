@@ -43,7 +43,7 @@ const ScoreboardPage = () => {
       dispatch(getAllScoreThunk(authToken));
       dispatch(getMeScoreThunk({ nickname, authToken }));
     }
-  }, []);
+  }, [hasScore]);
 
   const getScoreboardList = () => {
     const items: any[] = [];
