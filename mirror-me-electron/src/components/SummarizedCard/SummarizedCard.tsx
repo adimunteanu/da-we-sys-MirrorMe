@@ -37,11 +37,13 @@ const SummarizedCard = ({ title, children, logo }: Props) => {
         <IonToolbar>
           <IonCardTitle>{title}</IonCardTitle>
           <IonButtons slot="end">
-            <IconButton
-              onClick={() => goToDetailedView()}
-              label="See more"
-              icon={statsChartOutline}
-            />
+            <div className="LabelIcon">
+              <IconButton
+                onClick={() => goToDetailedView()}
+                icon={statsChartOutline}
+              />
+              <span>See more</span>
+            </div>
           </IonButtons>
         </IonToolbar>
       </IonCardHeader>
