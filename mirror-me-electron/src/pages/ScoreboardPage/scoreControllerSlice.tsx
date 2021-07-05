@@ -16,7 +16,7 @@ const initialState: ScoreControllerState = {
 };
 
 const scoreInstance = axios.create({
-  baseURL: `http://localhost:4000/scoreboard`,
+  baseURL: `http://13.59.228.104:4000/scoreboard`,
   timeout: 1000,
 });
 
