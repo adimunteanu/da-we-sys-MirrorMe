@@ -48,9 +48,9 @@ const dataSlice = createSlice({
     updateCanUpload: (state, action: PayloadAction<boolean>) => {
       state.canUpload = action.payload;
     },
-    updateRelevantData: (state, action: PayloadAction<string>) => {
+    deleteCompanyRelevantData: (state, action: PayloadAction<string>) => {
       const dataArray = [] as CompanyRelevantDataObject[];
-      Object.entries(state.companyRelevantDataArray).forEach(([key, value]) => {
+      Object.entries(state.companyRelevantDataArray).forEach(([_, value]) => {
         if (value.company !== action.payload) {
           dataArray.push({
             company: value.company,
@@ -99,7 +99,7 @@ export const {
   updateStringifiedData,
   updateCanUpload,
   updateIsUploadingFiles,
-  updateRelevantData,
+  deleteCompanyRelevantData,
 } = actions;
 
 export {
