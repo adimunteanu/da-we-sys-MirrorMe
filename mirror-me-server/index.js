@@ -1,7 +1,16 @@
 const express = require("express");
+const https = require('https');
+const fs = require('fs');
 const user = require("./routes/user.js");
 const scoreboard = require("./routes/scoreboard.js")
 const InitiateMongoServer = require("./config/db.js");
+
+var key = fs.readFileSync('mirrorme.key');
+var cert = fs.readFileSync('mirrorme.crt');
+var options = {
+	key: key,
+	cert: cert
+};
 
 // Initiate Mongo Server
 InitiateMongoServer();
@@ -27,6 +36,8 @@ app.get("/", (req, res) => {
 app.use("/user", user);
 app.use("/scoreboard", scoreboard);
 
-app.listen(PORT, (req, res) => {
+var server = https.createServer(options, app);
+
+server.listen(PORT, (req, res) => {
   console.log(`Server Started at PORT ${PORT}`);
 });
