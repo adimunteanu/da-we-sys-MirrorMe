@@ -14,9 +14,9 @@ import { useHistory } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import SlidingError from '../../../components/SlidingError/SlidingError';
 import './RegisterPage.scss';
-import { PAGES } from '../../../globals';
 import { selectIsAuthenticated, signupThunk } from '../userControllerSlice';
 import { isEmail, isNickname, isPassword } from '..';
+import { PAGES } from '../../../store/globalSlice';
 
 const RegisterPage = () => {
   const history = useHistory();

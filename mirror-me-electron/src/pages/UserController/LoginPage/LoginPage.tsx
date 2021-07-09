@@ -12,7 +12,6 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
-import { PAGES } from '../../../globals';
 import './LoginPage.scss';
 import {
   loginThunk,
@@ -24,6 +23,7 @@ import { isEmail, isPassword } from '..';
 import SlidingError from '../../../components/SlidingError/SlidingError';
 import { getMeScoreThunk } from '../../ScoreboardPage/scoreControllerSlice';
 import { loadFiles } from '../../OverviewPage/dataSlice';
+import { PAGES } from '../../../store/globalSlice';
 
 const LoginPage = () => {
   const history = useHistory();

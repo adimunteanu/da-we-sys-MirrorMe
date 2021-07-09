@@ -11,10 +11,9 @@ import { useLocation } from 'react-router-dom';
 import React, { useEffect } from 'react';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import Menu from '../Menu/Menu';
-import { selectTitle, updateCurrentPage } from '../../store/globalSlice';
+import { PAGES, selectTitle, updateCurrentPage } from '../../store/globalSlice';
 import store from '../../store';
 import DataUploadModal from '../../pages/OverviewPage/DataUploadModal/DataUploadModal';
-import { PAGES } from '../../globals';
 import {
   updateCanUpload,
   updateStringifiedData,

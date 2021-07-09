@@ -4,6 +4,7 @@ export const createChartDataset = (
   labels: any[],
   datasetLabel: string,
   data: any[],
+  isDarkmode: boolean,
   colors: string[] = CHART_COLORS
 ) => {
   return {
@@ -13,6 +14,7 @@ export const createChartDataset = (
         label: datasetLabel,
         data,
         backgroundColor: colors,
+        borderColor: isDarkmode ? 'rgba(255,255,255, 0.5)' : 'rgba(0,0,0,0.1)',
         hoverOffset: 4,
       },
     ],
@@ -22,17 +24,23 @@ export const createChartDataset = (
 export const createChartDatasetFromMap = (
   datasetLabel: string,
   map: Map<any, any>,
+  isDarkmode: boolean,
   colors?: string[]
 ) => {
   return createChartDataset(
     Array.from(map.keys()),
     datasetLabel,
     Array.from(map.values()),
+    isDarkmode,
     colors
   );
 };
 
-export const getFieldPerMonth = (field: any[], datasetLabel: string) => {
+export const getFieldPerMonth = (
+  field: any[],
+  datasetLabel: string,
+  isDarkmode: boolean
+) => {
   const sortedArray = [...field];
 
   sortedArray.sort(
@@ -53,12 +61,16 @@ export const getFieldPerMonth = (field: any[], datasetLabel: string) => {
     }
   });
 
-  return createChartDatasetFromMap(datasetLabel, monthsMap, [
+  return createChartDatasetFromMap(datasetLabel, monthsMap, isDarkmode, [
     CHART_COLORS[Math.round(Math.random() * (CHART_COLORS.length - 1))],
   ]);
 };
 
-export const getFieldPerHour = (field: any[], datasetLabel: string) => {
+export const getFieldPerHour = (
+  field: any[],
+  datasetLabel: string,
+  isDarkmode: boolean
+) => {
   const sortedArray = [...field];
 
   sortedArray.sort(
@@ -114,8 +126,13 @@ export const getFieldPerHour = (field: any[], datasetLabel: string) => {
   // });
 
   return [
-    createChartDatasetFromMap(datasetLabel, hoursMap, hoursColors),
-    createChartDatasetFromMap(datasetLabel, overviewMap, ACTIVITY_CHART_COLORS),
+    createChartDatasetFromMap(datasetLabel, hoursMap, isDarkmode, hoursColors),
+    createChartDatasetFromMap(
+      datasetLabel,
+      overviewMap,
+      isDarkmode,
+      ACTIVITY_CHART_COLORS
+    ),
   ];
 };
 

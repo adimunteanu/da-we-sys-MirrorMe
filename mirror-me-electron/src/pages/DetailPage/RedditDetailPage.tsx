@@ -25,6 +25,7 @@ import { selectData } from '../OverviewPage/dataSlice';
 import DefaultChart from '../../components/ChartCard/DefaultChart';
 import SegmentChart from '../../components/ChartCard/SegmentChart';
 import { COMPANIES } from '../../globals';
+import { selectIsDarkmode } from '../../store/globalSlice';
 
 const geoip = require('offline-geo-from-ip');
 
@@ -32,6 +33,7 @@ const RedditDetailPage = () => {
   const data = useSelector(selectData).find(
     (object) => object.company === COMPANIES.REDDIT.name
   )!.data as RedditRelevantData;
+  const isDarkmode = useSelector(selectIsDarkmode);
 
   const getUpDownVotes = () => {
     const { votes } = data.contributions;
@@ -45,7 +47,12 @@ const RedditDetailPage = () => {
       }
     });
 
-    return createChartDataset(['Upvotes', 'Downvotes'], '# of votes', newData);
+    return createChartDataset(
+      ['Upvotes', 'Downvotes'],
+      '# of votes',
+      newData,
+      isDarkmode
+    );
   };
 
   const getVotesDistribution = () => {
@@ -61,19 +68,19 @@ const RedditDetailPage = () => {
       );
     });
 
-    return createChartDatasetFromMap('Subreddits', subredditMap);
+    return createChartDatasetFromMap('Subreddits', subredditMap, isDarkmode);
   };
 
   const getCommentsPerMonth = () => {
     const { comments } = data.contributions;
 
-    return getFieldPerMonth(comments, '# of comments');
+    return getFieldPerMonth(comments, '# of comments', isDarkmode);
   };
 
   const getMessagesPerMonth = () => {
     const { messages } = data.contributions;
 
-    return getFieldPerMonth(messages, '# of messages');
+    return getFieldPerMonth(messages, '# of messages', isDarkmode);
   };
 
   const getLocationCounts = () => {
@@ -92,19 +99,19 @@ const RedditDetailPage = () => {
       }
     });
 
-    return createChartDatasetFromMap('Cities', citiesMap);
+    return createChartDatasetFromMap('Cities', citiesMap, isDarkmode);
   };
 
   const getCommentsActivity = () => {
     const { comments } = data.contributions;
 
-    return getFieldPerHour(comments, 'Comment activity');
+    return getFieldPerHour(comments, 'Comment activity', isDarkmode);
   };
 
   const getMessagesActivity = () => {
     const { messages } = data.contributions;
 
-    return getFieldPerHour(messages, 'Messages activity');
+    return getFieldPerHour(messages, 'Messages activity', isDarkmode);
   };
 
   const getMostUsedInCommentWordCloud = (wordCount: number): Array<Word> => {
@@ -165,20 +172,23 @@ const RedditDetailPage = () => {
     return words;
   };
 
-  const getLocationsSet = () => {
+  const getLocationsMap = () => {
     const { ipLogs } = data;
 
-    const locationsSet = new Set<Location>();
+    const locationsMap = new Map<string, Location>();
 
     ipLogs.forEach((log) => {
       if (log.ip) {
         const { longitude, latitude } = geoip.allData(log.ip).location;
-
-        locationsSet.add({ longitude, latitude });
+        const key = `${latitude},${longitude}`;
+        const hasLocation = locationsMap.has(key);
+        if (!hasLocation) {
+          locationsMap.set(key, { latitude, longitude });
+        }
       }
     });
 
-    return locationsSet;
+    return locationsMap;
   };
 
   return (
@@ -209,7 +219,7 @@ const RedditDetailPage = () => {
                       dragging
                     >
                       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                      {Array.from(getLocationsSet().values()).map(
+                      {Array.from(getLocationsMap().values()).map(
                         (location: Location) => {
                           return (
                             <Marker

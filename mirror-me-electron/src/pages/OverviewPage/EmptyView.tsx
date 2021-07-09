@@ -8,7 +8,7 @@ import {
 } from '@ionic/react';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { PAGES } from '../../globals';
+import { PAGES } from '../../store/globalSlice';
 
 const EmptyView = () => {
   const history = useHistory();
