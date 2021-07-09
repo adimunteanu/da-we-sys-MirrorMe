@@ -110,6 +110,10 @@
   --ion-color-light-tint: #f5f6f9;
 }
 
+ion-card-header ion-toolbar ion-card-title {
+  margin-left: 16px;
+}
+
 body {
   position: relative;
   height: 100vh;
