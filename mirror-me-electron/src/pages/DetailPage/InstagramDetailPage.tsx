@@ -23,11 +23,13 @@ import { selectData } from '../OverviewPage/dataSlice';
 import SegmentChart from '../../components/ChartCard/SegmentChart';
 import DefaultChart from '../../components/ChartCard/DefaultChart';
 import { COMPANIES } from '../../globals';
+import { selectIsDarkmode } from '../../store/globalSlice';
 
 const InstagramDetailPage = () => {
   const data = useSelector(selectData).find(
     (object) => object.company === COMPANIES.INSTAGRAM.name
   )!.data as InstagramRelevantData;
+  const isDarkmode = useSelector(selectIsDarkmode);
 
   const getContributionsPerMonth = () => {
     const { messages, posts, likes, stories, comments } = data.contributions;
@@ -55,7 +57,8 @@ const InstagramDetailPage = () => {
     return createChartDataset(
       ['Followers', 'Followings', 'Mutuals'],
       'Relationships',
-      [followers.length, followings.length, mutuals.length]
+      [followers.length, followings.length, mutuals.length],
+      isDarkmode
     );
   };
 
@@ -98,31 +101,35 @@ const InstagramDetailPage = () => {
       );
     });
 
-    return createChartDatasetFromMap('Participants', participantMap);
+    return createChartDatasetFromMap(
+      'Participants',
+      participantMap,
+      isDarkmode
+    );
   };
 
   const getLikesActivity = () => {
     const { likes } = data.contributions;
 
-    return getFieldPerHour(likes, 'Likes activity');
+    return getFieldPerHour(likes, 'Likes activity', isDarkmode);
   };
 
   const getMessagesActivity = () => {
     const { messages } = data.contributions;
 
-    return getFieldPerHour(messages, 'Messages activity');
+    return getFieldPerHour(messages, 'Messages activity', isDarkmode);
   };
 
   const getStoriesActivity = () => {
     const { stories } = data.contributions;
 
-    return getFieldPerHour(stories, 'Stories activity');
+    return getFieldPerHour(stories, 'Stories activity', isDarkmode);
   };
 
   const getCommentsActivity = () => {
     const { comments } = data.contributions;
 
-    return getFieldPerHour(comments, 'Comments activity');
+    return getFieldPerHour(comments, 'Comments activity', isDarkmode);
   };
 
   const getMostUsedInMessageWordCloud = (wordCount: number): Array<Word> => {

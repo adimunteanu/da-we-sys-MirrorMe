@@ -11,6 +11,10 @@ import {
   IonGrid,
   IonRow,
   IonCol,
+  IonToggle,
+  IonItem,
+  IonLabel,
+  IonList,
 } from '@ionic/react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -28,6 +32,7 @@ import {
 } from '../OverviewPage/dataSlice';
 import { COMPANIES } from '../../globals';
 import { computeScore } from '../ScoreboardPage';
+import { selectIsDarkmode, updateIsDarkmode } from '../../store/globalSlice';
 
 const dataPathFacebook = './data/facebook_data.json';
 const dataPathInstagram = './data/instagram_data.json';
@@ -42,6 +47,7 @@ const SettingsPage: React.FC = () => {
   const data = useSelector(selectData);
 
   const [hasDeletedData, setHasDeletedData] = useState(false);
+  const isDarkmode = useSelector(selectIsDarkmode);
 
   useEffect(() => {
     if (hasDeletedData) {
@@ -109,19 +115,25 @@ const SettingsPage: React.FC = () => {
           <IonCol size="4">
             <IonCard className="SettingsPage_Card">
               <IonCardHeader>
-                <IonCardTitle>Change Nickname</IonCardTitle>
+                <IonCardTitle>Toggle theme</IonCardTitle>
               </IonCardHeader>
               <IonCardContent>
-                In order to change your nickname, click here!
-                <IonGrid>
-                  <IonRow>
-                    <IonCol>
-                      <IonButton id="change-nickname" size="large">
-                        Coming Soon
-                      </IonButton>
-                    </IonCol>
-                  </IonRow>
-                </IonGrid>
+                <IonList>
+                  <IonItem>
+                    <IonLabel>{isDarkmode ? 'Darkmode' : 'Lightmode'}</IonLabel>
+                    <IonToggle
+                      slot="start"
+                      checked={isDarkmode}
+                      onIonChange={(e) => {
+                        document.body.classList.toggle(
+                          'dark',
+                          e.detail.checked
+                        );
+                        dispatch(updateIsDarkmode(e.detail.checked));
+                      }}
+                    />
+                  </IonItem>
+                </IonList>
               </IonCardContent>
             </IonCard>
           </IonCol>

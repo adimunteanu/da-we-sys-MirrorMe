@@ -23,11 +23,13 @@ import { selectData } from '../OverviewPage/dataSlice';
 import SegmentChart from '../../components/ChartCard/SegmentChart';
 import DefaultChart from '../../components/ChartCard/DefaultChart';
 import { COMPANIES, REACTION_COLORS, REACTION_EMOJIS } from '../../globals';
+import { selectIsDarkmode } from '../../store/globalSlice';
 
 const FacebookDetailPage = () => {
   const data = useSelector(selectData).find(
     (object) => object.company === COMPANIES.FACEBOOK.name
   )!.data as FacebookRelevantData;
+  const isDarkmode = useSelector(selectIsDarkmode);
 
   const getContributionsPerMonth = () => {
     const { messages, posts, reactions, comments } = data.contributions;
@@ -76,25 +78,29 @@ const FacebookDetailPage = () => {
       );
     });
 
-    return createChartDatasetFromMap('Participants', participantMap);
+    return createChartDatasetFromMap(
+      'Participants',
+      participantMap,
+      isDarkmode
+    );
   };
 
   const getReactionsActivity = () => {
     const { reactions } = data.contributions;
 
-    return getFieldPerHour(reactions, 'Reactions activity');
+    return getFieldPerHour(reactions, 'Reactions activity', isDarkmode);
   };
 
   const getMessagesActivity = () => {
     const { messages } = data.contributions;
 
-    return getFieldPerHour(messages, 'Messages activity');
+    return getFieldPerHour(messages, 'Messages activity', isDarkmode);
   };
 
   const getCommentsActivity = () => {
     const { comments } = data.contributions;
 
-    return getFieldPerHour(comments, 'Comments activity');
+    return getFieldPerHour(comments, 'Comments activity', isDarkmode);
   };
 
   const getReactionDistribution = () => {
@@ -112,6 +118,7 @@ const FacebookDetailPage = () => {
     return createChartDatasetFromMap(
       'Reaction distribution',
       reactionMap,
+      isDarkmode,
       REACTION_COLORS
     );
   };

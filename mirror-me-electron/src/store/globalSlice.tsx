@@ -6,11 +6,13 @@ import { Page } from '../types';
 export type GlobalState = {
   currentPage: Page;
   currentCompanyView: string;
+  isDarkmode: boolean;
 };
 
 const initialState: GlobalState = {
   currentPage: PAGES.LANDING,
   currentCompanyView: '',
+  isDarkmode: false,
 };
 
 const globalSlice = createSlice({
@@ -31,6 +33,9 @@ const globalSlice = createSlice({
     updateCurrentCompanyView: (state, action: PayloadAction<string>) => {
       state.currentCompanyView = action.payload;
     },
+    updateIsDarkmode: (state, action: PayloadAction<boolean>) => {
+      state.isDarkmode = action.payload;
+    },
   },
 });
 
@@ -43,8 +48,16 @@ const selectTitle = (state: RootState): string => {
   return state.global.currentPage.title;
 };
 
-export const { updateCurrentPage, updateCurrentCompanyView } = actions;
+const selectIsDarkmode = (state: RootState): boolean => {
+  return state.global.isDarkmode;
+};
 
-export { selectTitle };
+export const {
+  updateCurrentPage,
+  updateCurrentCompanyView,
+  updateIsDarkmode,
+} = actions;
+
+export { selectTitle, selectIsDarkmode };
 
 export default reducer;
