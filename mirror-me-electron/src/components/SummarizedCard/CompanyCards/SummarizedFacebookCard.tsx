@@ -6,18 +6,21 @@ import { createChartDataset } from '../../ChartCard/chartUtils';
 import { selectData } from '../../../pages/OverviewPage/dataSlice';
 import { FacebookRelevantData } from '../../../types';
 import { COMPANIES } from '../../../globals';
+import { selectIsDarkmode } from '../../../store/globalSlice';
 
 const SummarizedInstagramCard = () => {
   const data = useSelector(selectData).find(
     (object) => object.company === COMPANIES.FACEBOOK.name
   )!.data as FacebookRelevantData;
+  const isDarkmode = useSelector(selectIsDarkmode);
 
   const getPieChartData = () => {
     const { posts, messages, comments, reactions } = data.contributions;
     return createChartDataset(
       ['Posts', 'Messages', 'Comments', 'Reactions'],
       'Contributions',
-      [posts.length, messages.length, comments.length, reactions.length]
+      [posts.length, messages.length, comments.length, reactions.length],
+      isDarkmode
     );
   };
 

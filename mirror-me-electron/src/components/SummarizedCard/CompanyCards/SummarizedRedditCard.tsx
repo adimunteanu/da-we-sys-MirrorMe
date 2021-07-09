@@ -6,18 +6,21 @@ import { createChartDataset } from '../../ChartCard/chartUtils';
 import { selectData } from '../../../pages/OverviewPage/dataSlice';
 import { RedditRelevantData } from '../../../types';
 import { COMPANIES } from '../../../globals';
+import { selectIsDarkmode } from '../../../store/globalSlice';
 
 const SummarizedRedditCard = () => {
   const data = useSelector(selectData).find(
     (object) => object.company === COMPANIES.REDDIT.name
   )!.data as RedditRelevantData;
+  const isDarkmode = useSelector(selectIsDarkmode);
 
   const getPieChartData = () => {
     const { posts, messages, votes, comments } = data.contributions;
     return createChartDataset(
       ['Posts', 'Messages', 'Votes', 'Comments'],
       'Contributions',
-      [posts.length, messages.length, votes.length, comments.length]
+      [posts.length, messages.length, votes.length, comments.length],
+      isDarkmode
     );
   };
 
