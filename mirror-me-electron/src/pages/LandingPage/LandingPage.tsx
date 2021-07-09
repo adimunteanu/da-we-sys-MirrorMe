@@ -15,7 +15,7 @@ import { Link } from 'react-router-dom';
 import MirrorImg from '../../images/Mirror.jpg';
 import AppsImg from '../../images/Apps.png';
 import ScoreImg from '../../images/Score.jpg';
-import { PAGES } from '../../globals';
+import { PAGES } from '../../store/globalSlice';
 
 const LandingPage: React.FC = () => {
   const history = useHistory();

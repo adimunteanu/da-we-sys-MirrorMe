@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.global.scss';
 import Header from './components/Header/Header';
-import { COMPANIES, PAGES } from './globals';
+import { COMPANIES } from './globals';
 import {
   LandingPage,
   LoginPage,
@@ -28,6 +28,7 @@ import {
   selectIsAuthenticated,
   selectNickname,
 } from './pages/UserController/userControllerSlice';
+import { PAGES } from './store/globalSlice';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -58,7 +59,7 @@ const App = () => {
               <Route
                 key={company.name}
                 path={PAGES.DETAIL.route + company.name.toLowerCase()}
-                component={company.detail_page}
+                component={() => company.detail_page}
               />
             );
           })}

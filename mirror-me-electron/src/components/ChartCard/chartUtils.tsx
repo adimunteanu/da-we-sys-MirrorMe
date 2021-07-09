@@ -14,7 +14,7 @@ export const createChartDataset = (
         label: datasetLabel,
         data,
         backgroundColor: colors,
-        borderColor: isDarkmode ? 'rgb(255,255,255)' : 'rgba(0,0,0,0.1)',
+        borderColor: isDarkmode ? 'rgba(255,255,255, 0.5)' : 'rgba(0,0,0,0.1)',
         hoverOffset: 4,
       },
     ],

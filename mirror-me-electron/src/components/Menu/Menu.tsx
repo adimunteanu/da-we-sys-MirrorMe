@@ -11,8 +11,8 @@ import {
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
-import { PAGES } from '../../globals';
 import { logout } from '../../pages/UserController/userControllerSlice';
+import { PAGES } from '../../store/globalSlice';
 
 const Menu = () => {
   const history = useHistory();
