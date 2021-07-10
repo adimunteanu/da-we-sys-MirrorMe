@@ -100,7 +100,11 @@ const ScoreboardPage = () => {
     sortedScores.forEach((score, i) => {
       if (score.nickname === nickname) {
         items.push(
-          <IonItem className="ScoreItem" color="primary">
+          <IonItem
+            className="ScoreItem"
+            color="primary"
+            title="The score is computed based on the number of contributions (likes, comments, posts) and user-specific information that is disclosed. For more information checkout the README file."
+          >
             <span>
               {`#${i + 1}`}&emsp;{score.nickname}
             </span>
