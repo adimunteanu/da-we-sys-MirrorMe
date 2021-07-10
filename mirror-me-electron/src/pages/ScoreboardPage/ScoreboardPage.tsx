@@ -9,6 +9,7 @@ import {
   IonLabel,
   IonList,
   IonRow,
+  IonSearchbar,
   IonSelect,
   IonSelectOption,
 } from '@ionic/react';
@@ -37,6 +38,7 @@ const ScoreboardPage = () => {
   const authToken = useSelector(selectAuthToken);
   const nickname = useSelector(selectNickname);
   const dispatch = useDispatch();
+  const [searchText, setSearchText] = useState<string>('');
 
   useEffect(() => {
     if (hasScore) {
@@ -130,6 +132,17 @@ const ScoreboardPage = () => {
         <ConsentForm />
       ) : (
         <IonGrid>
+          <IonRow>
+            <IonCol size="8" offset="2">
+              <IonSearchbar
+                id="searchbar"
+                value={searchText}
+                onIonChange={(e) => setSearchText(e.detail.value!)}
+                showCancelButton="never"
+                showClearButton="always"
+              />
+            </IonCol>
+          </IonRow>
           <IonRow>
             <IonCol size="8" offset="2">
               <IonCard>
