@@ -100,24 +100,26 @@ const ScoreboardPage = () => {
     }
 
     sortedScores.forEach((score, i) => {
-      if (score.nickname === nickname) {
-        items.push(
-          <IonItem className="ScoreItem" color="primary">
-            <span>
-              {`#${i + 1}`}&emsp;{score.nickname}
-            </span>
-            <span slot="end">{score.score}</span>
-          </IonItem>
-        );
-      } else {
-        items.push(
-          <IonItem className="ScoreItem">
-            <span>
-              {`#${i + 1}`}&emsp;{score.nickname}
-            </span>
-            <span slot="end">{score.score}</span>
-          </IonItem>
-        );
+      if (score.nickname.toLowerCase().includes(searchText.toLowerCase())) {
+        if (score.nickname === nickname) {
+          items.push(
+            <IonItem className="ScoreItem" color="primary">
+              <span>
+                {`#${i + 1}`}&emsp;{score.nickname}
+              </span>
+              <span slot="end">{score.score}</span>
+            </IonItem>
+          );
+        } else {
+          items.push(
+            <IonItem className="ScoreItem">
+              <span>
+                {`#${i + 1}`}&emsp;{score.nickname}
+              </span>
+              <span slot="end">{score.score}</span>
+            </IonItem>
+          );
+        }
       }
     });
 
