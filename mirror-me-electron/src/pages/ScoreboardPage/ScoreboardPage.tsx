@@ -9,6 +9,7 @@ import {
   IonLabel,
   IonList,
   IonRow,
+  IonSearchbar,
   IonSelect,
   IonSelectOption,
 } from '@ionic/react';
@@ -37,6 +38,7 @@ const ScoreboardPage = () => {
   const authToken = useSelector(selectAuthToken);
   const nickname = useSelector(selectNickname);
   const dispatch = useDispatch();
+  const [searchText, setSearchText] = useState<string>('');
 
   useEffect(() => {
     if (hasScore) {
@@ -98,24 +100,26 @@ const ScoreboardPage = () => {
     }
 
     sortedScores.forEach((score, i) => {
-      if (score.nickname === nickname) {
-        items.push(
-          <IonItem className="ScoreItem" color="primary">
-            <span>
-              {`#${i + 1}`}&emsp;{score.nickname}
-            </span>
-            <span slot="end">{score.score}</span>
-          </IonItem>
-        );
-      } else {
-        items.push(
-          <IonItem className="ScoreItem">
-            <span>
-              {`#${i + 1}`}&emsp;{score.nickname}
-            </span>
-            <span slot="end">{score.score}</span>
-          </IonItem>
-        );
+      if (score.nickname.toLowerCase().includes(searchText.toLowerCase())) {
+        if (score.nickname === nickname) {
+          items.push(
+            <IonItem className="ScoreItem" color="primary">
+              <span>
+                {`#${i + 1}`}&emsp;{score.nickname}
+              </span>
+              <span slot="end">{score.score}</span>
+            </IonItem>
+          );
+        } else {
+          items.push(
+            <IonItem className="ScoreItem">
+              <span>
+                {`#${i + 1}`}&emsp;{score.nickname}
+              </span>
+              <span slot="end">{score.score}</span>
+            </IonItem>
+          );
+        }
       }
     });
 
@@ -130,6 +134,17 @@ const ScoreboardPage = () => {
         <ConsentForm />
       ) : (
         <IonGrid>
+          <IonRow>
+            <IonCol size="8" offset="2">
+              <IonSearchbar
+                id="searchbar"
+                value={searchText}
+                onIonChange={(e) => setSearchText(e.detail.value!)}
+                showCancelButton="never"
+                showClearButton="always"
+              />
+            </IonCol>
+          </IonRow>
           <IonRow>
             <IonCol size="8" offset="2">
               <IonCard>
