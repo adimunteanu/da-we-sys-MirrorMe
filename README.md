@@ -1,5 +1,34 @@
 # MirrorMe
 
+## About MirrorMe
+Social media has become a major part of numerous lives through websites and apps, and people have been able to connect with others and 
+share their thoughts, emotions, experiences... The ability to share photos, opinions, and events in real-time has transformed the way 
+we live and the way we do business. Social media has been providing people a source of entertainment and shopping. Many businesses have 
+even found it useful for their own promotion and marketing. At this point, social media has had such a huge impact on the society, and 
+it seems like people couldn’t live without it. But, despite all the advantages, the use of social media comes with a price, which 
+people are not aware of. People share their data intentionally and unintentionally, and everything that they share, stays stored 
+online. In order to have a look at what we’ve shared with the websites, we made a desktop app called **MirrorMe**.
+
+The primary idea of the app is to give a user an overview of all the data he has already shared with different companies. We create a 
+mirror profile based on the user data, in order to show how much of this user’s data is stored online. We visualize the data into a lot 
+of different charts (*bar charts, pie charts, line charts...*) and maps, since the data that is requested from different companies is 
+not readable by the user. In the end, the scoreboard feature in the app gives the user an opportunity to compare his score with his 
+friends and other users of the app. The score is calculated by the amount of the data shared with different companies. In order for the 
+user to see his score, he has to give his consent to submit his score. For this purpose, we created a consent form and after the user 
+has given his consent, he is able to see his own score for each company and the total score. The user who has the smallest amount of 
+the data stored online, has the best score and is listed on the first place of the scoreboard. The score is calculated for each company 
+differently (based on the data we were able to extract). So far, our application supports 3 companies: Reddit, Facebook and Instagram 
+and is available in dark mode, as well.
+
+Our goal is to show to the user how much information websites and companies have about him. We want the user to realize how dangerous 
+the sharing of personal data can be. The visualized data should raise awareness and the user is supposed to think twice before 
+revealing his information online. The scoreboard feature is supposed to show numerically the amount and the significance of the shared 
+data. The score computation takes different types of data into consideration, each multiplied with a different factor. The bigger the 
+factor, the more important the piece of information is. 
+
+Our work in this project was split into two groups: the frontend group and the backend group. The workflow of both groups will be 
+explained in the further text.
+
 ## Prerequisites
 - [NodeJS](https://nodejs.org/en/)
 - [Yarn](https://yarnpkg.com/)
