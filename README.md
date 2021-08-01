@@ -81,3 +81,24 @@ We also thought about analyzing the content of the contributions (messages, post
 <img width="1440" alt="Screenshot 2021-07-31 at 15 12 55" src="https://user-images.githubusercontent.com/23280777/127741012-6c8a7115-62a8-42c6-a5d0-810e303b91d4.png">
 
 
+
+## MirrorMe Backend Architecture
+
+
+The MirrorMe Backend Architecture is mostly based on two AWS Instances, which were deployed via the Amazon EC2 Service. Both instances run with a Linux 2 AMI (Amazon Machine Image) without a GUI. One of them represents the application server which communicates with the frontend of each user, the other one is used as a Database-Server to store all necessary data like user credentials and scores. To make sure that the communication between User and application server is secure, the connection is encrypted with a self-signed SSL certificate. To avoid that the external IP address of the EC2 instance changes whenever it’s getting rebooted, we assigned an elastic IP address to the application server. 
+The application server is written in NodeJS and declares the user schema and the score schema, in order to make sure how the data will be stored in the database. One problem we faced on the application server was that whenever you start running the index.js file and logout afterwards, the process gets shut down. To solve the problem and to run the index.js permanently we used the command:	nohup node index.js &
+
+Another task of the application server is to represent the only access point to the backend, since the Database-server is deployed in a subnet of the application server. That means, that no one can access the Database-server from outside, only through the application server and a private IP address. The application server itself can be accessed via an SSH tunnel and a private key, which is only in the possession of the admin. 
+The Database-server is running mongoDB which can be accessed through the mongoDB wire protocol. In order to make sure that only the application server is able to write on the database, we created a security group and declared the access to be possible only for the public and private IP address of the application server. 
+To try out using a mongoDB database, when our AWS Server are not running, you can change the connection string in our frontend code at the following location:
+mirror-me-electron -> src -> pages -> UserController -> userControllerSlice.tsx
+![image](https://user-images.githubusercontent.com/64585410/127766093-577b2aa6-e15a-4dcc-9eb3-434b239dc2e6.png)
+
+For using a local mongoDB server type in: http://localhost:4000/user.
+
+The following diagram shows the technical overview of our application: 
+
+![image](https://user-images.githubusercontent.com/64585410/127766155-9c318e44-a7e9-4d31-8c7e-d5c4807e4d6f.png)
+
+
+
