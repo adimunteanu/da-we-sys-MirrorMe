@@ -92,8 +92,8 @@ Another task of the application server is to represent the only access point to 
 The Database-server is running mongoDB which can be accessed through the mongoDB wire protocol. In order to make sure that only the application server is able to write on the database, we created a security group and declared the access to be possible only for the public and private IP address of the application server. 
 To try out using a mongoDB database, when our AWS Server are not running, you can change the connection string in our frontend code at the following location:
 mirror-me-electron -> src -> pages -> UserController -> userControllerSlice.tsx
-![image](https://user-images.githubusercontent.com/64585410/127766300-c1522f5e-1746-4c7c-8ee8-1015587bed8d.png)
 
+<img alt="Screenshot 2021-07-31 at 14 58 57" src="https://user-images.githubusercontent.com/64585410/127766300-c1522f5e-1746-4c7c-8ee8-1015587bed8d.png">
 
 For using a local mongoDB server type in: http://localhost:4000/user.
 
