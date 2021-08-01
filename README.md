@@ -95,11 +95,11 @@ managing the scoreboard
 The user login and authentication were our first tasks in the backend. We implemented the signup and login POST requests, for which we needed a schema with a nickname, email, and password from the user and a separate route in the URL with “/user”. We made sure to not save the password in clear text, by salting it before saving. For the authentication we wanted to have an authentication token, that the user must have in the header, to access all the scoreboard functions. For that we installed the [JSON Web Token](https://www.npmjs.com/package/jsonwebtoken) library and wrote a middleware for it. So, when our user registers or logs in, he gets back a unique token.
 Speaking of which, our scoreboard is the most important part in the backend. All the functions can get accessed simply via “/scoreboard” when you have the auth token
 
-GET /getMe – is used to identify if the user uploaded a score and what the user's score is.
-POST /addScore – initializes the user’s score with his nickname as identifier, used when accepting the ToS
-GET /getAll – returns all Scores from the DB as a Map, used to fill the displayed scoreboard
-PUT /update – changes score of the given nickname, used when user adds new/changes his files
-DELETE /delete – delete the whole score out of the DB
+- GET /getMe – is used to identify if the user uploaded a score and what the user's score is.
+- POST /addScore – initializes the user’s score with his nickname as identifier, used when accepting the ToS
+- GET /getAll – returns all Scores from the DB as a Map, used to fill the displayed scoreboard
+- PUT /update – changes score of the given nickname, used when user adds new/changes his files
+- DELETE /delete – delete the whole score out of the DB
 
 
 
