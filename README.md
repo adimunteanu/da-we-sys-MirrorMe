@@ -99,5 +99,6 @@ For using a local mongoDB server type in: http://localhost:4000/user.
 
 The following diagram shows the technical overview of our application: 
 
-<img width="600" height="400" alt="Screenshot 2021-08-01 at 11 38 00" src="https://user-images.githubusercontent.com/64585410/127766401-4e42e9aa-de11-4f0b-9be5-b5df339fcb5a.png">
+![TechnicalOverview](https://user-images.githubusercontent.com/64585410/127767176-5397329f-e2cd-46d0-907b-f88869f95ae2.png)
+
 
