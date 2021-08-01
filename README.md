@@ -80,11 +80,30 @@ We also thought about analyzing the content of the contributions (messages, post
 
 <img width="1440" alt="Screenshot 2021-07-31 at 15 12 55" src="https://user-images.githubusercontent.com/23280777/127741012-6c8a7115-62a8-42c6-a5d0-810e303b91d4.png">
 
+## Running the server
+1. Run `cd mirror-me-server`
+2. Run `node index.js`
+ 
+ 
+## Application Server
+Because we were already working with JavaScript/TypeScript in our Frontend and most of our Team knew how to work with it, we decided that our application server should run on it as well. The simplest solution was using [NodeJS](https://nodejs.org/en/) + [Express.js]( https://expressjs.com/de/).
+After that we had to look into how and where we want to store our data. We didn’t see the need for a relational DB and because we already had some experience with it, we chose mongoDB. For managing and accessing it, we installed [Mongoose](https://mongoosejs.com/) and created schemas. The user schema for the user credentials has a nickname, email and password, and the scoreboard schema includes a nickname, scores of Reddit, Facebook and Instagram and a total score.
+Now to the functionalities of our application server:  
+ user authentication
+managing the scoreboard
+
+The user login and authentication were our first tasks in the backend. We implemented the signup and login POST requests, for which we needed a schema with a nickname, email, and password from the user and a separate route in the URL with “/user”. We made sure to not save the password in clear text, by salting it before saving. For the authentication we wanted to have an authentication token, that the user must have in the header, to access all the scoreboard functions. For that we installed the [JSON Web Token](https://www.npmjs.com/package/jsonwebtoken) library and wrote a middleware for it. So, when our user registers or logs in, he gets back a unique token.
+Speaking of which, our scoreboard is the most important part in the backend. All the functions can get accessed simply via “/scoreboard” when you have the auth token
+
+GET /getMe – is used to identify if the user uploaded a score and what the user's score is.
+POST /addScore – initializes the user’s score with his nickname as identifier, used when accepting the ToS
+GET /getAll – returns all Scores from the DB as a Map, used to fill the displayed scoreboard
+PUT /update – changes score of the given nickname, used when user adds new/changes his files
+DELETE /delete – delete the whole score out of the DB
+
 
 
 ## MirrorMe Backend Architecture
-
-
 The MirrorMe Backend Architecture is mostly based on two AWS Instances, which were deployed via the Amazon EC2 Service. Both instances run with a Linux 2 AMI (Amazon Machine Image) without a GUI. One of them represents the application server which communicates with the frontend of each user, the other one is used as a Database-Server to store all necessary data like user credentials and scores. To make sure that the communication between User and application server is secure, the connection is encrypted with a self-signed SSL certificate. To avoid that the external IP address of the EC2 instance changes whenever it’s getting rebooted, we assigned an elastic IP address to the application server. 
 The application server is written in NodeJS and declares the user schema and the score schema, in order to make sure how the data will be stored in the database. One problem we faced on the application server was that whenever you start running the index.js file and logout afterwards, the process gets shut down. To solve the problem and to run the index.js permanently we used the command:	nohup node index.js &
 
