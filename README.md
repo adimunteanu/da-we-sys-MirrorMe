@@ -93,7 +93,7 @@ The Database-server is running mongoDB which can be accessed through the mongoDB
 To try out using a mongoDB database, when our AWS Server are not running, you can change the connection string in our frontend code at the following location:
 mirror-me-electron -> src -> pages -> UserController -> userControllerSlice.tsx
 
-<img alt="Screenshot 2021-07-31 at 14 58 57" src="https://user-images.githubusercontent.com/64585410/127766300-c1522f5e-1746-4c7c-8ee8-1015587bed8d.png">
+![CodeSnippet](https://user-images.githubusercontent.com/64585410/127767227-d503d788-0152-4e98-b54e-b9e8404ae1d2.png)
 
 For using a local mongoDB server type in: http://localhost:4000/user.
 
