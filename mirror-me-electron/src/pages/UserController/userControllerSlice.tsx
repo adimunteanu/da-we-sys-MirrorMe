@@ -15,7 +15,7 @@ const initialState: UserControllerState = {
 };
 
 const userInstance = axios.create({
-  baseURL: `https://13.59.228.104:4000/user`,
+  baseURL: `https://18.119.2.53:4000/user`,
   timeout: 1000,
 });
 
