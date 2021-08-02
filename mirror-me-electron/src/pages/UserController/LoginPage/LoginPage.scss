@@ -1,0 +1,26 @@
+.LoginPage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+
+  &__Card {
+    height: auto;
+    width: var(--space-large);
+  }
+
+  &__Item {
+    margin: 10px 0px;
+
+    &--centered {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  &__Link {
+    text-decoration: underline;
+  }
+}

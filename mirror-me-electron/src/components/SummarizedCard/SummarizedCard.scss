@@ -1,0 +1,11 @@
+.SummarizedCard {
+  img {
+    object-fit: cover;
+    height: 170px;
+  }
+
+  .LabelIcon {
+    display: flex;
+    flex-direction: column;
+  }
+}

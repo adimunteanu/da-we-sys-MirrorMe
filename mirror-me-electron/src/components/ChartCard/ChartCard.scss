@@ -1,0 +1,19 @@
+div {
+  .ChartCardModal {
+    .modal-wrapper {
+      background: transparent;
+      box-shadow: none;
+      width: 70vw;
+      height: 100vh;
+    }
+  }
+
+  .ContentScroll {
+    height: 85vh;
+    overflow: hidden;
+    overflow-y: auto;
+    scroll-behavior: auto;
+    display: flex;
+    flex-direction: column;
+  }
+}
